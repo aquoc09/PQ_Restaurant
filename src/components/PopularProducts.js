@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react'
 import Title from './Title'
 import Item from './Item';
-import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 
 const PopularProducts = () => {
 
   const [popularProducts,setPopularProducts]=useState([]);
-  const {products}=useAppContext()
+  const {products}=useUserContext()
 
   useEffect(()=>{
       const data=products.filter((item)=> item.popular && item.inStock).slice(0,5);

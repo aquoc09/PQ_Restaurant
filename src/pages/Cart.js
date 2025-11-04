@@ -1,12 +1,12 @@
 import React,{useEffect,useState} from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
-import { useAppContext } from '../context/AppContext'
+import { useUserContext } from '../context/UserContext'
 import { myAssets } from '../assets/assets'
 
 const Cart = () => {
 
-  const{navigate, products, currency, cardItems, updateQuantity}=useAppContext();
+  const{navigate, products, currency, cardItems, updateQuantity}=useUserContext();
   const[cartData,setCartData]=useState([]);
 
 

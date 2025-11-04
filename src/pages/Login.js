@@ -1,10 +1,10 @@
 import React, {useEffect,useState} from 'react'
-import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 function Login() {
 
-const {navigate} = useAppContext();
+const {navigate} = useUserContext();
   const [formData, setFormData] = useState({
     phoneNumber: '0912345677', // Default user number
     password: 'test@12345',
@@ -85,7 +85,7 @@ const {navigate} = useAppContext();
       localStorage.setItem('user', JSON.stringify(userData));
       
       // Redirect based on role
-      navigate(userData.roleId === 1 ? '/home' : '/admin/orders');
+      navigate(userData.roleId === 1 ? '/home' : '/admin/dashboard');
     } catch (error) {
       console.error('Login error:', error);
       // TODO: Show error toast

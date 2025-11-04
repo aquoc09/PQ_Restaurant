@@ -1,9 +1,9 @@
 import React from 'react'
-import { useAppContext } from '../context/AppContext'
+import { useUserContext } from '../context/UserContext'
 import { myAssets } from '../assets/assets'
 const SearchInput = () => {
 
-  const {searchQuery,setSearchQuery}=useAppContext();
+  const {searchQuery,setSearchQuery}=useUserContext();
 
   return (
     <div className='py-4'>

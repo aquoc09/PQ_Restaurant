@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { myAssets } from '../assets/assets'
 import Navbar from './Navbar'
 // import {useClerk,UserButton}from "@clerk/clerk-react"
-import { useAppContext } from '../context/AppContext'
+import { useUserContext } from '../context/UserContext'
 
 const Header = () => {
 
@@ -12,7 +12,8 @@ const Header = () => {
   const toggleMenu = ()=>setMenuOpened(prev => !prev);
 
   // const {openSignIn}=useClerk();
-  const {navigate, user, getCartCount}=useAppContext();
+  const {navigate, user, getCartCount}=useUserContext();
+  const isHomePage=useLocation().pathname.endsWith('/')
 
   const OrdersIcon =()=>(
     <svg 
@@ -35,7 +36,7 @@ const Header = () => {
     </svg>
   )
   return (
-    <header className='absolute top-0 left-0 right-0 z-50 py-3'>
+    <header className={`absolute top-0 left-0 right-0 z-50 py-3 ${!isHomePage && 'bg-white'}`}>
       {/* CONTAINER */}
       <div className='mx-auto max-w-[1440px] px-4 lg:px-12 flex justify-between items-center'>
         {/* LOGO */}

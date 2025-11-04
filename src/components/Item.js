@@ -1,11 +1,11 @@
 import React, {useState} from 'react'
 import { myAssets } from '../assets/assets'
-import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 
 const Item = ({product}) => {
 
 const[size,setSize]=useState(product.sizes[0]);
-const {currency, addToCart}=useAppContext();
+const {currency, addToCart}=useUserContext();
 
 
   return (

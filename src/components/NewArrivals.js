@@ -10,12 +10,12 @@ import 'swiper/css';
 import { Autoplay } from 'swiper/modules';
 // import { dummyProducts } from '../assets/assets';
 import Item from './Item';
-import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 
 const NewArrivals = () => {
 
   const [newArrivals,setNewArrivals]=useState([]);
-  const {products}=useAppContext()
+  const {products}=useUserContext()
 
   useEffect(()=>{
     const data=products.filter((item)=>item.inStock).slice(0,10);

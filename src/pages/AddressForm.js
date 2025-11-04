@@ -1,12 +1,12 @@
 import React, {useEffect,useState} from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
-import { useAppContext } from '../context/AppContext'
+import { useUserContext } from '../context/UserContext'
 import toast from 'react-hot-toast'
 
 const AddressForm = () => {
 
-  const {navigate, user}= useAppContext();
+  const {navigate, user}= useUserContext();
   const [address, setAddress]=useState({
     firstName:"",
     lastName:"",

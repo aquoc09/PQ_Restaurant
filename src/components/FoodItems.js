@@ -1,13 +1,13 @@
 import React ,{useState,useMemo, useEffect} from 'react'
 import Item from './Item'
-import { useAppContext } from '../context/AppContext'
+import { useUserContext } from '../context/UserContext'
 import ExploreMenu from './ExploreMenu'
 import SearchInput from './SearchInput'
 
 const FoodItems = () => {
 
   const[categories,setCategories]=useState("All");
-  const {products, searchQuery}=useAppContext();
+  const {products, searchQuery}=useUserContext();
   const[category,setCategory]=useState([]);
   const[type,setType]=useState([]);
   const[selectedSort,setSelectedSort]=useState("relevant");

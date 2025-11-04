@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 // import { useUser } from '@clerk/clerk-react';
 import { toast } from 'react-hot-toast';
 
-const AppContext=createContext()
-export const AppContextProvider = ({children}) => {
+const UserContext=createContext()
+export const UserContextProvider = ({children}) => {
 
     const[products, setProducts]=useState([]);
     const [searchQuery, setSearchQuery]=useState("");
@@ -14,6 +14,10 @@ export const AppContextProvider = ({children}) => {
     const navigate=useNavigate();
     const [cardItems, setCartItems]=useState([]);
     const[method,setMethod]=useState("COD");
+    const [isAdmin, setIsAdmin]=useState(() => {
+      const adminToken = localStorage.getItem('adminToken');
+      return !!adminToken; // Convert to boolean
+    });
     //Clerk
     // const {user}=useUser();
 
@@ -83,11 +87,13 @@ export const AppContextProvider = ({children}) => {
         getCartAmount,
         method,
         setMethod,
+        isAdmin,
+        setIsAdmin,
     };
     
-  return <AppContext.Provider value={value}>
+  return <UserContext.Provider value={value}>
         {children}
-    </AppContext.Provider>;
+    </UserContext.Provider>;
 };
 
-export const useAppContext = ()=>useContext(AppContext)
+export const useUserContext = ()=>useContext(UserContext)

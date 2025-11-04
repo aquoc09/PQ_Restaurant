@@ -17,32 +17,65 @@ import AddProducts from './pages/admin/AddProducts';
 import ListProducts from './pages/admin/ListProducts';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AdminLogin from './components/admin/Login';
+import { useUserContext } from './context/UserContext';
+import { Navigate } from 'react-router-dom';
+
+const MainLayout = ({ children }) => {
+  return (
+    <div className='overflow-x-hidden text-textColor'>
+      <Header />
+      {children}
+      <Footer />
+    </div>
+  );
+};
+
+// Protected Route Component
+const ProtectedAdminRoute = ({ children }) => {
+  const { isAdmin } = useUserContext();
+  
+  if (!isAdmin) {
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  return children;
+};
 
 function App() {
   return (
-    <main className='overflow-x-hidden text-textColor'>
-      <Header />
+    <main>
       <Toaster position='bottom-right' />
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/menu' element={<Menu />} />
-        <Route path='/blog' element={<Blog />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/cart' element={<Cart />} />
-        <Route path='/address-form' element={<AddressForm />} />
-        <Route path='/my-orders' element={<MyOrders />} />
-        <Route path='/login-form' element={<Login />} />
-        <Route path='/signup-form' element={<Signup />} />
-        <Route path='/admin' element={<Sidebar />} >
-          <Route index element={<Dashboard />} />
-          <Route path='/admin/add-product' element={<AddProducts />} />
-          <Route path='/admin/list-product' element={<ListProducts />} />
-
+        {/* Public routes with Header and Footer */}
+        <Route path='/' element={<MainLayout><Home /></MainLayout>} />
+        <Route path='/menu' element={<MainLayout><Menu /></MainLayout>} />
+        <Route path='/blog' element={<MainLayout><Blog /></MainLayout>} />
+        <Route path='/contact' element={<MainLayout><Contact /></MainLayout>} />
+        <Route path='/cart' element={<MainLayout><Cart /></MainLayout>} />
+        <Route path='/address-form' element={<MainLayout><AddressForm /></MainLayout>} />
+        <Route path='/my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
+        <Route path='/login-form' element={<MainLayout><Login /></MainLayout>} />
+        <Route path='/signup-form' element={<MainLayout><Signup /></MainLayout>} />
+        
+        {/* Admin routes */}
+        <Route path='/admin'>
+          <Route path='login' element={<AdminLogin />} />
+          <Route
+            path='*'
+            element={
+              <ProtectedAdminRoute>
+                <Sidebar />
+              </ProtectedAdminRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path='add-product' element={<AddProducts />} />
+            <Route path='list-product' element={<ListProducts />} />
+          </Route>
         </Route>
-
       </Routes>
-
-      <Footer />
+      {/* {isAdmin && <Footer />} */}
     </main>
   );
 }

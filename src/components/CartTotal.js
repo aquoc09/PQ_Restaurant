@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react'
-import { useAppContext } from '../context/AppContext'
+import { useUserContext } from '../context/UserContext'
 import toast from 'react-hot-toast'
 
 function CartTotal() {
@@ -16,7 +16,7 @@ function CartTotal() {
     getCartAmount,
     setCartItems,
     user
-  } =useAppContext();
+  } =useUserContext();
 
   const[addresses, setAddresses]=useState([]);
   const[showAddress,setShowAddress]=useState(false);
@@ -102,7 +102,7 @@ function CartTotal() {
           <div className='flex justify-between'>
             <h5>Total Amount</h5>
             <p className='text-lg font-bold text-solid'>{getCartAmount() === 0 ? 
-            '0đ' : getCartAmount() + delivery_charges + (getCartAmount()*8/100)}{currency}</p>
+            '0' : getCartAmount() + delivery_charges + (getCartAmount()*8/100)}{currency}</p>
           </div>
         </div>
         <button className='btn-solid w-full mt-8 !rounded-md py-2'>Proceed to Order</button>

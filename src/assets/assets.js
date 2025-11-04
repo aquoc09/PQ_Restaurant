@@ -118,12 +118,37 @@ import salad_tom from './salad_tom.jpg'
 import feature1 from './features1.png'
 import feature2 from './features2.png'
 import feature3 from './features3.png'
+
+//Blog
+import blog1 from './blog1.jpg'
+import blog2 from './blog2.jpg'
+import blog3 from './blog3.jpg'
+import blog4 from './blog4.jpg'
+import blog5 from './blog5.jpg'
+import blog6 from './blog6.jpg'
+import blog7 from './blog7.jpg'
+import blog8 from './blog8.jpg'
+
+import mail from './mail.svg'
+import right from './right.svg'
+
+
 export const myAssets = {
+    mail,
+    right,
     bento1,
     bento2,
     bento3,
     bento4,
     bento5,
+    blog1,
+    blog3,
+    blog2,
+    blog4,
+    blog5,
+    blog6,
+    blog7,
+    blog8,
     coca_drink,
     ebi_wakame_udon_hot,
     beef_curry_udon,
@@ -330,4 +355,64 @@ export const promotion=[
         img:[promotion6],
         inStock:true,
     },
-]
+];
+
+// Blogs Dummy Data 
+export const blogs = [
+  {
+    title: "Top 10 Skincare Must-Haves for 2025",
+    category: "Skincare Tips",
+    image: blog1,
+    description:
+      "Discover the essential skincare products you need in your routine for glowing, healthy skin in 2025.",
+  },
+  {
+    title: "How to Choose the Perfect Foundation Shade",
+    category: "Makeup Guide",
+    image: blog2,
+    description:
+      "A step-by-step guide to finding your exact foundation match for a flawless and natural look.",
+  },
+  {
+    title: "Hair Care Trends Every Woman Should Try",
+    category: "Hair Care",
+    image: blog3,
+    description:
+      "Explore the latest hair care tips and product trends that help strengthen, style, and shine.",
+  },
+  {
+    title: "Beginner’s Guide to Building a Makeup Kit",
+    category: "Beauty Basics",
+    image: blog4,
+    description:
+      "A complete checklist of makeup essentials every beginner should own for daily and special looks.",
+  },
+  {
+    title: "Maximizing Results with Your Night Skincare Routine",
+    category: "Skincare Routine",
+    image: blog5,
+    description:
+      "Learn how to create the perfect nighttime skincare routine for better hydration and anti-aging benefits.",
+  },
+  {
+    title: "The Benefits of Organic and Natural Cosmetics",
+    category: "Lifestyle",
+    image: blog6,
+    description:
+      "Understand why more people are switching to natural cosmetics and the long-term skin benefits.",
+  },
+  {
+    title: "Tips to Make Your Lipstick Last All Day",
+    category: "Makeup Tips",
+    image: blog7,
+    description:
+      "Simple but effective hacks to keep your lipstick fresh and vibrant from morning to evening.",
+  },
+  {
+    title: "2025 Beauty Forecast: Makeup and Skincare Trends",
+    category: "Beauty Trends",
+    image: blog8,
+    description:
+      "An expert look at the upcoming beauty and skincare trends that will define style in 2025.",
+  },
+];

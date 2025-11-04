@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useAppContext } from '../context/AppContext';
+import { useUserContext } from '../context/UserContext';
 
 function Signup() {
 
-    const {navigate} = useAppContext;
+    const {navigate} = useUserContext;
     const todayMinus18 = (() => {
   const d = new Date();
   d.setFullYear(d.getFullYear() - 18);
