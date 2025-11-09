@@ -6,16 +6,19 @@ import bento3 from './bento3.png'
 import bento4 from './bento4.png'
 import bento5 from './bento5.png'
 
-//Drink
+//Drink: fresh water
 import coca_drink from './coca_drink.jpg'
-import liptonchanh_drink from './liptonchanh_drink.png'
 import pepsi_drink from './pepsi_drink.jpg'
 import samlanh_drink from './samlanh_drink.png'
+//Drink: beer
 import sapporo_drink from './sapporo_drink.jpg'
 import tiger_drink from './tiger_drink.jpg'
+//Drink: tea
+import liptonchanh_drink from './liptonchanh_drink.png'
 import tradao_drink from './tradao_drink.jpg'
 import trada_drink from './trada_drink.png'
 import trahoacuc_drink from './trahoacuc_drink.jpg'
+//Drink: soda
 import sodablueocean_drink from './sodablueocean_drink.png'
 import sodachanh_drink from './sodachanh_drink.png'
 import sodadao_drink from './sodadao_drink.png'
@@ -30,6 +33,8 @@ import chicken_curry_udon from './chicken_curry_udon.jpg'
 //Rice
 import butadon_rice from './butadon_rice.png'
 import shishirian_raisu_rice from './shishirian_raisu_rice.png'
+
+//từ về trên đã có data
 
 //Curry
 import com_bo_curry from './com_bo_curry.jpg'

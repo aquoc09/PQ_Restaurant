@@ -4,6 +4,8 @@ import Item from './Item';
 // import { useUserContext } from '../context/UserContext';
 import { environment } from '../environment/environment';
 import axios from 'axios';
+//import to get data from api
+import ProductService from '../services/ProductService';
 
 const PopularProducts = () => {
 
@@ -17,11 +19,11 @@ const PopularProducts = () => {
     try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${environment.apiBaseUrl}/ `); //Này để chuyển đường dẫn
-        if (response.data) // Điều kiện response
+        const response = await ProductService.getPopulars(); //Này để chuyển đường dẫn
+        if (response.result) // Điều kiện response
         {
             // Lọc các item có popular và inStock đều là true
-            const filteredData = response.data.filter((item) => item.popular && item.inStock);
+            const filteredData = response.result.filter((item) => item.inPopular && item.inStock);
             setItems(filteredData); 
         }
     } catch (err) {
