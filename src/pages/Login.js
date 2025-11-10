@@ -23,7 +23,6 @@ const Login = () => {
       // 1. Lưu Token và Vai trò vào Local Storage
       localStorage.setItem('accessToken', token);
       localStorage.setItem('refreshToken', refreshToken); // Lưu Refresh Token
-      localStorage.setItem('userRoles', JSON.stringify(roles));
 
       alert('Đăng nhập thành công!');
       

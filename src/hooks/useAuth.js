@@ -1,74 +1,86 @@
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 import AuthService from '../services/AuthService'; // Giả định đường dẫn tới AuthService
 
 // Constants for Role Names (nên định nghĩa cố định để tránh lỗi chính tả)
 const ROLE_ADMIN = 'ADMIN';
-const ROLE_USER = 'USER';
 
 export const useAuth = () => {
     const navigate = useNavigate();
 
-    // Hàm tiện ích để lấy vai trò từ Local Storage
-    const getUserRoles = () => {
-        const rolesJson = localStorage.getItem('userRoles');
+    // 1. Hàm giải mã token và lấy payload
+    const getDecodedToken = () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) return null;
         try {
-            // Trả về mảng các vai trò (ví dụ: ["USER", "ADMIN"])
-            return rolesJson ? JSON.parse(rolesJson) : [];
+            const decoded = jwtDecode(token);
+            return decoded;
         } catch (e) {
-            console.error("Lỗi khi phân tích JSON Roles:", e);
-            return [];
+            // Lỗi giải mã thường xảy ra khi token bị hỏng hoặc không phải JWT
+            console.error("Lỗi giải mã token:", e);
+            return null;
         }
     };
     
-    const userRoles = getUserRoles();
+    const decodedToken = getDecodedToken();
+
+    // Lấy roles và các thông tin khác từ payload
+    // Giả định Back-end đính kèm roles, userId, và username vào JWT
+    const userRoles = decodedToken ? decodedToken.roles || [] : [];
     
-    // 1. Kiểm tra trạng thái đăng nhập (token có tồn tại không)
+    // 2. Kiểm tra trạng thái đăng nhập và hết hạn
     const isAuthenticated = () => {
-        return !!localStorage.getItem('accessToken');
+        if (!decodedToken) return false;
+        
+        // exp là thời gian hết hạn dưới dạng Unix timestamp (giây)
+        const currentTime = Date.now() / 1000;
+        
+        // Nếu token hết hạn, gọi logout cục bộ
+        if (decodedToken.exp < currentTime) {
+            // console.warn("Access Token đã hết hạn.");
+            // Lưu ý: Logic Refresh Token được xử lý trong api.js Interceptor
+            // Nếu Interceptor không xử lý được, người dùng sẽ bị đăng xuất.
+            return false; 
+        }
+
+        return true;
     };
 
-    // 2. Kiểm tra quyền Admin
+    // 3. Kiểm tra quyền Admin
     const isAdmin = () => {
-        // Kiểm tra xem đã đăng nhập và có vai trò ADMIN không
         return isAuthenticated() && userRoles.includes(ROLE_ADMIN);
-    };
-
-    // 3. Kiểm tra quyền User thông thường
-    const isUser = () => {
-        // Trả về true nếu có vai trò USER
-        return isAuthenticated() && userRoles.includes(ROLE_USER);
     };
 
     // 4. Hàm Đăng xuất
     const logout = async () => {
-        // Lấy token hiện tại để gửi yêu cầu vô hiệu hóa (log-out) lên Back-end
         const token = localStorage.getItem('accessToken');
         
-        // 1. Gửi yêu cầu vô hiệu hóa token lên Back-end
         if (token) {
             try {
-                // Controller của bạn có endpoint POST /auth/log-out nhận vào TokenRequest
+                // Gửi yêu cầu vô hiệu hóa token lên Back-end
                 await AuthService.logout({ token: token });
             } catch (error) {
-                // Lỗi ở đây thường là do token đã hết hạn hoặc không hợp lệ. 
-                // Ta vẫn tiếp tục xóa dữ liệu cục bộ.
-                console.error("Lỗi khi gọi API Logout:", error);
+                // Ignore lỗi nếu token đã hết hạn ở phía server
+                console.warn("Logout API failed (token có thể đã hết hạn), proceeding with local clear.", error);
             }
         }
         
-        // 2. Xóa dữ liệu cục bộ
+        // Xóa tất cả dữ liệu xác thực
         localStorage.removeItem('accessToken');
-        localStorage.removeItem('userRoles');
-
-        // 3. Chuyển hướng về trang đăng nhập
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userRoles'); // Chỉ xóa nếu bạn vẫn lưu nó riêng
+        
+        // Chuyển hướng về trang đăng nhập
         navigate('/login'); 
     };
 
     return { 
         isAuthenticated, 
         isAdmin, 
-        isUser, 
         userRoles,
+        // Cung cấp các thông tin hữu ích từ token
+        userId: decodedToken?.userId, 
+        username: decodedToken?.username, 
         logout 
     };
 };
