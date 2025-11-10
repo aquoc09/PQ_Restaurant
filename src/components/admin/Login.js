@@ -1,65 +1,48 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import { useUserContext } from '../../context/UserContext';
-import adminService from '../../services/adminService';
-import { environment } from '../../environment/environment';
+import AuthService from '../../services/AuthService';
 
 function AdminLogin() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setIsAdmin } = useUserContext();
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setError(null);
+    setLoading(true);
 
     try {
-      const response = await axios.post(`${environment.apiBaseUrl}/auth/log-in`, {
-        username: formData.username,
-        password: formData.password
-      });
+      const response = await AuthService.login({ email, password });
       
-      // Kiểm tra response từ server
-      if (response.data === 1000) {
-        // Lưu thông tin xác thực
-        localStorage.setItem('adminToken', response.data.token);
-        localStorage.setItem('adminUsername', formData.username);
-        
-        // Cập nhật trạng thái admin trong context
-        setIsAdmin(true);
-        
-        // Hiển thị thông báo thành công
-        toast.success('Đăng nhập thành công!');
-        
-        // Chuyển hướng đến trang admin
-        navigate('/admin');
-      } else {
-        toast.error('Tên đăng nhập hoặc mật khẩu không đúng');
+      const { token, roles } = response.data.result; 
+      
+      // KIỂM TRA VAI TRÒ ĐỂ CHỈ CHO PHÉP ADMIN TIẾP TỤC
+      if (!roles || !roles.includes('ADMIN')) {
+          setError('Truy cập bị từ chối: Tài khoản không có quyền Admin.');
+          setLoading(false);
+          // KHÔNG lưu token nếu không phải admin, hoặc có thể log-out token ngay lập tức
+          // (Cần gọi API logout nếu muốn vô hiệu hóa token đã tạo)
+          return;
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      toast.error(
-        error.response?.data?.message || 
-        'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.'
-      );
+      
+      // Nếu là Admin, lưu Token và Vai trò
+      localStorage.setItem('accessToken', token);
+      localStorage.setItem('userRoles', JSON.stringify(roles));
+
+      alert('Đăng nhập Admin thành công!');
+      navigate('/admin/dashboard');
+
+    } catch (err) {
+      setError('Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.');
+      console.error('Admin Login Error:', err);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 

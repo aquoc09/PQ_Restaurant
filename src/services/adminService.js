@@ -1,92 +1,35 @@
-import api from '../interceptors/tokenInterceptor';
+import api from '../api/api';
 
-class AdminService {
-    constructor() {
-        // Đường dẫn API của Spring Boot backend
-        this.baseUrl = 'http://localhost:8084/web_order';
-        this.endpoints = {
-            login: '/auth/log-in',
-            adminDetails: '/auth/details',
-            logout: '/auth/log-out',
-            refresh: '/auth/refresh'
-        };
+const USER_API_URL = '/users';
+const ROLE_API_URL = '/roles';
+
+const AdminService = {
+    // Quản lý người dùng: Lấy tất cả người dùng
+    getAllUsers: () => {
+        // Chỉ Admin mới được gọi endpoint này
+        return api.get(USER_API_URL);
+    },
+
+    // Quản lý người dùng: Cập nhật người dùng theo ID
+    updateUserById: (userId, updateData) => {
+        return api.put(`${USER_API_URL}/${userId}`, updateData);
+    },
+
+    // Quản lý người dùng: Xóa người dùng
+    deleteUserById: (userId) => {
+        return api.delete(`${USER_API_URL}/${userId}`);
+    },
+
+    // Quản lý vai trò: Lấy tất cả vai trò
+    getAllRoles: () => {
+        return api.get(ROLE_API_URL);
+    },
+    
+    // Quản lý vai trò: Tạo vai trò mới
+    createRole: (roleData) => {
+        return api.post(ROLE_API_URL, roleData);
     }
+    // ... (Thêm các API Admin khác tại đây)
+};
 
-    // Đăng nhập
-    async login(loginData) {
-        try {
-            const response = await api.post(`${this.baseUrl}${this.endpoints.login}`, {
-                username: loginData.username,
-                password: loginData.password
-            });
-            
-            // Lưu token vào localStorage
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-            }
-            if (response.data.refreshToken) {
-                localStorage.setItem('refreshToken', response.data.refreshToken);
-            }
-            
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Đăng xuất
-    async logout() {
-        try {
-            const token = localStorage.getItem('token');
-            await api.post(`${this.baseUrl}${this.endpoints.logout}`, {
-                token: token
-            });
-            
-            // Xóa token khỏi localStorage
-            localStorage.removeItem('token');
-            localStorage.removeItem('refreshToken');
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Refresh token
-    async refreshToken() {
-        try {
-            const refreshToken = localStorage.getItem('refreshToken');
-            const response = await api.post(`${this.baseUrl}${this.endpoints.refresh}`, {
-                refreshToken: refreshToken
-            });
-            
-            // Cập nhật token mới vào localStorage
-            if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-            }
-            if (response.data.refreshToken) {
-                localStorage.setItem('refreshToken', response.data.refreshToken);
-            }
-            
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Lấy token từ localStorage
-    getToken() {
-        return localStorage.getItem('token');
-    }
-
-    // Lấy refresh token từ localStorage
-    getRefreshToken() {
-        return localStorage.getItem('refreshToken');
-    }
-
-    // Kiểm tra xem admin đã đăng nhập chưa
-    isLoggedIn() {
-        return !!this.getToken();
-    }
-}
-
-const adminService = new AdminService();
-export default adminService;
+export default AdminService;

@@ -11,12 +11,13 @@ import Cart from './pages/Cart';
 import AddressForm from './pages/AddressForm';
 import MyOrders from './pages/MyOrders';
 import { Toaster } from 'react-hot-toast';
-import Sidebar from './components/admin/Sidebar';
+// import Sidebar from './components/admin/Sidebar';
 import Dashboard from './pages/admin/Dashboard';
 import AddProducts from './pages/admin/AddProducts';
 import ListProducts from './pages/admin/ListProducts';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import AdminRoute from './components/AdminRoutes';
 // import AdminLogin from './components/admin/Login';
 // import { useUserContext } from './context/UserContext';
 // import { Navigate } from 'react-router-dom';
@@ -54,8 +55,8 @@ function App() {
         <Route path='/cart' element={<MainLayout><Cart /></MainLayout>} />
         <Route path='/address-form' element={<MainLayout><AddressForm /></MainLayout>} />
         <Route path='/my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
-        <Route path='/login-form' element={<MainLayout><Login /></MainLayout>} />
-        <Route path='/signup-form' element={<MainLayout><Signup /></MainLayout>} />
+        <Route path='/login' element={<MainLayout><Login /></MainLayout>} />
+        <Route path='/signup' element={<MainLayout><Signup /></MainLayout>} />
         
         {/* Admin routes */}
         {/* <Route path='/admin'>
@@ -75,7 +76,7 @@ function App() {
             <Route path='list-product' element={<ListProducts />} />
           </Route>
         </Route> */}
-        <Route path='/admin' element={<Sidebar />}>
+        <Route path='/admin' element={<AdminRoute />}>
           <Route index element={<Dashboard />} />
           <Route path='add-product' element={<AddProducts />} />
           <Route path='list-product' element={<ListProducts />} />

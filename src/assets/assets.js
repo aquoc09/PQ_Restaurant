@@ -433,9 +433,6 @@ export const dummyAddress = [
     email: "userone@gmail.com",
     street: "789 Elm Street",
     city: "Springfield",
-    state: "California",
-    zipcode: 90210,
-    country: "US",
     phone: "+1-555-123-4567",
   },
   {
@@ -446,9 +443,6 @@ export const dummyAddress = [
     email: "janesmith@gmail.com",
     street: "456 Elm Street",
     city: "Metropolis",
-    state: "CA",
-    zipcode: "998877",
-    country: "United States",
     phone: "9876543210",
   },
 
@@ -461,19 +455,19 @@ export const dummyOrdersData = [
     userId: "1",
     items: [
       {
-        product: dummyProducts[0], // Argan Hair Oil
+        product: dummyProducts[0], // Beef Curry Udon
         quantity: 1,
-        size: "50ml",
+        size: "M",
         _id: "1",
       },
       {
-        product: dummyProducts[3], // Tea Tree Hair Oil
+        product: dummyProducts[3], // Beef Curry Udon
         quantity: 2,
-        size: "100ml",
+        size: "L",
         _id: "2",
       },
     ],
-    amount: 40.6,
+    amount: 427000,
     address: dummyAddress[0],
     status: "Out for delivery",
     paymentMethod: "COD",
@@ -487,19 +481,19 @@ export const dummyOrdersData = [
     userId: "1",
     items: [
       {
-        product: dummyProducts[8], // Vitamin C Face Oil
+        product: dummyProducts[1], // Beef Curry Udon
         quantity: 1,
-        size: "30ml",
+        size: "M",
         _id: "1",
       },
       {
-        product: dummyProducts[24], // Volumizing Shampoo
+        product: dummyProducts[4], // Beef Curry Udon
         quantity: 3,
-        size: "400ml",
+        size: "L",
         _id: "2",
       },
     ],
-    amount: 85.0,
+    amount: 586000,
     address: dummyAddress[0],
     status: "Delivered",
     paymentMethod: "Online",

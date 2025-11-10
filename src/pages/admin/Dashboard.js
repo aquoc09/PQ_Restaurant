@@ -24,14 +24,14 @@ function Dashboard() {
     <div>
       <div>
         <div>
-          <img src={myAssets.graph} className="hidden sm:flex w-8" />
+          <img src={myAssets.graph} alt="" className="hidden sm:flex w-8" />
           <div>
             <h4>{dashBoardData?.totalOrders?.toString().padStart(2,"0")}</h4>
             <h5 className='text-solid'>Total Sales</h5>
           </div>
         </div>
         <div>
-          <img src={myAssets.dollar} className="hidden sm:flex w-8" />
+          <img src={myAssets.dollar} alt="" className="hidden sm:flex w-8" />
           <div>
             <h4>{dashBoardData?.totalRevenue?.toFixed(2 || 0)}</h4>
             <h5 className='text-solid'>Total Earning</h5>
@@ -40,7 +40,7 @@ function Dashboard() {
       </div>
       {/* All Orders */}
       <div>
-        {dashBoardData.orders.map((order)=>(
+        {dummyOrdersData.map((order)=>(
         <div key={order._id} className='bg-white p-2 mt-3 rounded-2xl'>
           <div className='flex flex-wrap gap-8 gap-y-3 mb-3'>
             {/* Order Items */}
@@ -48,7 +48,7 @@ function Dashboard() {
               <div key={idx} className='text-gray-700 w-full lg:w-1/3'>
                 <div className='flex flex-[2] gap-x-3'>
                   <div className='flexCenter bg-primary rounded-xl'>
-                    <img src={item.product.images[0]} className='max-h-20 max-w-20 object-contain' />
+                    <img src={item.product.img[0]} alt="" className='max-h-20 max-w-20 object-contain' />
                   </div>
                   <div className='block w-full'>
                     <h5 className='uppercase line-clamp-1'>{item.product.title}</h5>
@@ -84,8 +84,30 @@ function Dashboard() {
                 <div className='flex items-center gap-x-2'>
                   <h5 className='text-sm font-medium'>OrderId:</h5>
                   <p className='text-gray-400 text-sm break-all'>
-                        {order.id}
+                        {order._id}
                   </p>
+                </div>
+                <div className='flex gap-4'>
+                  <div className='flex items-center gap-x-2'>
+                    <h5 className='text-sm font-medium'>Customer:</h5>
+                    <p className='text-gray-400 text-sm break-all'>
+                          {order.address.firstName} {order.address.lastName}
+                    </p>
+                    <div className='flex items-center gap-x-2'>
+                      <h5 className='text-sm font-medium'>Phone:</h5>
+                      <p className='text-gray-400 text-sm'>
+                            {order.address.phone}
+                      </p>
+                    </div>
+                </div>
+                </div>
+                <div className='flex gap-4'>
+                  <div className='flex items-center gap-x-2'>
+                    <h5 className='text-sm font-medium'>Address:</h5>
+                    <p className='text-gray-400 text-sm break-all'>
+                          {order.address.street}, {order.address.city}
+                    </p>
+                </div>
                 </div>
                 <div className='flex gap-4'>
                   <div className='flex items-center gap-x-2'>
@@ -106,13 +128,13 @@ function Dashboard() {
                   <div className='flex items-center gap-x-2'>
                     <h5 className='text-sm font-medium'>Date:</h5>
                     <p className='text-gray-400 text-sm '>
-                          {new Date(order.createAt).toDateString()}
+                          {new Date(order.createdAt).toDateString()}
                     </p>
                   </div>
                     <div className='flex items-center gap-x-2'>
-                      <h5 className='text-sm font-medium'>Amout:</h5>
+                      <h5 className='text-sm font-medium'>Amount:</h5>
                       <p className='text-gray-400 text-sm'>
-                            {order.amount}
+                            {order.amount}{currency}
                       </p>
                     </div>
                 </div>

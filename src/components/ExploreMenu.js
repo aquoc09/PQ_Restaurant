@@ -14,14 +14,28 @@ const ExploreMenu = ({category, setCategory}) => {
     try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${environment.apiBaseUrl}/ `); //Này để chuyển đường dẫn
-        if (response.data) // Điều kiện response
-        {
+        // Lấy menu categories từ products hoặc từ endpoint riêng
+        const response = await axios.get(`${environment.apiBaseUrl}/categories`); // Endpoint để lấy danh sách categories
+        if (response.data) {
             setMenuLists(response.data); 
         }
     } catch (err) {
-      setError('Failed to fetch MenuLists');
-      console.error('Error fetching MenuLists:', err);
+      // Nếu không có endpoint categories, lấy từ products và tạo menu list
+      try {
+        const productsResponse = await axios.get(`${environment.apiBaseUrl}/products`);
+        if (productsResponse.data && Array.isArray(productsResponse.data)) {
+          const uniqueCategories = [...new Set(productsResponse.data.map(p => p.category).filter(Boolean))];
+          // Tạo menu list từ categories (có thể cần thêm img từ backend)
+          const menuListFromProducts = uniqueCategories.map(cat => ({
+            name: cat,
+            img: null // Có thể cần lấy từ backend hoặc sử dụng default image
+          }));
+          setMenuLists(menuListFromProducts);
+        }
+      } catch (productsErr) {
+        setError('Failed to fetch MenuLists');
+        console.error('Error fetching MenuLists:', productsErr);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import adminService from '../../services/adminService';
+import adminService from '../../services/AdminService';
 
 function AdminNavbar() {
   const navigate = useNavigate();

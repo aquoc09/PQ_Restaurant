@@ -9,8 +9,12 @@ import 'swiper/css';
 import { Autoplay } from 'swiper/modules';
 //import { promotion } from '../assets/assets';
 import ItemPromotions from './ItemPromotions';
+<<<<<<< HEAD
+import PromotionService from "../services/PromotionService";
+=======
 //import to get data from api
 import PromotionService from '../services/PromotionService';
+>>>>>>> 8c1bbcfd3283c6ec2ede07760d68da1bec8066c3
 
 const Promotion = () => {
 
