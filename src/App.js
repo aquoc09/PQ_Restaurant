@@ -11,7 +11,7 @@ import Cart from './pages/Cart';
 import AddressForm from './pages/AddressForm';
 import MyOrders from './pages/MyOrders';
 import { Toaster } from 'react-hot-toast';
-// import Sidebar from './components/admin/Sidebar';
+import Sidebar from './components/admin/Sidebar';
 import Dashboard from './pages/admin/Dashboard';
 import AddProducts from './pages/admin/AddProducts';
 import ListProducts from './pages/admin/ListProducts';
@@ -84,7 +84,8 @@ function App() {
 
     {/* Tuyến đường riêng dành cho Admin */}
         <Route path='/admin' element={<AdminRoute />}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Sidebar />} />
+          <Route path='dashboard' element={<Dashboard />} />
           <Route path='add-product' element={<AddProducts />} />
           <Route path='list-product' element={<ListProducts />} />
         </Route>

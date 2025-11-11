@@ -51,6 +51,7 @@ import basket from './basket.svg'
 import menu from './menu.svg'
 import menu_close from './menu-close.svg'
 import user from './user.svg'
+import admin from './user.png'
 import user1 from './user1.png'
 import user2 from './user2.png'
 import user3 from './user3.png'
@@ -140,6 +141,7 @@ import dollar from './dollar.svg'
 
 
 export const myAssets = {
+    admin,
     mail,
     dollar,
     right,

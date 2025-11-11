@@ -2,7 +2,8 @@ import React, { useEffect } from 'react'
 import { useUserContext } from '../../context/UserContext';
 import { myAssets } from '../../assets/assets';
 import { Link, NavLink, Outlet } from 'react-router-dom';
-import AdminNavbar from './Navbar';
+// import AdminNavbar from './Navbar';
+import AdminButton from './AdminButton'
 // import {UserButton} from "@clerk"
 
 function Sidebar() {
@@ -52,7 +53,8 @@ function Sidebar() {
               </div>
               {/* User */}
               <div className='md:hidden flex items-center gap-3 md:bg-primary rounded-b-xl p-2 pl-5 lg:pl-10 md:mt-10'>
-                <AdminNavbar />
+                {/* <AdminNavbar /> */}
+                <AdminButton />
               </div>
             </div>
             <div className='flex md:flex-col md:gap-x-5 gap-y-8 md:mt-4'>
@@ -75,7 +77,8 @@ function Sidebar() {
             </div>
           </div>
           <div className='hidden md:flex items-center gap-3 md:bg-primary rounded-b-xl p-2 pl-5 lg:pl-10 md:mt-10 border-t border-slate-900/15'>
-            <AdminNavbar /> 
+            {/* <AdminNavbar /> */}
+            <AdminButton />
           </div>
         </div>
         {/* Right Side */}

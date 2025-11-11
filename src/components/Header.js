@@ -4,15 +4,18 @@ import { myAssets } from '../assets/assets'
 import Navbar from './Navbar'
 // import {useClerk,UserButton}from "@clerk/clerk-react"
 import { useUserContext } from '../context/UserContext'
+import useAuth from '../hooks/useAuth'
+import UserButton from './UserButton'
 
 const Header = () => {
 
   const [menuOpened, setMenuOpened] = useState(false);
 
   const toggleMenu = ()=>setMenuOpened(prev => !prev);
+  const {isUser} = useAuth();
 
   // const {openSignIn}=useClerk();
-  const {navigate, user, getCartCount}=useUserContext();
+  const {navigate, getCartCount}=useUserContext();
   const isHomePage=useLocation().pathname.endsWith('/')
 
   const OrdersIcon =()=>(
@@ -81,12 +84,18 @@ const Header = () => {
 
         {/* USER PROFILE */}
         <div>
+          {isUser ? <UserButton /> : 
+          `
+            <div>
           <button onClick={()=>{
                 navigate("/login")}} className='px-6 py-3 active:scale-95 transition bg-solid border-gray-500/20 text-black text-sm font-medium rounded-full cursor-pointer flex justify-center items-center gap-2'>
           Login
           <img src={myAssets.user} alt="" />
         </button>
         </div>
+          `}
+        </div>
+        
         {/* <div>
           {user ? (
             <UserButton
