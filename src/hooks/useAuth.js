@@ -3,9 +3,9 @@ import { jwtDecode } from 'jwt-decode';
 import AuthService from '../services/AuthService'; // Giả định đường dẫn tới AuthService
 
 // Constants for Role Names (nên định nghĩa cố định để tránh lỗi chính tả)
-const ROLE_ADMIN_STRING = "ADMIN";
-const ROLE_USER_STRING = "USER";
-const ROLE_MANAGER_STRING = "MANAGER";
+const ROLE_ADMIN_STRING = "ROLE_ADMIN";
+const ROLE_USER_STRING = "ROLE_USER";
+const ROLE_MANAGER_STRING = "ROLE_MANAGER";
 
 export const useAuth = () => {
     const navigate = useNavigate();

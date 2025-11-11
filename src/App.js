@@ -56,6 +56,8 @@ function App() {
         <Route path='/menu' element={<MainLayout><Menu /></MainLayout>} />
         <Route path='/blog' element={<MainLayout><Blog /></MainLayout>} />
         <Route path='/contact' element={<MainLayout><Contact /></MainLayout>} />
+        <Route path='/login' element={<MainLayout><Login /></MainLayout>} />
+        <Route path='/signup' element={<MainLayout><Signup /></MainLayout>} />
 
         <Route element={<PublicRoute />}>
           <Route path='/login' element={<MainLayout><Login /></MainLayout>} />
