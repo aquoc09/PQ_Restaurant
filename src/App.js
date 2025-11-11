@@ -21,9 +21,10 @@ import AdminRoute from './components/AdminRoutes';
 import UserRoute from './components/UserRoute';
 import PublicRoute from './components/PublicRoutes';
 import { AuthProvider } from './context/AuthContext';
+import useAuth from './hooks/useAuth';
 // import AdminLogin from './components/admin/Login';
 // import { useUserContext } from './context/UserContext';
-// import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 const MainLayout = ({ children }) => {
   return (
@@ -35,11 +36,21 @@ const MainLayout = ({ children }) => {
   );
 };
 
-// const ProtectedAdminRoute = ({ children }) => {
-//   const { isAdmin } = useUserContext();
+const ProtectedAdminRoute = ({ children }) => {
+  const { isAdmin } =useAuth();
   
-//   if (!isAdmin) {
-//     return <Navigate to="/admin/login" replace />;
+  if (!isAdmin()) {
+    return <Navigate to="/admin" replace />;
+  }
+
+  return children;
+};
+
+// const ProtectedUserRoute = ({ children }) => {
+//   const { isUser } =useAuth();
+  
+//   if (!isUser()) {
+//     return <Navigate to="/" replace />;
 //   }
 
 //   return children;
@@ -84,7 +95,13 @@ function App() {
 
     {/* Tuyến đường riêng dành cho Admin */}
         <Route path='/admin' element={<AdminRoute />}>
-          <Route element={<Sidebar />}>
+          <Route path='*'
+            element={
+              
+              <ProtectedAdminRoute>
+                <Sidebar />
+              </ProtectedAdminRoute>
+            }>
             <Route index element={<Dashboard />} />
             <Route path='add-product' element={<AddProducts />} />
             <Route path='list-product' element={<ListProducts />} />
@@ -94,9 +111,9 @@ function App() {
 
         {/* Tuyến đường riêng dành cho User */}
         <Route path= '/' element={<UserRoute />}>
-          <Route path='/cart' element={<MainLayout><Cart /></MainLayout>} />
-          <Route path='/address-form' element={<MainLayout><AddressForm /></MainLayout>} />
-          <Route path='/my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
+          <Route path='cart' element={<MainLayout><Cart /></MainLayout>} />
+          <Route path='address-form' element={<MainLayout><AddressForm /></MainLayout>} />
+          <Route path='my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
         </Route>
       </Routes>
       </AuthProvider>

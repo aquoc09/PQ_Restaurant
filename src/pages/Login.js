@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../services/AuthService';
+import { jwtDecode } from 'jwt-decode';
 import {useAuth} from '../hooks/useAuth'
 import {useAuthContext} from '../context/AuthContext'
+
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -10,8 +12,10 @@ const Login = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { isAdmin, isManager } = useAuth();
   const { refreshAuthStatus } = useAuthContext();
+  const ROLE_ADMIN_STRING = "ROLE_ADMIN";
+  const ROLE_USER_STRING = "ROLE_USER";
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,14 +33,16 @@ const Login = () => {
       localStorage.setItem('refreshToken', refreshToken); // Lưu Refresh Token
       refreshAuthStatus();
       alert('Đăng nhập thành công!');
+
+      const decodedToken = jwtDecode(token);
+      const userScope = decodedToken?.scope?.trim() || '';
+
       
       // 2. KIỂM TRA VAI TRÒ VÀ ĐIỀU HƯỚNG
-      if (isAdmin()) {
-          navigate('/admin');
+      if (userScope === ROLE_ADMIN_STRING) {
+        navigate('/admin');
       }
-      else if(isManager()) {
-          navigate('/manager'); 
-      }else {
+      else {
           navigate('/'); 
       }
 

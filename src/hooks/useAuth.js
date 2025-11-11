@@ -7,7 +7,7 @@ const ROLE_ADMIN_STRING = "ROLE_ADMIN";
 const ROLE_USER_STRING = "ROLE_USER";
 const ROLE_MANAGER_STRING = "ROLE_MANAGER";
 
-export const useAuth = () => {
+export const useAuth = ()=> {
     const navigate = useNavigate();
 
     // 1. Hàm giải mã token và lấy payload

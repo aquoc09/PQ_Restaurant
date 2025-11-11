@@ -64,19 +64,19 @@ const AdminButton = () => {
                     disabled={loading}
                 >
                     {/* Avatar */}
-                    <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+                    <div className="w-8 h-8 rounded-full text-black flex items-center justify-center font-semibold">
                         <img src={myAssets.admin} alt="Admin Avatar" className="w-8 h-8 rounded-full object-cover"/>
                         <span className="text-sm font-medium">{username || 'Admin'}</span>
                     </div>
                     
                     {/* Icon Mũi tên */}
-                    <svg className={`w-3 h-3 text-gray-500 transform ${isOpen ? 'rotate-180' : ''}`}
-                    viewBox="0 0 20 20"
+                    {/* <svg className={`w-3 h-3 text-gray-500 transform ${isOpen ? 'rotate-180' : ''}`}
+                    viewBox="0 15 25 25"
                     fill="currentColor"
                     aria-hidden="true"
                 >
                     <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                    </svg>
+                    </svg> */}
                 </button>
 
                 {/* Dropdown Menu */}
