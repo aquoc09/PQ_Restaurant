@@ -1,5 +1,5 @@
 import React ,{useState,useMemo, useEffect} from 'react'
-import Item from './Item'
+import Items from './Items'
 // import { useUserContext } from '../context/UserContext'
 import ExploreMenu from './ExploreMenu'
 import SearchInput from './SearchInput'
@@ -99,7 +99,7 @@ const FoodItems = () => {
 
   return (
       <div className='max-padd-container !px-0 mt-[72px]'>
-        <ExploreMenu category={categories} setCategory={setCategories}/>
+        {/* <ExploreMenu category={categories} setCategory={setCategories}/> */}
         {/* CONTAINER */}
         <div className='flex flex-row sm:flex-row flex-wrap'>
           {/* Filter - Left Side */}
@@ -148,14 +148,14 @@ const FoodItems = () => {
                 xl:grid-cols-4 gap-x-10'>
                   {products.length >0 ?(
                     products.map((product)=>(
-                      <Item key={product.id} product={product}/>
+                      <Items key={product.id} product={product}/>
                   ))
                   ) : (
                     <p className='captilize'>Không tìm thấy sản phẩm</p>
                     )}
                 </div>
                 {/* Pagination */}
-                <div className='flexCenter fle flex-wrap mt-14 mb-10 gap-4'>
+                <div className='flexCenter flex flex-wrap mt-14 mb-10 gap-4'>
                   <button disabled={currentPage===1} onClick={()=>setCurrentPage(prev=>prev-1)} 
                   className={`btn-light !py-1 !px-3 
                   ${currentPage === 1 && "opacity-50 cursor-not-allowed"}`}>

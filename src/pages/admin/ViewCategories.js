@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ListProducts() {
+function ViewCategories() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function ListProducts() {
   )
 }
 
-export default ListProducts
+export default ViewCategories

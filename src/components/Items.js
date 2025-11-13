@@ -3,12 +3,21 @@ import { myAssets } from '../assets/assets'
 import { useUserContext } from '../context/UserContext';
 
 
-const Item = ({product}) => {
+const Items = ({product}) => {
 
 const[size, setSize]=useState(product.prices[0]?.size || "");
 const[price, setPrice] = useState(product.prices[0]?.price || 0);
 const {currency, addToCart}=useUserContext();
 const imageSrc = myAssets[product.productImage];
+const formatCurrency = (value) => {
+    if (typeof value !== "number" || isNaN(value)) return "";
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      minimumFractionDigits: 0, // Không hiển thị số lẻ
+    }).format(value);
+  };
+// const imageSrc = product.productImage;
 
   return (
         <div className='relative mt-24 group'>
@@ -63,7 +72,7 @@ const imageSrc = myAssets[product.productImage];
                     </button>
                 ))}
             </div>
-            <h4 className='text-red-700'>{price}{currency}</h4>
+            <h4 className='text-red-700'>{formatCurrency(price)}</h4>
         </div>
         {/* Order Info & Cart Add */}
         <div className='flex justify-between items-center rounded-xl pl-5 text-[13px] font-semibold'>
@@ -90,4 +99,4 @@ const imageSrc = myAssets[product.productImage];
   )
 }
 
-export default Item
+export default Items

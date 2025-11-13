@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import Title from './Title'
-import Item from './Item';
+import Items from './Items';
 // import { useUserContext } from '../context/UserContext';
 import { environment } from '../environment/environment';
 import axios from 'axios';
@@ -50,7 +50,7 @@ const PopularProducts = () => {
       lg:grid-cols-4 xl:grid-cols-5 gap-8'>
         {items.map((product)=>(
           <div key={product.id}>
-            <Item product={product} /> 
+            <Items product={product} /> 
           </div>
         ))}
       </div>

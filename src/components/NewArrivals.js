@@ -8,7 +8,7 @@ import 'swiper/css';
 
 // import required modules
 import { Autoplay } from 'swiper/modules';
-import Item from './Item';
+import Items from './Items';
 import { environment } from '../environment/environment';
 import axios from 'axios';
 
@@ -70,7 +70,7 @@ const NewArrivals = () => {
       >
         {newArrivals.map((product)=>(
           <SwiperSlide key={product.id}>
-            <Item product={product} /> 
+            <Items product={product} /> 
           </SwiperSlide>
         ))}
       </Swiper>

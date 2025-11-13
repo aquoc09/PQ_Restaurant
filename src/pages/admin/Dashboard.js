@@ -21,16 +21,16 @@ function Dashboard() {
 }, [isAdmin])
 
   return (
-    <div>
-      <div>
-        <div>
+    <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
+      <div className='grid grid-cols-2 gap-4'>
+        <div className='flexStart gap-7 p-5 bg-[#fff4d2] lg:min-w-56 rounded-xl'>
           <img src={myAssets.graph} alt="" className="hidden sm:flex w-8" />
           <div>
             <h4>{dashBoardData?.totalOrders?.toString().padStart(2,"0")}</h4>
             <h5 className='text-solid'>Total Sales</h5>
           </div>
         </div>
-        <div>
+        <div className='flexStart gap-7 p-5 bg-[#fff4d2] lg:min-w-56 rounded-xl'>
           <img src={myAssets.dollar} alt="" className="hidden sm:flex w-8" />
           <div>
             <h4>{dashBoardData?.totalRevenue?.toFixed(2 || 0)}</h4>
@@ -39,7 +39,7 @@ function Dashboard() {
         </div>
       </div>
       {/* All Orders */}
-      <div>
+      <div className='bg-primary'>
         {dummyOrdersData.map((order)=>(
         <div key={order._id} className='bg-white p-2 mt-3 rounded-2xl'>
           <div className='flex flex-wrap gap-8 gap-y-3 mb-3'>
@@ -139,16 +139,16 @@ function Dashboard() {
                     </div>
                 </div>
                 </div>
-
-                  <div className='flex gap-3'>
                     <div className='flex items-center gap-x-2'>
                       <h5 className='text-sm font-medium'>Status:</h5>
-                      <div className='flex items-center gap-1'>
-                        <span className='min-w-2 h-2 rounded-full bg-green-500'></span>
-                        <p>{order.status}</p>
-                      </div>
-                    </div>
-                    <button className='btn-solid !py-1 !text-xs rounded-sm'>Track Order</button>
+                      <select value={order.status} className='ring-1
+           ring-slate-900/5 rounded bg-primary text-sm font-semibold p-1'>
+                        <option value="Order Placed">Order Placed</option>
+                        <option value="Packing">Packing</option>
+                        <option value="Shipping">Shipping</option>
+                        <option value="Out for delivery">Out for delivery</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
                 </div>
             </div>
         </div>

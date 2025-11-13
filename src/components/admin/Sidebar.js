@@ -27,7 +27,33 @@ function Sidebar() {
       path:"/admin/list-product",
       label:"List Product",
       icon: myAssets.list,
-    }
+    },
+    {
+      path:"/admin/list-promotion",
+      label:"List Promotion",
+      icon: myAssets.list,
+    },
+    {
+      path:"/admin/list-banner",
+      label:"List Banner",
+      icon: myAssets.list,
+    },
+    {
+      path:"/admin/list-about",
+      label:"List About",
+      icon: myAssets.list,
+    },
+    {
+      path:"/admin/list-comment",
+      label:"List Comment",
+      icon: myAssets.list,
+    },
+    {
+      path:"/admin/list-blog",
+      label:"List Blog",
+      icon: myAssets.list,
+    },
+    
   ];
 
   useEffect(() => {

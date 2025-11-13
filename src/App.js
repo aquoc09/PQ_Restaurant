@@ -14,7 +14,8 @@ import { Toaster } from 'react-hot-toast';
 import Sidebar from './components/admin/Sidebar';
 import Dashboard from './pages/admin/Dashboard';
 import AddProducts from './pages/admin/AddProducts';
-import ListProducts from './pages/admin/ListProducts';
+import ViewProducts from './pages/admin/ViewProducts';
+import ListProduct from './pages/admin/ListProduct';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminRoute from './components/AdminRoutes';
@@ -96,7 +97,7 @@ function App() {
         </Route> */}
 
     {/* Tuyến đường riêng dành cho Admin */}
-        <Route path='/admin' element={<AdminRoute />}>
+        {/* <Route path='/admin' element={<AdminRoute />}>
           <Route path='*'
             element={
               
@@ -106,9 +107,25 @@ function App() {
             }>
             <Route index element={<Dashboard />} />
             <Route path='add-product' element={<AddProducts />} />
-            <Route path='list-product' element={<ListProducts />} />
+            <Route path='list-product' element={<ViewProducts />} />
+            <Route path='list-promotion' element={<ViewProducts />} />
+            <Route path='list-banner' element={<ViewProducts />} />
+            <Route path='list-about' element={<ViewProducts />} />
+            <Route path='list-comment' element={<ViewProducts />} />
+            <Route path='list-blog' element={<ViewProducts />} />
           </Route>
           <Route path="login" element={<MainLayout><Login /></MainLayout>} />
+        </Route> */}
+        <Route path='/admin' element={<Sidebar />}>
+        <Route index element={<Dashboard />} />
+            <Route path='add-product' element={<AddProducts />} />
+            {/* <Route path='list-product' element={<ListProduct />} /> */}
+            <Route path='list-product' element={<ViewProducts />} />
+            <Route path='list-promotion' element={<ViewProducts />} />
+            <Route path='list-banner' element={<ViewProducts />} />
+            <Route path='list-about' element={<ViewProducts />} />
+            <Route path='list-comment' element={<ViewProducts />} />
+            <Route path='list-blog' element={<ViewProducts />} />
         </Route>
 
         {/* Tuyến đường riêng dành cho User */}
@@ -116,6 +133,7 @@ function App() {
           <Route path='cart' element={<MainLayout><Cart /></MainLayout>} />
           <Route path='address-form' element={<MainLayout><AddressForm /></MainLayout>} />
           <Route path='my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
+          
         </Route>
       </Routes>
       </AuthProvider>

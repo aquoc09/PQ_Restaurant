@@ -138,9 +138,11 @@ import blog8 from './blog8.jpg'
 import mail from './mail.svg'
 import right from './right.svg'
 import dollar from './dollar.svg'
+import upload_icon from './upload_icon.png'
 
 
 export const myAssets = {
+  upload_icon,
     admin,
     mail,
     dollar,
