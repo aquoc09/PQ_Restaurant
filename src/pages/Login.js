@@ -43,7 +43,7 @@ const Login = () => {
         navigate('/admin');
       }
       else {
-          navigate('/home'); 
+          navigate('/'); 
       }
 
     } catch (err) {

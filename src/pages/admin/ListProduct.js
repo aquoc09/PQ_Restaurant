@@ -28,7 +28,7 @@ function AdminProductList() {
             );
             
             // Dữ liệu sản phẩm nằm trong response.data.result (là ProductListResponse)
-            const productListResponse = response.data.result; 
+            const productListResponse = response.result; 
 
             setProducts(productListResponse.products);
             setTotalPages(productListResponse.totalPages);

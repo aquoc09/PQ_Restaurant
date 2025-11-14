@@ -24,9 +24,6 @@ const CategoryFilter = ({ categories, selectedCategoryId, onCategoryChange, load
                         }
                     >
                         {category.name}
-                        {category.subCategories && category.subCategories.length > 0 && (
-                        <span className="text-gray-400 ml-2">({category.subCategories.length})</span>
-                        )}
                     </button>
                 ))}
                 {categories.map((category) => (

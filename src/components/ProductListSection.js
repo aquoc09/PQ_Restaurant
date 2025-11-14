@@ -36,10 +36,11 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword }) => {
                     ITEMS_PER_PAGE
                 ); 
                 
-                const productListResponse = response.data.result; 
+                const productListResponse = response.result;
 
                 setProducts(productListResponse.products);
                 setTotalPages(productListResponse.totalPages);
+
                 
             } catch (err) {
                 // console.error("Lỗi khi tải sản phẩm:", err);
@@ -68,6 +69,7 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword }) => {
         <div>
             {/* DANH SÁCH SẢN PHẨM */}
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10'>
+                {console.log(totalPages)}
                 {products.length > 0 ? (
                     products.map((product) => (
                         <Items key={product.id} product={product} />
@@ -80,7 +82,6 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword }) => {
             {/* PHÂN TRANG */}
             {totalPages > 1 && (
                 <div className='flex justify-center items-center flex-wrap mt-14 mb-10 gap-3'>
-                    
                     <button 
                         disabled={currentPage === 1} 
                         onClick={() => setCurrentPage(prev => prev - 1)} 

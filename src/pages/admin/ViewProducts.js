@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import ProductService from '../../services/ProductService';
 import { toast } from 'react-toastify';
+import { myAssets } from '../../assets/assets';
 
 function ViewProducts() {
 
@@ -23,10 +24,10 @@ function ViewProducts() {
             const response = await ProductService.getProducts(
                 '', 
                 0, 
-                0, 
-                20
+                page - 1, 
+                10
             );
-            const productListResponse = response.data.result;
+            const productListResponse = response.result;
             setProducts(productListResponse.products);
             setTotalPages(productListResponse.totalPages);
             setCurrentPage(page);
@@ -57,23 +58,30 @@ function ViewProducts() {
     <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
       <h2 className='text-2xl font-bold mb-4'>Quản lý Sản phẩm ({products.length})</h2>
       <div className='flex flex-col gap-2 lg:w-11/12'>
-        <div className='grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center py-4 px-2 bg-solid text-white 
+        <div className='grid grid-cols-[1.5fr_1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center py-4 px-2 bg-solid text-white 
         bold-14 sm:bold-15 mb-1 rounded-xl'>
+          <h5>Number</h5>
           <h5>Image</h5>
           <h5>Title</h5>
           <h5>Category</h5>
-          <h5>Price</h5>
+          <h5>Size/Price</h5>
           <h5>Instock</h5>
           <h5>Action</h5>
         </div>
 
         {/* Product List */}
         {products.map((product)=>(
-        <div key={product.id} className='grid grid-cols-[1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
-          <img src={product.productImage} alt="" className='w-12 bg-primary rounded'/>
-          <h5 className='text-sm font-semibold line-clamp-2'>{product.title}</h5>
-          <p className='text-sm font-semibold'>{product.category}</p>
-          <div className='text-sm font-semibold'>{formatCurrency(product.price[product.sizes[0]])}</div>
+        <div key={product.id} className='grid grid-cols-[1.5fr_1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
+          <p>1</p>
+          <img src={myAssets[product.productImage]} alt="" className='w-12 bg-primary rounded'/>
+          <h5 className='text-sm font-semibold line-clamp-2'>{product.name}</h5>
+          <p className='text-sm font-semibold'>{product.categoryCode}</p>
+          <div className='text-sm font-semibold'>{product.prices.map((p, index) => (
+                                                  <div key={index}>
+                                                    {p.size}: {formatCurrency(p.price)}
+                                                  </div>
+                                                ))}
+          </div>
           <div>
             <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
               <input type='checkbox' className='sr-only peer' defaultChecked={product.inStock}></input>
