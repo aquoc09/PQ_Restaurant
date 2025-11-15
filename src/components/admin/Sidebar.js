@@ -19,11 +19,6 @@ function Sidebar() {
       icon: myAssets.dashboard,
     },
     {
-      path:"/admin/add-product",
-      label:"Add Product",
-      icon: myAssets.square_plus,
-    },
-    {
       path:"/admin/list-product",
       label:"List Product",
       icon: myAssets.list,
