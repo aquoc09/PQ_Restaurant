@@ -15,6 +15,9 @@ import Sidebar from './components/admin/Sidebar';
 import Dashboard from './pages/admin/Dashboard';
 import AddProducts from './pages/admin/AddProducts';
 import ViewProducts from './pages/admin/ViewProducts';
+import ViewPromotion from './pages/admin/ViewPromotion';
+import ViewCategory from './pages/admin/ViewCategory';
+import ViewUser from './pages/admin/ViewUser';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import AdminRoute from './components/AdminRoutes';
@@ -26,6 +29,12 @@ import useAuth from './hooks/useAuth';
 // import { useUserContext } from './context/UserContext';
 import { Navigate } from 'react-router-dom';
 import ForgotPassword from './pages/ForgotPassword';
+import AddCategory from './pages/admin/AddCategory';
+import EditCategory from './pages/admin/EditCategory';
+import AddPromotion from './pages/admin/AddPromotion';
+import EditProduct from './pages/admin/EditProduct';
+import AddUser from './pages/admin/AddUser';
+import EditUser from './pages/admin/EditUser';
 
 const MainLayout = ({ children }) => {
   return (
@@ -117,13 +126,22 @@ function App() {
         </Route> */}
         <Route path='/admin' element={<Sidebar />}>
         <Route index element={<Dashboard />} />
-            <Route path='add-product' element={<AddProducts />} />
-            <Route path='list-product' element={<ViewProducts />} />
-            <Route path='list-promotion' element={<ViewProducts />} />
-            <Route path='list-banner' element={<ViewProducts />} />
-            <Route path='list-about' element={<ViewProducts />} />
-            <Route path='list-comment' element={<ViewProducts />} />
-            <Route path='list-blog' element={<ViewProducts />} />
+        <Route path='list-user' element={<ViewUser />} />
+          <Route path='add-user' element={<AddUser />} />
+          <Route path='edit-user' element={<EditUser />} />
+          <Route path='list-product' element={<ViewProducts />} />
+          <Route path='add-product' element={<AddProducts />} />
+          <Route path='edit-product' element={<EditProduct />} />
+          <Route path='list-category' element={<ViewCategory />} />
+          <Route path='add-category' element={<AddCategory />} />
+          <Route path='edit-category' element={<EditCategory />} />
+          <Route path='list-promotion' element={<ViewPromotion />} />
+          <Route path='add-promotion' element={<AddPromotion />} />
+          <Route path='list-banner' element={<ViewProducts />} />
+          <Route path='list-user' element={<ViewUser />} />
+          <Route path='list-about' element={<ViewProducts />} />
+          <Route path='list-comment' element={<ViewProducts />} />
+          <Route path='list-blog' element={<ViewProducts />} />
         </Route>
 
         {/* Tuyến đường riêng dành cho User */}

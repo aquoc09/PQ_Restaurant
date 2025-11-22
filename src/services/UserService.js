@@ -4,17 +4,69 @@ const USER_API_URL = '/users';
 
 const UserService = {
     // Lấy thông tin cá nhân (Cả User và Admin đều dùng)
-    getMyInfo: () => {
-        return api.get(`${USER_API_URL}/myInfo`);
+
+    getAllUsers: async () => {
+        try {
+            const response = await api.get(USER_API_URL);
+            // BE trả về List<ApiResponse<UserResponse>>. Cần phải trích xuất từng 'result'
+            const userResponses = response.data.map(apiResponse => apiResponse.result);
+            return userResponses;
+        } catch (error) {
+            console.error("Lỗi khi lấy danh sách người dùng:", error);
+            throw error;
+        }
+    },
+
+    getUserById: async (userId) => {
+        try {
+            const response = await api.get(`${USER_API_URL}/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Lỗi khi lấy người dùng ID ${userId}:`, error);
+            throw error;
+        }
+    },
+
+    getMyInfo: async() => {
+        try {
+            const response = await api.get(`${USER_API_URL}/myInfo`);
+            return response.data;
+        } catch (error) {
+            console.error("Lỗi khi lấy thông tin người dùng hiện tại:", error);
+            throw error;
+        }
     },
     
     // Cập nhật thông tin cá nhân
-    updateMyInfo: (updateData) => {
-        // Cần có endpoint update tương tự trong UserController
-        return api.put(`${USER_API_URL}/myInfo`, updateData);
+    updateUser: async (userId, userUpdateRequest) => {
+        try {
+            const response = await api.put(`${USER_API_URL}/${userId}`, userUpdateRequest);
+            return response.data;
+        } catch (error) {
+            console.error(`Lỗi khi cập nhật người dùng ID ${userId}:`, error);
+            throw error;
+        }
     },
     
-    // ... (Thêm các API dành riêng cho User tại đây, ví dụ: Xem đơn hàng)
+    createUser: async (userCreationRequest) => {
+        try {
+            const response = await api.post(USER_API_URL, userCreationRequest);
+            return response.data; 
+        } catch (error) {
+            console.error("Lỗi khi tạo người dùng:", error);
+            throw error;
+        }
+    },
+    deleteUser: async (userId) => {
+        try {
+            const response = await api.delete(`${USER_API_URL}/${userId}`);
+            // BE trả về ApiResponse<String>, chúng ta chỉ trả về tin nhắn
+            return response.data.message;
+        } catch (error) {
+            console.error(`Lỗi khi xóa người dùng ID ${userId}:`, error);
+            throw error;
+        }
+    },
 };
 
 export default UserService;

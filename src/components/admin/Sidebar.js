@@ -19,8 +19,18 @@ function Sidebar() {
       icon: myAssets.dashboard,
     },
     {
+      path:"/admin/list-user",
+      label:"List User",
+      icon: myAssets.list,
+    },
+    {
       path:"/admin/list-product",
       label:"List Product",
+      icon: myAssets.list,
+    },
+    {
+      path:"/admin/list-category",
+      label:"List Category",
       icon: myAssets.list,
     },
     {

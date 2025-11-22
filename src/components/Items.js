@@ -17,6 +17,10 @@ const formatCurrency = (value) => {
       minimumFractionDigits: 0, // Không hiển thị số lẻ
     }).format(value);
   };
+  const handleAddToCart = () => {
+        // Gọi hàm addToCart với quantity = 1
+        addToCart(product.id, size, 1); 
+    };
 // const imageSrc = product.productImage;
 
   return (
@@ -84,7 +88,7 @@ const formatCurrency = (value) => {
                 </div>
             </div>
             <div className='flex flex-col gap-1'>
-                <button onClick={()=>addToCart(product.id,size)}
+                <button onClick={handleAddToCart}
                 className='px-3 py-3 bg-solid border border-gray-500/20 text-black text-sm font-medium rounded-full cursor-pointer flex items-center justify-center'>
                     <img src={myAssets.cart_add} alt="" width={20} />
                 </button>
