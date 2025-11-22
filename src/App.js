@@ -105,7 +105,7 @@ function App() {
         </Route> */}
 
     {/* Tuyến đường riêng dành cho Admin */}
-        {/* <Route path='/admin' element={<AdminRoute />}>
+        <Route path='/admin' element={<AdminRoute />}>
           <Route path='*'
             element={
               
@@ -114,19 +114,28 @@ function App() {
               </ProtectedAdminRoute>
             }>
             <Route index element={<Dashboard />} />
-            <Route path='add-product' element={<AddProducts />} />
-            <Route path='list-product' element={<ViewProducts />} />
-            <Route path='list-promotion' element={<ViewProducts />} />
-            <Route path='list-banner' element={<ViewProducts />} />
-            <Route path='list-about' element={<ViewProducts />} />
-            <Route path='list-comment' element={<ViewProducts />} />
-            <Route path='list-blog' element={<ViewProducts />} />
+              <Route path='list-user' element={<ViewUser />} />
+              <Route path='add-user' element={<AddUser />} />
+              <Route path='edit-user' element={<EditUser />} />
+              <Route path='list-product' element={<ViewProducts />} />
+              <Route path='add-product' element={<AddProducts />} />
+              <Route path='edit-product' element={<EditProduct />} />
+              <Route path='list-category' element={<ViewCategory />} />
+              <Route path='add-category' element={<AddCategory />} />
+              <Route path='edit-category' element={<EditCategory />} />
+              <Route path='list-promotion' element={<ViewPromotion />} />
+              <Route path='add-promotion' element={<AddPromotion />} />
+              <Route path='list-banner' element={<ViewProducts />} />
+              <Route path='list-user' element={<ViewUser />} />
+              <Route path='list-about' element={<ViewProducts />} />
+              <Route path='list-comment' element={<ViewProducts />} />
+              <Route path='list-blog' element={<ViewProducts />} />
           </Route>
           <Route path="login" element={<MainLayout><Login /></MainLayout>} />
-        </Route> */}
-        <Route path='/admin' element={<Sidebar />}>
+        </Route>
+        {/* <Route path='/admin' element={<Sidebar />}>
         <Route index element={<Dashboard />} />
-        <Route path='list-user' element={<ViewUser />} />
+          <Route path='list-user' element={<ViewUser />} />
           <Route path='add-user' element={<AddUser />} />
           <Route path='edit-user' element={<EditUser />} />
           <Route path='list-product' element={<ViewProducts />} />
@@ -142,7 +151,7 @@ function App() {
           <Route path='list-about' element={<ViewProducts />} />
           <Route path='list-comment' element={<ViewProducts />} />
           <Route path='list-blog' element={<ViewProducts />} />
-        </Route>
+        </Route> */}
 
         {/* Tuyến đường riêng dành cho User */}
         <Route path= '/' element={<UserRoute />}>
