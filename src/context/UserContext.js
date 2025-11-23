@@ -3,8 +3,9 @@ import React, { createContext, useContext, useEffect, useState, useCallback } fr
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import CartService from '../services/CartService'; 
-import UserService from '../services/UserService';
+// import UserService from '../services/UserService';
 import ProductService from '../services/ProductService';
+import useAuth from '../hooks/useAuth';
 
 const UserContext = createContext();
 const formatCurrency = (value) => {
@@ -17,13 +18,17 @@ const formatCurrency = (value) => {
 };
 
 export const UserContextProvider = ({ children }) => {
-    // --- State Backend / User ---
-    const [user, setUser] = useState(null); // Thông tin người dùng đăng nhập (UserResponse object)
-    const [cart, setCart] = useState(null); // Giỏ hàng: CartResponse object từ BE
-    const [isAuthenticated, setIsAuthenticated] = useState(false); // Trạng thái đăng nhập
-    const [userLoading, setUserLoading] = useState(true); // Trạng thái tải thông tin user
+    // --- Lấy Auth State từ Hook ---
+    const { 
+        isAuthenticated: isAuth, // Đổi tên biến để tránh trùng lặp
+        userRoles,
+        username,
+        logout: authLogout, // Đổi tên hàm để tránh trùng lặp
+        ...authData // Các dữ liệu khác từ token
+    } = useAuth();
 
     // --- State Cục bộ / Sản phẩm ---
+    const [cart, setCart] = useState(null); // Giỏ hàng: CartResponse object từ BE
     const [products, setProducts] = useState([]);
     const [productLoading, setProductLoading] = useState(false);
 
@@ -55,38 +60,10 @@ export const UserContextProvider = ({ children }) => {
         }
     }, []);
 
-    // --- Lấy thông tin User khi khởi động ---
-    // Giả định hàm này kiểm tra token và tải thông tin user
-    const fetchMyInfo = useCallback(async () => {
-        const token = localStorage.getItem('authToken'); // Giả định dùng authToken
-        if (!token) {
-            setIsAuthenticated(false);
-            setUser(null);
-            setUserLoading(false);
-            return;
-        }
-
-        try {
-            // Lấy thông tin user hiện tại
-            const response = await UserService.getMyInfo();
-            const userData = response.result; // Lấy result từ ApiResponse
-            
-            setUser(userData);
-            setIsAuthenticated(true);
-        } catch (error) {
-            console.error("Lỗi khi tải thông tin người dùng:", error);
-            // Xóa token nếu không hợp lệ
-            localStorage.removeItem('authToken'); 
-            setIsAuthenticated(false);
-            setUser(null);
-        } finally {
-            setUserLoading(false);
-        }
-    }, []);
-
+    
     // --- Lấy Giỏ hàng từ Backend ---
     const fetchCart = useCallback(async () => {
-        if (!isAuthenticated || !user) return;
+        if (!isAuth) return;
         try {
             const cartResponse = await CartService.getCart(); // Lấy CartResponse
             setCart(cartResponse); 
@@ -94,13 +71,13 @@ export const UserContextProvider = ({ children }) => {
             console.error("Lỗi khi tải giỏ hàng:", error);
             setCart({ items: [] }); // Đặt giỏ hàng rỗng nếu lỗi
         }
-    }, [isAuthenticated, user]);
+    }, [isAuth]);
 
     // --- HÀM THAO TÁC GIỎ HÀNG SỬ DỤNG API ---
     
     // 1. Thêm/Cập nhật Sản phẩm vào Giỏ hàng (Sử dụng API)
     const addToCart = async (productId, size, quantity = 1, note = "") => {
-        if (!isAuthenticated) {
+        if (!isAuth) {
             toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
             navigate('/login');
             return;
@@ -121,7 +98,7 @@ export const UserContextProvider = ({ children }) => {
     
     // 2. Xóa 1 mục khỏi Giỏ hàng (API)
     const removeFromCart = async (itemId) => {
-         if (!isAuthenticated) return;
+         if (!isAuth) return;
         try {
             await CartService.deleteItemFromCart(itemId);
             await fetchCart(); // Tải lại giỏ hàng
@@ -133,7 +110,7 @@ export const UserContextProvider = ({ children }) => {
 
     // 3. Cập nhật Số lượng (API)
     const updateQuantity = async (itemId, quantity) => {
-        if (!isAuthenticated) return;
+        if (!isAuth) return;
         try {
             const request = { itemId: itemId, quantity: quantity };
             await CartService.updateItemQuantity(request);
@@ -142,8 +119,6 @@ export const UserContextProvider = ({ children }) => {
             toast.error("Lỗi khi cập nhật số lượng.");
         }
     };
-
-    // --- Logic Tính Toán (Dựa trên dữ liệu `cart` từ BE) ---
     
     // Lấy tổng số lượng mục
     const getCartCount = () => {
@@ -166,25 +141,26 @@ export const UserContextProvider = ({ children }) => {
     // --- Lifecycle Effects ---
     
     useEffect(() => {
-        fetchMyInfo(); // Tải thông tin user khi khởi động
         fetchProducts(); // Giữ lại logic tải dummy product của bạn
-    }, [fetchMyInfo, fetchProducts]); 
+    }, [fetchProducts]); 
     
     useEffect(() => {
-        if (isAuthenticated) {
+        if (isAuth) {
             fetchCart(); // Tải giỏ hàng khi user đã đăng nhập
         }
-    }, [isAuthenticated, fetchCart]);
+    }, [isAuth, fetchCart]);
 
+    const logout = () => {
+        authLogout(); // <-- Gọi hàm logout từ useAuth
+        setCart(null); // Xóa giỏ hàng cục bộ khi đăng xuất
+    };
 
     const value = {
-        // User & Auth
-        user,
-        isAuthenticated,
-        userLoading,
-        setUser, // Cung cấp cho hàm login/logout
-        setIsAuthenticated,
-        fetchMyInfo,
+        // Auth & User (Từ useAuth)
+        user: { username, ...authData }, // Cung cấp thông tin user (username, expirationTime,...)
+        isAuthenticated: isAuth, // Trạng thái đăng nhập
+        userRoles, // Vai trò của user
+        logout,
         
         // Cart
         cart, // Cung cấp object CartResponse

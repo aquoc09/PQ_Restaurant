@@ -12,7 +12,9 @@ function CartTotal() {
     delivery_charges,
     getCartCount,
     getCartAmount,
-    user
+    isAuthenticated,
+    user,
+    userLoading,
   } =useUserContext();
 
   const [addresses, setAddresses] = useState([]);
@@ -21,7 +23,6 @@ function CartTotal() {
   const [addressLoading, setAddressLoading] = useState(true);
 
   const fetchAddresses = useCallback(async () => {
-        if (!user) return;
         setAddressLoading(true);
         try {
             
@@ -44,11 +45,18 @@ function CartTotal() {
         } finally {
             setAddressLoading(false);
         }
-    }, [user]);
+    }, []);
 
     useEffect(() => {
-        fetchAddresses();
-    }, [fetchAddresses]);
+        // Chỉ fetch nếu đã đăng nhập và user chi tiết đã có (nếu dùng fetchUserDetails)
+        if(isAuthenticated) {
+            fetchAddresses();
+        } else {
+            setAddressLoading(false);
+            setAddresses([]);
+            setSelectedAddress(null);
+        }
+    }, [isAuthenticated, fetchAddresses]);
 
     // --- Logic Tính Toán ---
     const cartAmount = getCartAmount(); // Tổng tiền sản phẩm
@@ -60,6 +68,11 @@ function CartTotal() {
     
     // --- Xử lý Đặt hàng (Checkout) ---
     const handleCheckout = () => {
+      if (!isAuthenticated) {
+            toast.error("Vui lòng đăng nhập để tiến hành đặt hàng.");
+            navigate('/login');
+            return;
+        }
         if (cartAmount === 0) {
             toast.error("Giỏ hàng của bạn đang trống.");
             return;
@@ -68,12 +81,14 @@ function CartTotal() {
             toast.error("Vui lòng chọn địa chỉ giao hàng.");
             return;
         }
-        toast.info(`Đặt hàng với ${method} đang được xử lý...`);
+        toast.success(`Đã chuẩn bị đặt hàng. Thanh toán bằng: ${method}.`);
         // navigate('/checkout-page');
     };
 
-    // Kiểm tra nếu chưa có user hoặc đang tải
-    if (!user) return null;
+    if (userLoading || !isAuthenticated) {
+        // Có thể hiển thị component trống nếu Cart.js đã xử lý trạng thái chưa đăng nhập
+        return null; 
+    }
 
   return (
     <div>
