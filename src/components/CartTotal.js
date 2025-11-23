@@ -13,8 +13,6 @@ function CartTotal() {
     getCartCount,
     getCartAmount,
     isAuthenticated,
-    user,
-    userLoading,
   } =useUserContext();
 
   const [addresses, setAddresses] = useState([]);
@@ -85,7 +83,7 @@ function CartTotal() {
         // navigate('/checkout-page');
     };
 
-    if (userLoading || !isAuthenticated) {
+    if (!isAuthenticated) {
         // Có thể hiển thị component trống nếu Cart.js đã xử lý trạng thái chưa đăng nhập
         return null; 
     }

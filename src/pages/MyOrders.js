@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react'
 import Title from '../components/Title'
 import { useUserContext } from '../context/UserContext'
+import { myAssets } from '../assets/assets'
 
 const MyOrders = () => {
 
-  const {currency, user}=useUserContext();
+  const {currency, isAuthenticated}=useUserContext();
   const [orders, setOrders]=useState([]);
 
   const loadOrderData = () => {
@@ -12,10 +13,10 @@ const MyOrders = () => {
   }
 
   useEffect(()=>{
-    if(user){
+    if(isAuthenticated){
       loadOrderData()
     }
-  },[user])
+  },[isAuthenticated])
   
   return (
     <div className='max-padd-container py-16 pt-28 bg-primary'>
@@ -33,7 +34,7 @@ const MyOrders = () => {
               <div key={idx} className='text-gray-700 w-full lg:w-1/3'>
                 <div className='flex flex-[2] gap-x-3'>
                   <div className='flexCenter bg-primary rounded-xl'>
-                    <img src={item.product.images[0]} className='max-h-20 max-w-20 object-contain' />
+                    <img src={myAssets.badge} className='max-h-20 max-w-20 object-contain' />
                   </div>
                   <div className='block w-full'>
                     <h5 className='uppercase line-clamp-1'>{item.product.title}</h5>

@@ -14,8 +14,7 @@ const Cart = () => {
     cart,
     updateQuantity,
     removeFromCart, 
-    isAuthenticated,
-    userLoading, 
+    isAuthenticated, 
   }=useUserContext();
 
   const cartItems = cart?.items || [];
@@ -44,12 +43,7 @@ const Cart = () => {
           removeFromCart(itemId);
       }
     };
-
-    // --- Xử lý Loading và User Not Logged In ---
-    if (userLoading) {
-        return <div className='max-padd-container py-16 text-center'>Đang tải dữ liệu...</div>;
-    }
-
+    
     if (!isAuthenticated) {
         return (
             <div className='max-padd-container py-16 xl:py-28 text-center bg-primary'>

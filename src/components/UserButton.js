@@ -12,7 +12,7 @@ const UserButton = () => {
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     
     // 💡 Lấy thông tin từ useAuth
-    const { username, isUser, logout } = useAuth();
+    const { username, isAuthenticated, logout } = useAuth();
     
     // Logic đóng menu khi click ra ngoài
     useEffect(() => {

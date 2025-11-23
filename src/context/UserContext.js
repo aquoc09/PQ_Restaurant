@@ -148,6 +148,9 @@ export const UserContextProvider = ({ children }) => {
         if (isAuth) {
             fetchCart(); // Tải giỏ hàng khi user đã đăng nhập
         }
+        else {
+            setCart(null); 
+        }
     }, [isAuth, fetchCart]);
 
     const logout = () => {
