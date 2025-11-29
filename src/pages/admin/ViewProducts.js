@@ -69,7 +69,7 @@ function ViewProducts() {
         }
     };
 
-    if (loading) return <div className='p-6'>Đang tải danh sách sản phẩm...</div>;
+  if (loading) return <div className='p-6'>Đang tải danh sách sản phẩm...</div>;
 
   return (
     <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
@@ -82,7 +82,7 @@ function ViewProducts() {
         </button>
       </div>
       <div className='flex flex-col gap-2 lg:w-full'>
-        <div className='grid grid-cols-[1fr_1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center py-4 px-2 bg-solid text-white 
+        <div className='grid grid-cols-[1fr_2fr_2fr_1.5fr_1.5fr_1.5fr_2fr] items-center py-4 px-2 bg-solid text-white 
         bold-14 sm:bold-15 mb-1 rounded-xl'>
           <h5>STT</h5>
           <h5>Image</h5>
@@ -95,7 +95,7 @@ function ViewProducts() {
 
         {/* Product List */}
         {products.map((product, index)=>(
-        <div key={product.id} className='grid grid-cols-[1fr_1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
+        <div key={product.id} className='grid grid-cols-[1fr_2fr_2fr_1.5fr_1.5fr_1.5fr_2fr] items-center gap-2 p-2 bg-white rounded-lg' >
           <p className='text-sm font-semibold'>{(currentPage - 1) * 10 + index + 1}</p>
           <img src={myAssets[product.productImage]} alt="" className='w-12 bg-primary rounded'/>
           <h5 className='text-sm font-semibold line-clamp-2'>{product.name}</h5>
@@ -118,7 +118,7 @@ function ViewProducts() {
           <div className='py-2.5'>
             <button 
             onClick={()=>{navigate(`/admin/edit-promotion/${product.id}`)}} 
-            className='siinline-flex items-center justify-center rounded-md font-medium transition duration-150
+            className='inline-flex items-center justify-center rounded-md font-medium transition duration-150
           bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 text-sm'>
               Edit
             </button>

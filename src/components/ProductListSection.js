@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ProductService from '../services/ProductService'; 
 import Items from './Items'; 
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
 
 const ITEMS_PER_PAGE = 8; 
 

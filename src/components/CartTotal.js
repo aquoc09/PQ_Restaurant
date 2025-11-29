@@ -1,6 +1,7 @@
 import React, {useEffect,useState, useCallback} from 'react'
 import { useUserContext } from '../context/UserContext'
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
+// import useAuth from '../hooks/useAuth';
 
 function CartTotal() {
 
@@ -12,8 +13,11 @@ function CartTotal() {
     delivery_charges,
     getCartCount,
     getCartAmount,
-    isUser,
+    isAuthenticated
+    // isUser,
   } =useUserContext();
+
+  // const {isUser}=useAuth();
 
   const [addresses, setAddresses] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
@@ -47,17 +51,17 @@ function CartTotal() {
 
     useEffect(() => {
         // Chỉ fetch nếu đã đăng nhập và user chi tiết đã có (nếu dùng fetchUserDetails)
-        if(isUser) {
+        if(isAuthenticated) {
             fetchAddresses();
         } else {
             setAddressLoading(false);
             setAddresses([]);
             setSelectedAddress(null);
         }
-    }, [isUser, fetchAddresses]);
+    }, [isAuthenticated, fetchAddresses]);
 
     // --- Logic Tính Toán ---
-    const cartAmount = getCartAmount(); // Tổng tiền sản phẩm
+    const cartAmount = getCartAmount; // Tổng tiền sản phẩm
     const taxRate = 0.08;
     const taxAmount = cartAmount * taxRate;
     const shippingFee = cartAmount === 0 ? 0 : delivery_charges;
@@ -66,7 +70,7 @@ function CartTotal() {
     
     // --- Xử lý Đặt hàng (Checkout) ---
     const handleCheckout = () => {
-      if (!isUser) {
+      if (!isAuthenticated) {
             toast.error("Vui lòng đăng nhập để tiến hành đặt hàng.");
             navigate('/login');
             return;
@@ -82,8 +86,7 @@ function CartTotal() {
         toast.success(`Đã chuẩn bị đặt hàng. Thanh toán bằng: ${method}.`);
         // navigate('/checkout-page');
     };
-
-    if (!isUser) {
+    if (!isAuthenticated) {
         // Có thể hiển thị component trống nếu Cart.js đã xử lý trạng thái chưa đăng nhập
         return null; 
     }
@@ -92,7 +95,7 @@ function CartTotal() {
     <div>
       <h3>
         Order Detials 
-        <span className='text-black font-bold text-lg'>({getCartCount()}) </span>Items
+        <span className='text-black font-bold text-lg'>({getCartCount}) </span>Items
       </h3>
       <hr className='border-gray-300 my-5' />
       Payment & AddressForm
@@ -174,7 +177,7 @@ function CartTotal() {
 
           {/* Giá sản phẩm */}
           <div className='flex justify-between'>
-            <h5>Price ({getCartCount()} items)</h5>
+            <h5>Price ({getCartCount} items)</h5>
             <p className='font-bold text-black'>{formatCurrency(cartAmount)}</p>
           </div>
 

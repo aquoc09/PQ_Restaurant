@@ -77,8 +77,8 @@ const Header = () => {
         <div onClick={()=>navigate('/cart')} className='relative cursor-pointer'>
           <img src={myAssets.cart_added} alt="" className='min-w-[44px] bg-white rounded-full p-2'/>
           <label className="absolute bottom-10 right-1 text-xs font-bold 
-          bg-solidOne text-white flex justify-center items-center rounded-full w-9">
-          {getCartCount()}
+          bg-solid text-white flex justify-center items-center rounded-full w-9">
+          {getCartCount}
             </label>
         </div>
 

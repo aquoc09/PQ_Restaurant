@@ -8,7 +8,7 @@ function ViewCategory() {
     const navigate = useNavigate();
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
-    
+    const [currentPage, setCurrentPage] = useState(1);
     
     const fetchCategories = async () => {
         setLoading(true);
@@ -45,6 +45,7 @@ function ViewCategory() {
         }
     };
 
+
     if (loading) return <div className='p-6'>Đang tải danh sách danh mục...</div>;
 
     return (
@@ -63,11 +64,10 @@ function ViewCategory() {
 
             {/* Bảng Danh Mục */}
             <div className='flex flex-col gap-2 lg:w-full'>
-                <div className='grid grid-cols-[1fr_2fr_1.5fr_1.5fr_2fr_1fr] items-center py-4 px-2 bg-solid text-white bold-14 sm:bold-15 mb-1 rounded-xl'>
+                <div className='grid grid-cols-[1fr_2fr_1.5fr_2fr_1fr] items-center py-4 px-2 bg-solid text-white bold-14 sm:bold-15 mb-1 rounded-xl'>
                     <h5>STT</h5>
                     <h5>Name</h5>
                     <h5>Category Code</h5>
-                    <h5>Status</h5>
                     <h5>Parent Category</h5>
                     <h5>Action</h5>
                 </div>
@@ -76,40 +76,34 @@ function ViewCategory() {
                     <p className='p-4 text-center'>Không có danh mục nào được tìm thấy.</p>
                 ) : (
                     categories.map((cat, index) => (
-                        <div key={cat.id} className='grid grid-cols-[1fr_2fr_1.5fr_1.5fr_2fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
-                            <p className='text-sm font-semibold'>{cat.id}</p>
+                        <div key={cat.id} className='grid grid-cols-[1fr_2fr_1.5fr_2fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
+                            <p className='text-sm font-semibold'>{(currentPage - 1) * 10 + index + 1}</p>
                             <h5 className='text-sm font-semibold line-clamp-2'>{cat.name}</h5>
                             <p className='text-sm font-semibold'>{cat.categoryCode}</p>
-                            <p className='text-sm font-semibold'>
-                                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${cat.status === 'ACTIVE' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                                    {cat.status}
-                                </span>
-                            </p>
                             <p className='text-sm font-semibold'>{cat.parentCategory || 'Không'}</p>
                             <div>
                                 {/* Nút điều hướng đến trang Sửa */}
                                 <button 
                                     onClick={() => navigate(`/admin/edit-category/${cat.id}`)} 
-                                    className='siinline-flex items-center justify-center 
-                                    rounded-md font-medium transition duration-150
-                                  bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 text-sm'
+                                    className='inline-flex items-center justify-center rounded-md font-medium transition duration-150
+                                    bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 text-sm'
                                 >
-                                    Sửa
+                                    Edit
                                 </button>
                                 {/* Nút Xóa */}
                                 <button 
                                     onClick={() => handleDelete(cat.id)} 
-                                    className='text-red-600 hover:text-red-900'
+                                    className='inline-flex items-center justify-center rounded-md 
+                                    font-medium transition duration-150 bg-red-600 hover:bg-red-700 text-white 
+                                    px-2 py-1 text-sm ml-2'
                                 >
-                                    Xóa
+                                    Delete
                                 </button>
                             </div>
                         </div>
                     ))
                 )}
             </div>
-
-            {/* Nếu có phân trang, code phân trang sẽ được thêm ở đây */}
         </div>
     );
 }

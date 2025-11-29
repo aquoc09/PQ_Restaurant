@@ -5,7 +5,7 @@ import { useUserContext } from '../context/UserContext';
 
 const Items = ({product}) => {
 
-const[size, setSize]=useState(product.prices[0]?.size || "");
+const[size, setSize]=useState(product.prices[0]?.size||"");
 const[price, setPrice] = useState(product.prices[0]?.price || 0);
 const {addToCart}=useUserContext();
 const imageSrc = myAssets[product.productImage];
@@ -19,7 +19,7 @@ const formatCurrency = (value) => {
   };
   const handleAddToCart = () => {
         // Gọi hàm addToCart với quantity = 1
-        addToCart(product.id, size, 1); 
+        addToCart(1,size,"abc",product.id); 
     };
 // const imageSrc = product.productImage;
 

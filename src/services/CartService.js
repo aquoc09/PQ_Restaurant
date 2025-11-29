@@ -5,9 +5,9 @@ const CartService = {
 
     getCart: async () => {
         try {
-            const response = await api.get(CART_API_URL);
+            const response = await api.get("/carts");
             // Trả về dữ liệu giỏ hàng (CartResponse)
-            return response.data; 
+            return response.data;
         } catch (error) {
             console.error("Lỗi khi lấy giỏ hàng:", error);
             throw error;
@@ -25,8 +25,8 @@ const CartService = {
     },
     addItemToCart: async (request) => {
         try {
-            const url = `${CART_API_URL}/items`;
-            const response = await api.post(url, request);
+            // const url = `${CART_API_URL}/items`;
+            const response = await api.post("/carts/items", request);
             // Trả về CartItemResponse
             return response.data; 
         } catch (error) {

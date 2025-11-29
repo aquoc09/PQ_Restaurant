@@ -4,6 +4,7 @@ import AuthService from '../services/AuthService';
 import { jwtDecode } from 'jwt-decode';
 import {useAuth} from '../hooks/useAuth'
 import {useAuthContext} from '../context/AuthContext'
+import { toast } from 'react-hot-toast';
 
 
 const Login = () => {
@@ -13,6 +14,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { refreshAuthStatus } = useAuthContext();
+  const { setAccessToken } = useAuth();
   const ROLE_ADMIN_STRING = "ROLE_ADMIN";
   const ROLE_USER_STRING = "ROLE_USER";
 
@@ -31,8 +33,9 @@ const Login = () => {
       // 1. Lưu Token và Vai trò vào Local Storage
       localStorage.setItem('accessToken', token);
       localStorage.setItem('refreshToken', refreshToken); // Lưu Refresh Token
-      refreshAuthStatus();
-      alert('Đăng nhập thành công!');
+      // refreshAuthStatus();
+      setAccessToken(token);
+      toast.success('Đăng nhập thành công!');
 
       const decodedToken = jwtDecode(token);
       const userScope = decodedToken?.scope?.trim() || '';
@@ -45,6 +48,7 @@ const Login = () => {
       else {
           navigate('/'); 
       }
+      window.location.reload();
 
     } catch (err) {
       // Xử lý lỗi đăng nhập

@@ -7,8 +7,8 @@ const UserService = {
 
     getAllUsers: async () => {
         try {
-            const response = await api.get(USER_API_URL);
-            // BE trả về List<ApiResponse<UserResponse>>. Cần phải trích xuất từng 'result'
+            const response = await api.get("/users");
+
             const userResponses = response.data.map(apiResponse => apiResponse.result);
             return userResponses;
         } catch (error) {

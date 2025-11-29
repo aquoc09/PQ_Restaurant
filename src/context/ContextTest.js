@@ -1,13 +1,15 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React , {createContext, useContext, useEffect, useState, useCallback}from 'react'
 // import { dummyProducts } from '../assets/assets';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+// import { useUser } from '@clerk/clerk-react';
 import CartService from '../services/CartService'; 
-// import UserService from '../services/UserService';
 import ProductService from '../services/ProductService';
 import useAuth from '../hooks/useAuth';
+import { toast } from 'react-hot-toast';
 
-const UserContext = createContext();
+
+const UserContext=createContext();
+
 const formatCurrency = (value) => {
     if (typeof value !== "number" || isNaN(value)) return "";
     return new Intl.NumberFormat("vi-VN", {
@@ -17,74 +19,74 @@ const formatCurrency = (value) => {
     }).format(value);
 };
 
-export const UserContextProvider = ({ children }) => {
-    // --- Lấy Auth State từ Hook ---
+export const UserContextProvider = ({children}) => {
+
+    const[products, setProducts]=useState([]);
+    const [cart, setCart] = useState();
+    const [searchQuery, setSearchQuery]=useState("");
+    const delivery_charges=20000;
+    const navigate=useNavigate();
+    // const [cardItems, setCartItems]=useState([]);
+    const[method,setMethod]=useState("COD");
+    // const [isAdmin, setIsAdmin]=useState(() => {
+    //   const adminToken = localStorage.getItem('adminToken');
+    //   return !!adminToken; // Convert to boolean
+    // });
+
     const { 
-        isAuthenticated: isAuth, // Đổi tên biến để tránh trùng lặp
-        userRoles,
-        username,
-        logout: authLogout, // Đổi tên hàm để tránh trùng lặp
-        ...authData // Các dữ liệu khác từ token
+        isUser, 
+        isAuthenticated, // Lấy trạng thái đăng nhập đầy đủ
+        user, // Thông tin user cơ bản từ token (hoặc chi tiết nếu có)
+        logout // Hàm đăng xuất
     } = useAuth();
+    // const [isUser, setIsUser]=useState(true);
+    //Clerk
+    // const {user}=useUser();
 
-    // --- State Cục bộ / Sản phẩm ---
-    const [cart, setCart] = useState(null); // Giỏ hàng: CartResponse object từ BE
-    const [products, setProducts] = useState([]);
-    const [productLoading, setProductLoading] = useState(false);
-
-    const [searchQuery, setSearchQuery] = useState("");
-    const [method, setMethod] = useState("COD");
-    
-    // Giữ nguyên các hằng số
-    const delivery_charges = 20000;
-    const navigate = useNavigate();
-    
-    // Hàm này sẽ được gọi khi component mount hoặc khi cần làm mới danh sách sản phẩm.
-    const fetchProducts = useCallback(async (keyword = '', categoryId = 0, page = 0, limit = 10) => {
-        setProductLoading(true);
+    const fetchProducts = async()=>{
         try {
-            // Gọi ProductService.getProducts
-            const response = await ProductService.getProducts(keyword, categoryId, page, limit);
+            const response = await ProductService.getProducts('',0,0,10);
+            setProducts(response.data.result.products);
             
-            // Giả định response.data là ApiResponse<ProductListResponse>
-            // và danh sách sản phẩm nằm trong response.data.result.content
-            const productList = response.result?.content || [];
-            
-            setProducts(productList);
         } catch (error) {
-            console.error("Lỗi khi tải danh sách sản phẩm:", error);
-            toast.error("Không thể tải sản phẩm. Vui lòng thử lại.");
             setProducts([]);
-        } finally {
-            setProductLoading(false);
         }
-    }, []);
 
-    
-    // --- Lấy Giỏ hàng từ Backend ---
+    };
+
     const fetchCart = useCallback(async () => {
-        if (!isAuth) return;
+    if (!isAuthenticated) {
+             setCart([]); // Xóa giỏ hàng nếu chưa đăng nhập
+             return;
+        }
+
         try {
-            const cartResponse = await CartService.getCart(); // Lấy CartResponse
-            setCart(cartResponse); 
+            // Lấy CartResponse, giả định nó có cấu trúc { id, cartItems: [] }
+            const response = await CartService.getCart();
+            setCart(response.result);
         } catch (error) {
             console.error("Lỗi khi tải giỏ hàng:", error);
-            setCart({ cartItems: [] }); // Đặt giỏ hàng rỗng nếu lỗi
+            // Quan trọng: Đặt giỏ hàng rỗng nếu lỗi để ngăn lỗi runtime trong các component khác
+            setCart([]); 
         }
-    }, [isAuth]);
+    }, [isAuthenticated, setCart]);
 
-    // --- HÀM THAO TÁC GIỎ HÀNG SỬ DỤNG API ---
-    
+    //Add Products to Cart
     // 1. Thêm/Cập nhật Sản phẩm vào Giỏ hàng (Sử dụng API)
-    const addToCart = async (productId, size, quantity = 1, note = "") => {
-        if (!isAuth) {
-            toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
-            navigate('/login');
-            return;
-        }
+    const addToCart = async (quantity, size, note, productId) => {
+        // if (!isAuthenticated) {
+        //     toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
+        //     navigate('/login');
+        //     return;
+        // }
         if (!size) return toast.error("Vui lòng chọn kích cỡ.");
 
-        const cartItemRequest = { productId, size, quantity, note };
+        const cartItemRequest = {
+            "quantity" : parseInt(quantity),
+            "size" : size,
+            "note" : note,
+            "productId" : productId
+        };
 
         try {
             await CartService.addItemToCart(cartItemRequest); // BE tự động thêm/cập nhật
@@ -95,10 +97,10 @@ export const UserContextProvider = ({ children }) => {
             toast.error(errorMessage);
         }
     };
-    
+
     // 2. Xóa 1 mục khỏi Giỏ hàng (API)
     const removeFromCart = async (itemId) => {
-         if (!isAuth) return;
+         if (!isAuthenticated) return;
         try {
             await CartService.deleteItemFromCart(itemId);
             await fetchCart(); // Tải lại giỏ hàng
@@ -110,7 +112,7 @@ export const UserContextProvider = ({ children }) => {
 
     // 3. Cập nhật Số lượng (API)
     const updateQuantity = async (itemId, quantity) => {
-        if (!isAuth) return;
+        if (!isAuthenticated) return;
         try {
             const request = { itemId: itemId, quantity: quantity };
             await CartService.updateItemQuantity(request);
@@ -137,58 +139,51 @@ export const UserContextProvider = ({ children }) => {
         return total + (itemPrice * item.quantity);
         }, 0) || 0;
     };
-    
-    // --- Lifecycle Effects ---
+
+    useEffect(()=>{
+        
+        fetchProducts();
+        
+    },[]);
+
     
     useEffect(() => {
-        fetchProducts(); // Giữ lại logic tải dummy product của bạn
-    }, [fetchProducts]); 
-    
-    useEffect(() => {
-        if (isAuth) {
-            fetchCart(); // Tải giỏ hàng khi user đã đăng nhập
+        // Chỉ gọi fetchCart nếu isAuthenticated() trả về TRUE VÀ ĐÃ ỔN ĐỊNH
+        if (isAuthenticated) {
+            fetchCart(); 
         }
-    }, [isAuth, fetchCart]);
+    // Dependency: Chỉ phụ thuộc vào fetchCart (sử dụng useCallback an toàn)
+    }, [isAuthenticated, fetchCart]);
 
-    const logout = () => {
-        authLogout(); // <-- Gọi hàm logout từ useAuth
-        setCart(null); // Xóa giỏ hàng cục bộ khi đăng xuất
-    };
-
-    const value = {
-        // Auth & User (Từ useAuth)
-        user: { username, ...authData }, // Cung cấp thông tin user (username, expirationTime,...)
-        isAuthenticated: isAuth, // Trạng thái đăng nhập
-        userRoles, // Vai trò của user
+    const value={
+        // user
+        isAuthenticated,
+        user,
         logout,
-        
-        // Cart
-        cart, // Cung cấp object CartResponse
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart: CartService.clearCart, // Sử dụng trực tiếp hàm clearCart API nếu cần
-        getCartCount,
-        getCartAmount,
-        fetchCart, // Có thể cần khi user thanh toán xong
-        
-        // General & Products
-        products,
-        productLoading,
-        fetchProducts,
+        isUser,
 
+        products,
+        fetchProducts,
         formatCurrency,
         delivery_charges,
         navigate,
         searchQuery,
         setSearchQuery,
+        // cardItems,
+        addToCart,
+        getCartCount,
+        updateQuantity,
+        getCartAmount,
+        removeFromCart,
         method,
         setMethod,
+        // isUser,
+        // setIsUser,
     };
-
-    return <UserContext.Provider value={value}>
+    
+  return <UserContext.Provider value={value}>
         {children}
     </UserContext.Provider>;
 };
 
-export const useUserContext = () => useContext(UserContext);
+export const useUserContext = ()=>useContext(UserContext)

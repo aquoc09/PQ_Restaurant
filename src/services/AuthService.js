@@ -1,3 +1,4 @@
+import axios from 'axios';
 import api from '../api/api';   
 
 const AUTH_API_URL = '/auth';
@@ -15,13 +16,14 @@ const AuthService = {
 
     // Endpoint Đăng xuất
     logout: (tokenRequest) => {
+        
         return api.post(`${AUTH_API_URL}/log-out`, tokenRequest);
     },
 
     // Endpoint Làm mới Token (Refresh Token)
     refreshToken: (refreshRequest) => {
         // refreshRequest sẽ chứa Refresh Token cũ
-        return api.post(`${AUTH_API_URL}/refresh`, refreshRequest);
+        return api.post(`http://localhost:8084/web_order/auth/refresh`, refreshRequest);
     },
     
     // Endpoint Quên mật khẩu (Forgot Password)

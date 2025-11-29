@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProductListSection from '../components/ProductListSection'; 
 import CategoryService from '../services/CategoryService'; 
 import CategoryFilter from '../components/filters/CategoryFilter';
-import { toast } from 'react-toastify';
+import { toast } from 'react-hot-toast';
  
 
 const MenuPage = () => {

@@ -26,14 +26,14 @@ const CategoryFilter = ({ categories, selectedCategoryId, onCategoryChange, load
                         {category.name}
                     </button>
                 ))}
-                {categories.map((category) => (
+                {/* {categories.map((category) => (
                 <div key={category.id}>
                     {category.name}
                     {category.parentCategory && (
                         <span className="text-xs text-blue-500"> (Thuộc: {category.parentCategory})</span>
                     )}
                 </div>
-            ))}
+            ))} */}
             </div>
         </div>
     );
