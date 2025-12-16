@@ -1,6 +1,6 @@
 import React from 'react'
 import AddressService from '../services/AddressService';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { myAssets } from '../assets/assets';
 

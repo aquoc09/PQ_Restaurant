@@ -4,7 +4,7 @@ import ProductService from '../services/ProductService';
 import { useUserContext } from '../context/UserContext'
 import { toast } from 'react-toastify';
 
-const CartItem = ({cart}) => {
+const CartItem = ({cart, onSelectChange, isSelected}) => {
 
     const{formatCurrency, updateQuantity, removeFromCart, navigate}=useUserContext();
     const [product, setProduct]=useState([]);
@@ -27,6 +27,10 @@ const CartItem = ({cart}) => {
         fetchProducts();
     },[cart.productId]);
 
+    // Hàm xử lý khi checkbox của sản phẩm này thay đổi
+    const handleCheckboxChange = (e) => {
+        onSelectChange(cart.id, e.target.checked);
+    };
 
       // Tăng số lượng
     const increment = () => {
@@ -53,18 +57,26 @@ const CartItem = ({cart}) => {
     };
 
     return(
-    <div className='grid grid-cols-[6fr_2fr_1fr] items-center bg-white p-2 rounded-xl'>
+    <div className='grid grid-cols-[1fr_6fr_2fr_1fr] md:grid-cols-[1fr_6fr_2fr_1fr] items-center bg-white px-3 py-3 rounded-xl shadow-sm gap-3'>
+        <div className='flex justify-center'>
+            <input 
+            type="checkbox" 
+            checked={isSelected}
+            onChange={handleCheckboxChange}
+            className='h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary'
+            />
+        </div>
         <div className='flex items-center md:gap-6 gap-3'>
-        <div className='flex bg-primary rounded-xl'>
+        <div className='flex bg-primary rounded-xl overflow-hidden'>
             <img 
             src={myAssets[product.productImage]} 
             alt="productImg" 
             onClick={()=>{navigate(`/product-details/${product.id}`)}}
-            className='w-20' />
+            className='w-20 h-20 object-cover cursor-pointer' />
         </div>
         <div>
-            <h5 className='hidden sm:block line-clamp-1 text-gray-900'>{product.name}</h5>
-            <div className='bold-14 flexStart gap-2 mb-1 text-gray-900'>Size: <p>{cart.size}</p></div>
+            <h5 className='line-clamp-1 text-gray-900 font-semibold text-sm md:text-base'>{product.name}</h5>
+            <div className='bold-14 flexStart gap-2 mb-1 text-gray-700 text-xs md:text-sm'>Size: <p>{cart.size}</p></div>
             <div className='flexBetween'>
             <div className='flex items-center right-1 ring-slate-900/15 
             rounded-full overflow-hidden bg-primary'>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 // import DEFAULT_AVATAR_MAP from '../../constants/avatarMapping';
@@ -6,39 +6,20 @@ import { myAssets } from "../../assets/assets";
 
 const AdminButton = () => {
     const navigate = useNavigate();
-    const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const menuRef = useRef(null);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-    
-    // 💡 Lấy thông tin từ useAuth
     const { username, logout } = useAuth();
-    
-    // Logic đóng menu khi click ra ngoài
-    useEffect(() => {
-        function handleClickOutside(event) {
-          if (menuRef.current && !menuRef.current.contains(event.target)) {
-            setIsOpen(false);
-          }
-        }
-    
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-      }, []);
-
 
     const handleEditProfile = () => {
         navigate('/admin/my-profile');
-        setIsOpen(false); 
     };
 
     const handleLogoutClick = () => {
-        setIsOpen(false); // Đóng dropdown
-        setShowLogoutConfirm(true); // Hiển thị dialog
+        setShowLogoutConfirm(true);
     };
 
     const confirmLogout = async () => {
-        setShowLogoutConfirm(false); // Đóng dialog
+        setShowLogoutConfirm(false);
         setLoading(true);
         try {
           logout();
@@ -57,42 +38,46 @@ const AdminButton = () => {
 
     return (
         <div className='w-full md:flex items-center gap-3 p-2 pl-5 lg:pl-10'>
-            <div className="relative inline-block text-left w-full" ref={menuRef}>
+            <div className="relative inline-block text-center w-full group z-50"> 
                 <button
                     type="button"
                     className="flex items-center gap-3 px-3 py-1.5 rounded-full hover:bg-gray-100 focus:outline-none"
-                    onClick={() => setIsOpen(!isOpen)}
                     disabled={loading}
                 >
                     {/* Avatar */}
                     <div className="w-8 h-8 rounded-full text-black flex items-center justify-center font-semibold">
                         <img src={myAssets.admin} alt="Admin Avatar" className="w-8 h-8 rounded-full object-cover"/>
-                        <span className="font-medium">{username || 'Admin'}</span>
                     </div>
+                    <h5 className='text-black'>{username || 'Admin'}</h5>
                 </button>
 
-                {/* Dropdown Menu */}
-                {isOpen && (
-                    <div className="absolute right-10 w-30 bg-white rounded-md shadow-lg z-40 ring-1 ring-black ring-opacity-5">
-                        <ul className="flex flex-col">
-                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
-                            <button onClick={() => navigate('/')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
-                                <h5>Home</h5>
+                {/* Dropdown Menu*/}
+                <div 
+                    className="absolute right-0 w-40 bg-white rounded-md shadow-lg 
+                                ring-1 ring-black ring-opacity-5 top-full -mt-1
+                                invisible opacity-0 
+                                group-hover:visible group-hover:opacity-100
+                                pointer-events-none group-hover:pointer-events-auto" 
+                >
+                    <div className="dropdown-arrow absolute"></div>
+                    <ul className="flex flex-col py-1">
+                        <li>
+                            <button onClick={()=> navigate('/')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
+                                <h5>Front End</h5>
                             </button>
-                            </li>
-                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
+                        </li>
+                        <li>
                             <button onClick={handleEditProfile} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
                                 <h5>My Profile</h5>
                             </button>
-                            </li>
-                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
+                        </li>
+                        <li>
                             <button onClick={handleLogoutClick} disabled={loading} className="w-full text-center px-3 py-3 text-sm text-red-600 hover:bg-red-200">
                                 <h5>Logout</h5>
                             </button>
-                            </li>
-                        </ul>
-                    </div>
-                )}
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             {/* Logout Confirmation Dialog */}

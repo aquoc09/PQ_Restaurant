@@ -68,18 +68,6 @@ const ProtectedAdminRoute = ({ children }) => {
 function App() {
   return (
     <main>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
       <AuthProvider>
       <Routes>
         {/* Public routes with Header and Footer */}
@@ -139,6 +127,18 @@ function App() {
           <Route path='payment-status' element={<MainLayout><PaymentStatus /></MainLayout>} />
         </Route>
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
       </AuthProvider>
     </main>
   );

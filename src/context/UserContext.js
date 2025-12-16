@@ -120,6 +120,22 @@ export const UserContextProvider = ({children}) => {
         }
     }, [fetchCart]);
 
+    // Xóa nhiều Product mục khỏi Giỏ hàng 
+    const deleteMultipleItems = useCallback(async (itemIds) => {
+        try {
+            const deletePromises = itemIds.map(itemId => 
+                CartService.deleteCartItem(itemId)
+            );
+            await Promise.all(deletePromises);
+            toast.success("Đã xóa sản phẩm khỏi giỏ hàng.");
+            await fetchCart(); 
+        } catch (error) {
+            console.error("Lỗi khi xóa nhiều mặt hàng:", error);
+            toast.error("Lỗi khi xóa sản phẩm.");
+            throw error;
+        }
+    }, [fetchCart]);
+
     // Cập nhật Số lượng Product
     const updateQuantity = useCallback(async (itemId, newQuantity) => {
 
@@ -205,11 +221,14 @@ export const UserContextProvider = ({children}) => {
         updateSize,
         getCartAmount,
         removeFromCart,
+        deleteMultipleItems,
     };
     
-  return <UserContext.Provider value={value}>
-        {children}
-    </UserContext.Provider>; 
+  return (
+    <UserContext.Provider value={value}>
+      {children}
+    </UserContext.Provider>
+  ); 
 };
 
 export const useUserContext = ()=>useContext(UserContext)

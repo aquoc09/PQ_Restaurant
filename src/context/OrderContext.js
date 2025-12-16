@@ -7,7 +7,7 @@ import { useUserContext } from './UserContext'
 
 const OrderContext = createContext();
 
-export const CartProvider = ({ children }) => {
+export const OrderProvider = ({ children }) => {
     const [method,setMethod]=useState("COD");
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [orderNote, setOrderNote] = useState('');
@@ -88,7 +88,6 @@ export const CartProvider = ({ children }) => {
         <OrderContext.Provider value={value}>
             {children}
         </OrderContext.Provider>
-        
     );
 };
 

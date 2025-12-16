@@ -2,17 +2,14 @@ import React, {useEffect,useState, useCallback} from 'react'
 import { useUserContext } from '../context/UserContext'
 import { useOrderContext } from '../context/OrderContext'
 import AddressService from '../services/AddressService';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
-function CartTotal() {
+function CartTotal({ selectedAmount, selectedCount }) {
 
   const {
     navigate,
     formatCurrency,
     delivery_charges,
-    getCartCount,
-    getCartAmount,
     isAuthenticated
   } =useUserContext();
 
@@ -64,7 +61,8 @@ function CartTotal() {
     }, [isAuthenticated, fetchAddresses]);
 
     // --- Logic Tính Toán ---
-    const cartAmount = getCartAmount; // Tổng tiền sản phẩm
+    // const cartAmount = getCartAmount;
+    const cartAmount = selectedAmount;
     const taxRate = 0.08;
     const taxAmount = cartAmount * taxRate;
     const shippingFee = cartAmount === 0 ? 0 : delivery_charges;
@@ -73,6 +71,10 @@ function CartTotal() {
     
     // --- Xử lý Đặt hàng ---
     const handleCheckout = async () => {
+      if (cartAmount === 0) {
+        toast.error("Vui lòng chọn ít nhất một sản phẩm để thanh toán."); // Thay đổi thông báo
+        return;
+      }
         await processOrder(totalAmount);
     };
 
@@ -84,7 +86,7 @@ function CartTotal() {
     <div>
       <h3 className='text-gray-900'>
         Order Detials 
-        <span className='text-action font-bold text-lg'>({getCartCount}) Items</span>
+        <span className='text-action font-bold text-lg'>({selectedCount}) Items</span>
       </h3>
       <hr className='border-gray-300 my-5' />
       <div className='mb-5'>
@@ -179,7 +181,7 @@ function CartTotal() {
 
           {/* Giá sản phẩm */}
           <div className='flex justify-between'>
-            <h5 className='text-gray-900'>Price ({getCartCount} items)</h5>
+            <h5 className='text-gray-900'>Price ({selectedCount} items)</h5>
             <p className='font-bold text-gray-900'>{formatCurrency(cartAmount)}</p>
           </div>
 
@@ -208,24 +210,12 @@ function CartTotal() {
 
         {/* Nút Đặt hàng */}
         <button 
-        onClick={handleCheckout} 
-        disabled={cartAmount === 0 || !selectedAddress} 
-        className='text-white btn-solid w-full mt-8 !rounded-md py-2 disabled:opacity-50 disabled:cursor-not-allowed'
+          onClick={handleCheckout} 
+          disabled={cartAmount === 0 || !selectedAddress} 
+          className='text-white btn-solid w-full mt-8 !rounded-md py-2 disabled:opacity-50 disabled:cursor-not-allowed'
         >
-        Proceed to Order
+          Proceed to Order
         </button>
-        <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"
-        />
     </div>
     
   )
