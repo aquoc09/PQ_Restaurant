@@ -1,9 +1,9 @@
-// src/components/EditUser.jsx
+// src/components/MyProfile.jsx
 import React, { useState, useEffect } from 'react';
 import UserService from '../../services/UserService';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const initialFormState = {
     id: null,
@@ -28,40 +28,38 @@ const formatDobToBackend = (dob_yyyy_mm_dd) => {
     }
 };
 
-function EditUser() {
-    const { userId } = useParams(); // Lấy ID người dùng từ URL
+function MyProfile() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initialFormState);
     const [loading, setLoading] = useState(true);
 
     // --- Tải dữ liệu User hiện tại ---
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const currentUser = await UserService.getUserById(userId);
-                
-                // Format DOB từ LocalDate (YYYY-MM-DD) sang chuỗi cho input type="date"
-                const formattedDob = currentUser.dob || '';
+    const fetchUserData = async () => {
+        try {
+            const currentUser = await UserService.getMyInfo();
+            // Format DOB từ LocalDate (YYYY-MM-DD) sang chuỗi cho input type="date"
+            const formattedDob = currentUser.dob || '';
 
-                setFormData({
-                    id: currentUser.id,
-                    username: currentUser.username,
-                    email: currentUser.email,
-                    fullName: currentUser.fullName,
-                    phone: currentUser.phone,
-                    dob: formattedDob,
-                    gender: currentUser.gender,
-                    role: currentUser.role.name,
-                });
-            } catch (error) {
-                toast.error("Không thể tải dữ liệu người dùng để sửa.");
-                navigate('/admin/list-user');
-            } finally {
-                setLoading(false);
-            }
-        };
+            setFormData({
+                id: currentUser.id,
+                username: currentUser.username,
+                email: currentUser.email,
+                fullName: currentUser.fullName,
+                phone: currentUser.phone,
+                dob: formattedDob,
+                gender: currentUser.gender,
+                role: currentUser.role.name,
+            });
+        } catch (error) {
+            toast.error("Không thể tải dữ liệu người dùng để sửa.");
+            navigate('/admin');
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
         fetchUserData();
-    }, [userId, navigate]);
+    }, []);
 
     // --- Xử lý thay đổi Input ---
     const handleInputChange = (e) => {
@@ -99,15 +97,16 @@ function EditUser() {
             dob: dobBackendFormat, 
             gender: formData.gender,
             role: formData.role,
-            password: newPassword ? newPassword : formData.password , // Chỉ gửi nếu có thay đổi
+            password: newPassword
         };
+
 
         try {
             // Gọi API cập nhật User. Giả định BE trả về UserResponse trong .data.result
-            const response = await UserService.updateUser(userId, userUpdateRequest);
+            const response = await UserService.updateUser(formData.id, userUpdateRequest);
 
-            toast.success(`Update User ID: ${response.id} success!`);
-            navigate('/admin/list-user');
+            toast.success(`Cập nhật admin: ${response.name} success!`);
+            navigate('/admin');
         } catch (error) {
             console.error("Lỗi khi Update User:", error);
             const errorMessage = error.response?.data?.message || "Cập nhật thất bại. Vui lòng kiểm tra lại dữ liệu.";
@@ -149,7 +148,7 @@ function EditUser() {
                         value={formData.password} 
                         onChange={handleInputChange} 
                         placeholder='Để trống nếu không đổi' 
-                        minLength={8} className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"/>
+                        minLength={8} className="shadow border rounded w-full py-2 px-3"/>
                         <p className='text-xs text-gray-500 mt-1'>Tối thiểu 8 ký tự.</p>
                     </div>
                     
@@ -230,4 +229,4 @@ function EditUser() {
     );
 }
 
-export default EditUser;
+export default MyProfile;

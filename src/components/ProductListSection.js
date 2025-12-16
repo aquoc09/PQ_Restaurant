@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import ProductService from '../services/ProductService'; 
 import Items from './Items'; 
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ITEMS_PER_PAGE = 8; 
 
@@ -69,7 +70,6 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword }) => {
         <div>
             {/* DANH SÁCH SẢN PHẨM */}
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10'>
-                {console.log(totalPages)}
                 {products.length > 0 ? (
                     products.map((product) => (
                         <Items key={product.id} product={product} />
@@ -112,6 +112,18 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword }) => {
                     </button>
                 </div>
             )}
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 }

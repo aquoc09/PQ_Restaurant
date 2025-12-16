@@ -2,31 +2,20 @@
 import React, { useState, useEffect } from 'react';
 import ProductService from '../../services/ProductService';
 import CategoryService from '../../services/CategoryService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
-
-// *GIẢ ĐỊNH: Import thư viện assets để hiển thị ảnh cũ (Tên File -> URL)
-// Nếu bạn không dùng thư viện, hãy thay thế bằng logic lấy URL ảnh hợp lệ.
 import { myAssets } from '../../assets/assets'; 
 
 const initialFormState = {
     name: '',
     productCode: '',
     productImage: '', 
-    description: '',
     categoryId: '', 
+    description: '',
     inStock: true,
     inPopular: false,
-    prices: [{ size: 'S', price: 0 }], // Dạng mảng để dễ dàng chỉnh sửa
-};
-
-// Hàm chuyển đổi Map giá từ BE thành Mảng FE
-const mapPricesToArray = (pricesMap) => {
-    if (!pricesMap || typeof pricesMap !== 'object') return [{ size: 'S', price: 0 }];
-    return Object.entries(pricesMap).map(([size, price]) => ({
-        size: size,
-        price: price
-    }));
+    prices: [{ size: '', price: '' }], // Dạng mảng để dễ dàng chỉnh sửa
 };
 
 // Hàm lấy URL từ key (tên file) để xem trước ảnh cũ
@@ -35,7 +24,7 @@ const getImageUrl = (key) => {
 };
 
 function EditProduct() {
-    const { productId } = useParams(); // Lấy ID sản phẩm từ URL
+    const { id } = useParams(); 
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initialFormState);
     const [categories, setCategories] = useState([]);
@@ -45,27 +34,29 @@ function EditProduct() {
     const [imageFile, setImageFile] = useState(null); 
     // State để hiển thị bản xem trước ảnh (ảnh cũ hoặc ảnh mới)
     const [imagePreview, setImagePreview] = useState(null); 
-
     // --- 1. Tải Dữ liệu (Sản phẩm hiện tại & Danh mục) ---
-    useEffect(() => {
-        const fetchEditData = async () => {
+    const fetchEditData = async () => {
+        
             try {
                 // Tải danh mục
                 const categoryData = await CategoryService.getAllCategories();
                 setCategories(categoryData);
 
                 // Tải sản phẩm hiện tại
-                const productData = await ProductService.getProductById(productId);
+                const response = await ProductService.getProductById(id);
+                const productData = response.result;
 
                 // Chuyển đổi giá từ Map BE sang Array FE
-                const pricesArray = mapPricesToArray(productData.prices);
+                const pricesArray = productData.prices || [{ size: '', price: '' }];
 
+                const categoryIdToSet = productData.categoryId ? String(productData.categoryId) : '';
+                
                 setFormData({
                     name: productData.name,
                     productCode: productData.productCode,
-                    productImage: productData.productImage, // Tên file hiện tại
+                    productImage: productData.productImage, 
                     description: productData.description,
-                    categoryId: productData.categoryId.toString(), // Chuyển về string cho thẻ <select>
+                    categoryId: categoryIdToSet,
                     inStock: productData.inStock,
                     inPopular: productData.inPopular,
                     prices: pricesArray,
@@ -73,6 +64,7 @@ function EditProduct() {
                 
                 // Thiết lập ảnh hiện tại làm preview ban đầu
                 setImagePreview(getImageUrl(productData.productImage));
+                
 
             } catch (error) {
                 toast.error("Không thể tải dữ liệu sản phẩm. Vui lòng thử lại.");
@@ -81,10 +73,7 @@ function EditProduct() {
                 setLoading(false);
             }
         };
-        fetchEditData();
-    }, [productId, navigate]);
-    
-    // --- 2. Các hàm xử lý Input (Giữ nguyên từ AddProduct) ---
+    //  Các hàm xử lý Input  ---
     
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -133,14 +122,14 @@ function EditProduct() {
         }
     };
 
-    // --- 3. Xử lý Submit (Gọi Update API) ---
+    // Xử lý Submit (Gọi Update API) ---
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
-        // 1. Xác định TÊN FILE (Nếu có file mới, lấy tên file mới. Nếu không, giữ lại tên file cũ)
-        let imageFileName = imageFile ? imageFile.name : formData.productImage; 
+        // Xác định TÊN FILE (Nếu có file mới, lấy tên file mới. Nếu không, giữ lại tên file cũ)
+        let imageFileName = imageFile ? imageFile.name.split('.')[0] : formData.productImage; 
         
         if (!imageFileName) {
             setLoading(false);
@@ -148,45 +137,52 @@ function EditProduct() {
             return;
         }
 
-        // 2. Chuyển đổi prices ngược lại sang Map để gửi lên BE
+        //Chuyển đổi prices ngược lại sang Map để gửi lên BE
         const pricesMap = formData.prices.reduce((map, item) => {
             if (item.size && item.price > 0) {
                 map[item.size] = item.price;
             }
             return map;
         }, {});
-        
-        // 3. Chuẩn bị ProductRequest cuối cùng
+
+        let haveDescription = formData.description ? formData.description : "";
+
+        // Chuẩn bị ProductRequest cuối cùng
         const productRequest = {
             ...formData,
-            productImage: imageFileName, // Tên file mới hoặc cũ
+            productImage: imageFileName, 
+            description: haveDescription,
             prices: pricesMap,
-            categoryId: parseInt(formData.categoryId),
+            categoryId: parseInt(formData.categoryId,10)
         };
-        delete productRequest.prices; // Xóa mảng prices phụ
+        console.log("Product Request chuẩn bị gửi:", productRequest);
 
-        // 4. Gọi API Cập nhật Sản phẩm
+        // 4. Gọi API Update Product
         try {
-            await ProductService.updateProduct(productId, productRequest);
-            toast.success('Cập nhật sản phẩm thành công!');
+            await ProductService.updateProduct(id, productRequest);
+            toast.success('Update Product success!');
             navigate('/admin/list-product');
         } catch (error) {
-            console.error("Lỗi khi cập nhật sản phẩm:", error);
-            toast.error("Cập nhật sản phẩm thất bại. Vui lòng kiểm tra lại dữ liệu.");
+            console.error("Lỗi khi Update Product:", error);
+            toast.error("Update Product thất bại. Vui lòng kiểm tra lại dữ liệu.");
         } finally {
             setLoading(false);
         }
     };
+    useEffect(() => {
+        if(id)
+            fetchEditData();
+    }, [id]);
 
     if (loading) return <div className='p-8 bg-primary shadow rounded-xl w-full'>Đang tải dữ liệu sản phẩm...</div>;
     
     return (
         <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
-            <h2 className='text-2xl font-bold mb-6'>Edit Product ID: {productId}</h2>
+            <h2 className='text-2xl font-bold mb-6'>Edit Product ID: {id}</h2>
             
             <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
                 <div className='col-span-1'>
-                    {/* Name, Code (Giữ nguyên) */}
+                    {/* Name, Code */}
                     <div className="mb-4">
                         <h5>Product Name</h5>
                         <input type="text" name="name" 
@@ -206,7 +202,7 @@ function EditProduct() {
                         className='px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full'/>
                     </div>
 
-                    {/* Danh mục (Hiển thị categoryId hiện tại) */}
+                    {/* Danh mục */}
                     <div className="mb-4">
                         <h5>Category</h5>
                         <select 
@@ -217,8 +213,8 @@ function EditProduct() {
                         className=" py-2 px-3 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
                             <option value="">-- Chose Category --</option>
                             {categories.map(cat => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.name} ({cat.id})
+                                <option key={cat.id} value={String(cat.id)}>
+                                    {cat.name}
                                 </option>
                             ))}
                         </select>
@@ -255,10 +251,10 @@ function EditProduct() {
                         className="py-2 px-3 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full h-24"/>
                     </div>
                     <div className='mb-4 flex gap-6'>
-                        <h5 className="flex items-center">
+                        <label className="flex items-center">
                             <input type="checkbox" name="inStock" checked={formData.inStock} onChange={handleInputChange} className="mr-2 leading-tight"/>
                             <h5>InStock</h5>
-                        </h5>
+                        </label>
                         <label className="flex items-center">
                             <input type="checkbox" name="inPopular" checked={formData.inPopular} onChange={handleInputChange} className="mr-2 leading-tight"/>
                             <h5>InPopular</h5>
@@ -300,6 +296,18 @@ function EditProduct() {
                     </button>
                 </div>
             </form>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 }

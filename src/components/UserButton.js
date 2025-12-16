@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-// import DEFAULT_AVATAR_MAP from '../constants/avatarMapping';
 import { myAssets } from "../assets/assets";
 
 const UserButton = () => {
@@ -29,7 +28,7 @@ const UserButton = () => {
 
 
     const handleEditProfile = () => {
-        navigate('/user/profile');
+        navigate('/user-profile');
         setIsOpen(false); 
     };
 
@@ -43,10 +42,10 @@ const UserButton = () => {
         setLoading(true);
         try {
           logout();
-          navigate('/login');
+          setTimeout(() => navigate('/login'), 3000);
         } catch (error) {
           console.error('Logout error:', error);
-          setTimeout(() => navigate('/login'), 1500);
+          setTimeout(() => setTimeout(() => navigate('/login'), 3000), 1500);
         } finally {
           setLoading(false);
         }
@@ -75,15 +74,29 @@ const UserButton = () => {
 
                 {/* Dropdown Menu */}
                 {isOpen && (
-                    <div className="absolute right-0 mt-2 w-44 bg-white rounded-md shadow-lg z-50 ring-1 ring-black ring-opacity-5">
-                        <div className="py-1">
-                            <button onClick={handleEditProfile} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <span>⚙️</span> Edit Profile
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50 ring-1 ring-black ring-opacity-5">
+                        <ul className="flex flex-col">
+                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
+                            <button onClick={handleEditProfile} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
+                                <h5>My Profile</h5>
                             </button>
-                            <button onClick={handleLogoutClick} disabled={loading} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
-                                {'Logout'}
+                            </li>
+                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
+                            <button onClick={() => navigate('/my-orders')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
+                                <h5>My Orders</h5>
                             </button>
-                        </div>
+                            </li>
+                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded" >
+                            <button onClick={() => navigate('/user-address')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
+                                <h5>My Address</h5>
+                            </button>
+                            </li>
+                            <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
+                            <button onClick={handleLogoutClick} disabled={loading} className="w-full text-center px-3 py-3 text-sm text-red-600 hover:bg-red-200">
+                                <h5>Logout</h5>
+                            </button>
+                            </li>
+                        </ul>
                     </div>
                 )}
             </div>

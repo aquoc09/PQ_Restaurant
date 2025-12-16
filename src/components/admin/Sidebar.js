@@ -63,7 +63,7 @@ function Sidebar() {
 
   useEffect(() => {
     if (!isAdmin) {
-      navigate('/login');
+      setTimeout(() => navigate('/login'), 3000);
     }
   }, [isAdmin, navigate]);
 

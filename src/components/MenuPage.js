@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ProductListSection from '../components/ProductListSection'; 
 import CategoryService from '../services/CategoryService'; 
 import CategoryFilter from '../components/filters/CategoryFilter';
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
  
 
 const MenuPage = () => {
@@ -41,7 +42,7 @@ const MenuPage = () => {
 
 
     return (
-        <div className='max-padd-container !px-0 mt-[72px] mx-auto flex flex-col md:flex-row bg-primary min-h-screen pt-4 pb-12 px-4'>
+        <div className='max-padd-container !px-0 mt-[72px] mx-auto flex flex-col md:flex-row bg-primary min-h-screen pt-4 pb-12'>
             
             {/* LEFT SIDE: SIDEBAR LỌC */}
             <div className='md:w-1/4 bg-white md:m-3 p-5 rounded-xl shadow-lg'>
@@ -83,6 +84,18 @@ const MenuPage = () => {
                 />
 
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 };

@@ -20,7 +20,7 @@ const UserService = {
     getUserById: async (userId) => {
         try {
             const response = await api.get(`${USER_API_URL}/${userId}`);
-            return response.data;
+            return response.data.result;
         } catch (error) {
             console.error(`Lỗi khi lấy người dùng ID ${userId}:`, error);
             throw error;
@@ -29,8 +29,8 @@ const UserService = {
 
     getMyInfo: async() => {
         try {
-            const response = await api.get(`${USER_API_URL}/myInfo`);
-            return response.data;
+            return api.get('/users/my-info') 
+        .then(response => response.data.result);
         } catch (error) {
             console.error("Lỗi khi lấy thông tin người dùng hiện tại:", error);
             throw error;
@@ -41,14 +41,15 @@ const UserService = {
     updateUser: async (userId, userUpdateRequest) => {
         try {
             const response = await api.put(`${USER_API_URL}/${userId}`, userUpdateRequest);
-            return response.data;
+            return response.data.result;
         } catch (error) {
-            console.error(`Lỗi khi cập nhật người dùng ID ${userId}:`, error);
+            console.error(`Lỗi khi Update User ID ${userId}:`, error);
             throw error;
         }
     },
     
     createUser: async (userCreationRequest) => {
+        // debugger;
         try {
             const response = await api.post(USER_API_URL, userCreationRequest);
             return response.data; 
@@ -60,8 +61,7 @@ const UserService = {
     deleteUser: async (userId) => {
         try {
             const response = await api.delete(`${USER_API_URL}/${userId}`);
-            // BE trả về ApiResponse<String>, chúng ta chỉ trả về tin nhắn
-            return response.data.message;
+            return response.data;
         } catch (error) {
             console.error(`Lỗi khi xóa người dùng ID ${userId}:`, error);
             throw error;

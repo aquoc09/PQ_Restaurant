@@ -1,19 +1,19 @@
 // src/components/EditCategory.jsx
 import React, { useState, useEffect } from 'react';
 import CategoryService from '../../services/CategoryService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const initialFormState = {
-    id: null,
     name: '',
     categoryCode: '',
-    status: 'ACTIVE',
+    active: true,
     parentCategory: '',
 };
 
 function EditCategory() {
-    const { categoryId } = useParams(); // Lấy ID từ URL: /admin/edit-category/:categoryId
+    const { categoryId } = useParams();
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initialFormState);
     const [allCategories, setAllCategories] = useState([]);
@@ -23,17 +23,23 @@ function EditCategory() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // 1. Lấy dữ liệu danh mục hiện tại
+                //  Lấy dữ liệu danh mục hiện tại
                 const currentCatResponse = await CategoryService.getCategoryById(categoryId);
-                // Giả định response.data trả về { result: CategoryResponse }
-                const currentCategory = currentCatResponse.result || currentCatResponse; 
+                const currentCategory = currentCatResponse.result; 
                 
+                const parentCategoryObject = currentCategory.parentCategory;
+                    
+                // Lấy categoryCode từ object cha, nếu không có thì là chuỗi rỗng
+                const parentCodeToSet = parentCategoryObject
+                                        ? parentCategoryObject.categoryCode 
+                                        : '';
+
                 setFormData({
                     id: currentCategory.id,
                     name: currentCategory.name,
                     categoryCode: currentCategory.categoryCode,
-                    status: currentCategory.status,
-                    parentCategory: currentCategory.parentCategory || '',
+                    active: String(currentCategory.active),
+                    parentCategory: parentCodeToSet,
                 });
 
                 // 2. Tải tất cả danh mục để chọn Danh mục cha
@@ -59,20 +65,32 @@ function EditCategory() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        if (!formData.parentCategory) {
+            setLoading(false);
+            toast.error("Lỗi: Danh mục cha là bắt buộc (theo yêu cầu Backend). Vui lòng chọn Category cha.");
+            return; // Dừng Request
+        }
+        const parentCategoryObject = { 
+            categoryCode: formData.parentCategory 
+        };
+        const isActive = formData.active === 'true';
+
         try {
             const requestData = {
                 name: formData.name,
                 categoryCode: formData.categoryCode,
-                status: formData.status,
-                parentCategory: formData.parentCategory || null
+                active: isActive,
+                parentCategory: parentCategoryObject,
             };
             
+            
             await CategoryService.updateCategory(categoryId, requestData);
-            toast.success(`Cập nhật danh mục ID: ${categoryId} thành công!`);
-            navigate('/admin/list-category'); // Điều hướng về trang danh sách
+            toast.success(`Update category ID: ${categoryId} success!`);
+            navigate('/admin/list-category'); 
         } catch (error) {
-            console.error("Lỗi cập nhật danh mục:", error);
-            toast.error("Cập nhật danh mục thất bại. Vui lòng kiểm tra dữ liệu.");
+            console.error("Lỗi Update category:", error);
+            toast.error("Update category thất bại. Vui lòng kiểm tra dữ liệu.");
         } finally {
             setLoading(false);
         }
@@ -82,39 +100,53 @@ function EditCategory() {
     
     return (
         <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
-            <h2 className='text-2xl font-bold text-gray-800 mb-6'>Edit Category {formData.name}</h2>
+            <h2 className='text-2xl font-bold text-gray-800 mb-6'>Edit Category ID: {formData.id}</h2>
             
             <form onSubmit={handleSubmit} className='flex flex-col gap-y-3.5 px-2 text-sm w-full lg:w-full'>
                 <div className="w-full">
                     <h5>Category Name</h5>
-                    <input type="text" name="name" value={formData.name} placeholder='Type here...' className='px-3 py-1.5 
-          ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full' onChange={handleInputChange} required />
+                    <input type="text" 
+                    name="name" 
+                    value={formData.name} 
+                    placeholder='Type here...' 
+                    className='px-3 py-1.5 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full' onChange={handleInputChange} required />
                 </div>
                 
                 <div className="w-full">
                     <h5>Category Code</h5>
-                    <input type="text" name="categoryCode" placeholder='Type here...' className='px-3 py-1.5 
-          ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full'
-           value={formData.categoryCode} onChange={handleInputChange} required/>
+                    <input type="text" 
+                    name="categoryCode" 
+                    value={formData.categoryCode} 
+                    onChange={handleInputChange} required 
+                    placeholder='Type here...' 
+                    className='px-3 py-1.5 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full'
+                    />
                 </div>
                 
                 <div className="w-full">
                     <h5>Status</h5>
-                    <select name="status" value={formData.status} onChange={handleInputChange} required className="px-3 py-1.5 
-          ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
-                        <option value="ACTIVE">ACTIVE</option>
-                        <option value="INACTIVE">INACTIVE</option>
+                    <select 
+                    name="active" 
+                    value={formData.active} 
+                    onChange={handleInputChange} 
+                    required 
+                    className="px-3 py-1.5 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
+                        <option value="true">ACTIVE</option>
+                        <option value="false">INACTIVE</option>
                     </select>
                 </div>
 
                 <div className="w-full">
                     <h5>Parent Category</h5>
-                    <select name="parentCategory" value={formData.parentCategory} onChange={handleInputChange} className="px-3 py-1.5 
-          ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
+                    <select 
+                    name="parentCategory" 
+                    value={formData.parentCategory} 
+                    onChange={handleInputChange} required
+                    className="px-3 py-1.5 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
                         <option value="">-- Chose parent category --</option>
                         {allCategories.map(cat => (
                             <option key={cat.id} value={cat.categoryCode}>
-                                {cat.name} ({cat.categoryCode})
+                                {cat.name}
                             </option>
                         ))}
                     </select>
@@ -127,6 +159,18 @@ function EditCategory() {
                     </button>
                 </div>
             </form>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 }

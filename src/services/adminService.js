@@ -10,7 +10,7 @@ const AdminService = {
         return api.get(USER_API_URL);
     },
 
-    // Quản lý người dùng: Cập nhật người dùng theo ID
+    // Quản lý người dùng: Update User theo ID
     updateUserById: (userId, updateData) => {
         return api.put(`${USER_API_URL}/${userId}`, updateData);
     },

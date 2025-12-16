@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import ProductService from '../../services/ProductService';
 import CategoryService from '../../services/CategoryService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 
 const initialFormState = {
@@ -13,7 +14,7 @@ const initialFormState = {
     categoryId: '', 
     inStock: true,
     inPopular: false,
-    prices: [{ size: 'S', price: 0 }], 
+    prices: [{ size: "", price: "" }], 
 };
 
 function AddProduct() {
@@ -61,7 +62,7 @@ function AddProduct() {
     const addPriceField = () => {
         setFormData(prev => ({ 
             ...prev, 
-            prices: [...prev.prices, { size: '', price: 0 }] 
+            prices: [...prev.prices, { size: '', price: '' }] 
         }));
     };
 
@@ -92,17 +93,18 @@ function AddProduct() {
         e.preventDefault();
         setLoading(true);
 
-        // 1. Kiểm tra và Upload hình ảnh
+        // Kiểm tra và Upload hình ảnh
         let imageFileName = '';
         if (imageFile) {
-            imageFileName = imageFile.name; 
+            const myArray = imageFile.name.split('.');
+            imageFileName = myArray[0]; 
         } else {
             setLoading(false);
-            toast.error('Vui lòng chọn ảnh khuyến mãi.');
+            toast.error('Vui lòng chọn ảnh.');
             return;
         }
 
-        // 2. Chuyển đổi prices sang Map
+        // Chuyển đổi prices sang Map
         const pricesMap = formData.prices.reduce((map, item) => {
             if (item.size && item.price > 0) {
                 map[item.size] = item.price;
@@ -110,20 +112,18 @@ function AddProduct() {
             return map;
         }, {});
         
-        // 3. Chuẩn bị ProductRequest cuối cùng
+        // Chuẩn bị ProductRequest cuối cùng
         const productRequest = {
             ...formData,
             productImage: imageFileName,
             prices: pricesMap,
-            categoryId: parseInt(formData.categoryId),
+            categoryId: parseInt(formData.categoryId,10),
         };
-        // Đảm bảo không gửi các trường phụ không cần thiết
-        delete productRequest.prices; 
 
-        // 4. Gọi API Thêm Sản phẩm
+        // Gọi API Thêm Sản phẩm
         try {
             await ProductService.createProduct(productRequest);
-            toast.success('Thêm sản phẩm thành công!');
+            toast.success('Add product success!');
             navigate('/admin/list-product');
         } catch (error) {
             console.error("Lỗi khi thêm sản phẩm:", error);
@@ -171,7 +171,7 @@ function AddProduct() {
                             <option value="">-- Chose Category --</option>
                             {categories.map(cat => (
                                 <option key={cat.id} value={cat.id}>
-                                    {cat.name} ({cat.id})
+                                    {cat.name}
                                 </option>
                             ))}
                         </select>
@@ -210,10 +210,10 @@ function AddProduct() {
                         className="py-2 px-3 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full h-24"/>
                     </div>
                     <div className='mb-4 flex gap-6'>
-                        <h5 className="flex items-center">
+                        <label className="flex items-center">
                             <input type="checkbox" name="inStock" checked={formData.inStock} onChange={handleInputChange} className="mr-2 leading-tight"/>
                             <h5>InStock</h5>
-                        </h5>
+                        </label>
                         <label className="flex items-center">
                             <input type="checkbox" name="inPopular" checked={formData.inPopular} onChange={handleInputChange} className="mr-2 leading-tight"/>
                             <h5>InPopular</h5>
@@ -260,6 +260,18 @@ function AddProduct() {
                     </button>
                 </div>
             </form>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 }

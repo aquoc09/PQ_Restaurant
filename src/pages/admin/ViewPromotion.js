@@ -1,8 +1,11 @@
 import React, {useState,useEffect} from 'react'
 import PromotionService from '../../services/PromotionService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { myAssets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
+
+const LIMIT = 5;
 
 function ViewPromotion() {
 
@@ -10,17 +13,16 @@ function ViewPromotion() {
   const [promotion, setPromotion] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(2);
 
-  const fetchPromotion = async () => {
+  const fetchPromotion = async (page=1) => {
         setLoading(true);
         try {
-            const response = await PromotionService.getAllPromotions();
+            const response = await PromotionService.getAllPromotions(page-1,LIMIT);
             const promotionListResponse = response.result;
-            setPromotion(promotionListResponse.promotion);
-            setTotalPages(promotionListResponse.totalPages);
-            setCurrentPage(promotionListResponse.currentPage);
-
+            setPromotion(promotionListResponse);
+            setCurrentPage(page);
+            setTotalPages(Math.ceil(response.result.length / LIMIT) + 1 );
         } catch (error) {
             // console.error("Lỗi khi tải sản phẩm:", error);
             toast.error("Không thể tải danh sách promotion.");
@@ -31,13 +33,13 @@ function ViewPromotion() {
 
     // Tải dữ liệu khi component mount lần đầu
     useEffect(() => {
-        fetchPromotion();
+        fetchPromotion(1,LIMIT);
     }, []);
     
     // Tải lại dữ liệu khi chuyển trang
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
-            fetchPromotion(newPage);
+            fetchPromotion(newPage,LIMIT);
         }
     };
 
@@ -47,46 +49,11 @@ function ViewPromotion() {
         }
         try {
             await PromotionService.deletePromotion(promotionId);
-            toast.success(`Xóa khuyến mãi ${promotionId} thành công.`);
+            toast.success(`Xóa khuyến mãi ${promotionId} success.`);
             fetchPromotion(); 
         } catch (err) {
             console.error("Lỗi xóa khuyến mãi:", err);
             toast.error('Lỗi xóa khuyến mãi. Vui lòng thử lại.');
-        }
-    };
-
-    // --- HÀM XỬ LÝ TOGGLE IN-STOCK ---
-    const handleToggleInStock = async (promo) => {
-        const newInStockStatus = !promo.inStock;
-        
-        // 1. Cập nhật trạng thái trong UI ngay lập tức (Optimistic Update)
-        setPromotion(prevPromotions => 
-            prevPromotions.map(p => 
-                p.id === promo.id ? { ...p, inStock: newInStockStatus } : p
-            )
-        );
-
-        // 2. Chuẩn bị Request: Chỉ cần gửi dữ liệu cần thiết (title, img, inStock)
-        const updateRequest = {
-            title: promo.title, // Cần thiết để đảm bảo API PUT hoạt động
-            img: promo.img,     // Cần thiết để đảm bảo API PUT hoạt động
-            inStock: newInStockStatus, // Trạng thái mới
-        };
-        
-        // 3. Gọi API cập nhật
-        try {
-            await PromotionService.updatePromotion(promo.id, updateRequest);
-            toast.success(`Cập nhật trạng thái khuyến mãi ${promo.id} thành công!`);
-        } catch (error) {
-            console.error("Lỗi cập nhật trạng thái:", error);
-            toast.error('Lỗi: Không thể cập nhật trạng thái. Đang khôi phục...');
-            
-            // Nếu API thất bại, đảo ngược trạng thái trong UI về trạng thái cũ
-            setPromotion(prevPromotions => 
-                prevPromotions.map(p => 
-                    p.id === promo.id ? { ...p, inStock: promo.inStock } : p
-                )
-            );
         }
     };
 
@@ -95,27 +62,28 @@ function ViewPromotion() {
   return (
     <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
       <div className='flex justify-between items-center mb-6'> 
-        <h2 className='text-2xl font-bold mb-4'>Promotion Management</h2>
+        <h2 className='text-2xl font-bold'>Promotion Management</h2>
         <button onClick={()=>{
-                      navigate("/admin/add-promotion")}} className='px-6 py-3 active:scale-95 transition bg-tertiary border-gray-500/20 text-black text-sm font-medium rounded-full cursor-pointer flex justify-center items-center gap-2'>
+                      navigate("/admin/add-promotion")}} 
+                      className='px-6 py-3 active:scale-95 transition bg-tertiary border-gray-500/20 text-black text-sm font-medium rounded-full cursor-pointer flex justify-center items-center gap-2'>
                 Add Promotion
                 <img src={myAssets.square_plus} alt="" />
         </button>
       </div>
       <div className='flex flex-col gap-2 lg:w-full'>
-        <div className='grid grid-cols-[1fr_2fr_2fr_2fr_1fr] items-center py-4 px-2 bg-solid text-white 
+        <div className='grid grid-cols-[1fr_1.5fr_1.5fr_1fr_1fr] items-center py-4 px-2 bg-solid text-white 
         bold-14 sm:bold-15 mb-1 rounded-xl'>
           <h5>STT</h5>
           <h5>Image</h5>
           <h5>Title</h5>
-          <h5>Instock</h5>
+          <h5>Status</h5>
           <h5>Action</h5>
         </div>
 
         {/* Promotion List */}
         {promotion.map((promotion, index)=>(
-        <div key={promotion.id} className='grid grid-cols-[1fr_1.5fr_2fr_2fr_1.5fr_1.5fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
-          <p className='text-sm font-semibold'>{(currentPage - 1) * 10 + index + 1}</p>
+        <div key={promotion.id} className='grid grid-cols-[1fr_1.5fr_1.5fr_1fr_1fr] items-center gap-2 p-2 bg-white rounded-lg' >
+          <p className='text-sm font-semibold'>{(currentPage - 1) * 5 + index + 1}</p>
           <img src={myAssets[promotion.img]} alt="" className='w-12 bg-primary rounded'/>
           <h5 className='text-sm font-semibold line-clamp-2'>{promotion.title}</h5>
 
@@ -126,7 +94,6 @@ function ViewPromotion() {
               type='checkbox' 
               className='sr-only peer' 
               defaultChecked={promotion.inStock}
-              onChange={() => handleToggleInStock(promotion)}
               >
 
               </input>
@@ -140,16 +107,16 @@ function ViewPromotion() {
 
           <div className='py-2.5'>
             <button onClick={() => navigate(`/admin/edit-promotion/${promotion.id}`)} 
-            className='inline-flex items-center justify-center rounded-md font-medium transition duration-150 bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 text-sm'
+            className='inline-flex items-center justify-center rounded-md font-medium transition duration-150 hover:bg-blue-200 text-white px-2 py-1 text-sm'
             >
-              Edit
+              <img src={myAssets.edit} alt="" className='max-h-20 max-w-20 object-contain' />
             </button>
 
             <button 
             onClick={() => handleDeletePromotion(promotion.id)}
-            className='inline-flex items-center justify-center rounded-md font-medium transition duration-150 bg-red-600 hover:bg-red-700 text-white px-2 py-1 text-sm ml-2'
+            className='inline-flex items-center justify-center rounded-md font-medium transition duration-150 hover:bg-red-200 text-white px-2 py-1 text-sm ml-2'
             >
-              Delete
+              <img src={myAssets.trash} alt="" className='max-h-20 max-w-20 object-contain' />
               </button>
           </div>
         </div>
@@ -157,27 +124,50 @@ function ViewPromotion() {
 
         {/* Phân Trang */}
         {totalPages > 1 && (
-                <div className='flex justify-center items-center mt-6 gap-3'>
+                <div className='flex justify-center items-center flex-wrap mt-14 mb-10 gap-3'>
                     <button 
-                        onClick={() => handlePageChange(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className='px-3 py-1 border rounded-lg bg-gray-100 disabled:opacity-50'
+                        disabled={currentPage === 1} 
+                        onClick={() => handlePageChange(currentPage - 1)} 
+                        className={`px-3 py-1 border rounded-lg transition-all text-sm font-semibold 
+                        ${currentPage === 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
                     >
-                        Trước
+                        Previous
                     </button>
-                    <span className='text-sm'>
-                        Trang {currentPage} trên {totalPages}
-                    </span>
+                    
+                    {Array.from({ length: totalPages }, (_, index) => (
+                        <button 
+                            key={index + 1} 
+                            onClick={() => handlePageChange(index + 1)}
+                            className={`px-3 py-1 border rounded-lg text-sm font-semibold transition-all
+                            ${currentPage === index + 1 ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"}`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                    
                     <button 
-                        onClick={() => handlePageChange(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className='px-3 py-1 border rounded-lg bg-gray-100 disabled:opacity-50'
+                        disabled={currentPage === totalPages} 
+                        onClick={() => handlePageChange(currentPage + 1)} 
+                        className={`px-3 py-1 border rounded-lg transition-all text-sm font-semibold 
+                        ${currentPage === totalPages ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
                     >
-                        Sau
+                        Next
                     </button>
                 </div>
             )}
       </div>
+      <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+      />
     </div>
   )
 }

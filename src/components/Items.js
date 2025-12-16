@@ -7,21 +7,19 @@ const Items = ({product}) => {
 
 const[size, setSize]=useState(product.prices[0]?.size||"");
 const[price, setPrice] = useState(product.prices[0]?.price || 0);
-const {addToCart}=useUserContext();
+const {addToCart, navigate}=useUserContext();
 const imageSrc = myAssets[product.productImage];
 const formatCurrency = (value) => {
     if (typeof value !== "number" || isNaN(value)) return "";
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
-      minimumFractionDigits: 0, // Không hiển thị số lẻ
+      minimumFractionDigits: 0, 
     }).format(value);
   };
   const handleAddToCart = () => {
-        // Gọi hàm addToCart với quantity = 1
-        addToCart(1,size,"abc",product.id); 
+        addToCart(1,size,"",product.id); 
     };
-// const imageSrc = product.productImage;
 
   return (
         <div className='relative mt-24 group'>
@@ -37,8 +35,10 @@ const formatCurrency = (value) => {
         alt="productImg" 
         height={177} 
         width={177}
+        onClick={()=>{navigate(`/product-details/${product.id}`)}}
         className='absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-100 drop-shadow-md'/>
       </div>
+      <br />
       {/* Info */}
       <div className='rounded-3xl bg-primary pt-20 overflow-hidden'>
         {/* Title */}

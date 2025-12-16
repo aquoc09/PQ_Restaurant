@@ -4,9 +4,9 @@ import api from '../api/api';
 const CategoryService = {
     
     createCategory: async (categoryRequest) => {
+        debugger;
         try {
             const response = await api.post("/categories", categoryRequest);
-
             return response.data; 
         } catch (error) {
             console.error("Error creating category:", error);
@@ -58,7 +58,8 @@ const CategoryService = {
             console.error(`Error deleting category with ID ${categoryId}:`, error);
             throw error;
         }
-    }
+    },
+
 };
 
 export default CategoryService;

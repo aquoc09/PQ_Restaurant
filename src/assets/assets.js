@@ -139,7 +139,7 @@ import mail from './mail.svg'
 import right from './right.svg'
 import dollar from './dollar.svg'
 import upload_icon from './upload_icon.png'
-
+import edit from './edit.png'
 
 export const myAssets = {
   upload_icon,
@@ -188,7 +188,7 @@ export const myAssets = {
     'poster5.png':poster5,
     'poster6.png':poster6,
     'poster7.png':poster7,
-    'promotion6.jpg':promotion6,
+    promotion6,
     salad_cahoi,
     salad_dauhutrung,
     salad_rau,
@@ -251,7 +251,7 @@ export const myAssets = {
     feature2,
     feature3,
     star_black,
-    
+    edit,
 };
    
 export const menuList=[

@@ -1,15 +1,16 @@
 // src/components/AddPromotion.jsx (Chỉnh sửa để dùng key/string cho img)
 import React, { useState } from 'react';
 import PromotionService from '../../services/PromotionService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-// Giả định: Import thư viện assets của bạn để xem trước
-import { myAssets } from '../../assets/assets'; 
 
 const initialFormState = {
     title: '',
+    img: '',
     inStock: true,
 };
+
 
 function AddPromotion() {
     const navigate = useNavigate();
@@ -34,11 +35,13 @@ function AddPromotion() {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImageFile(file); // Lưu File Object
+            setImageFile(file);
             
-            // Tạo  tạm thời để xem trước
+            // Tạo URL xem trước
             const reader = new FileReader();
-            reader.onloadend = () => setImagePreview(reader.result);
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
             reader.readAsDataURL(file);
         } else {
             setImageFile(null);
@@ -52,11 +55,11 @@ function AddPromotion() {
 
         let imageFileName = '';
         if (imageFile) {
-            // LẤY TÊN FILE ĐỂ LƯU XUỐNG BE
-            imageFileName = imageFile.name; 
+            const myArray = imageFile.name.split('.');
+            imageFileName = myArray[0]; 
         } else {
             setLoading(false);
-            toast.error('Vui lòng chọn ảnh khuyến mãi.');
+            toast.error('Vui lòng chọn ảnh.');
             return;
         }
         
@@ -70,7 +73,7 @@ function AddPromotion() {
         // Gọi API Thêm Khuyến mãi
         try {
             await PromotionService.createPromotion(promotionRequest);
-            toast.success('Thêm khuyến mãi thành công!');
+            toast.success('Add promotion success!');
             navigate('/admin/list-promotion');
         } catch (error) {
             console.error("Lỗi khi thêm khuyến mãi:", error);
@@ -84,7 +87,7 @@ function AddPromotion() {
         <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
             <h2 className='text-2xl font-bold mb-6'>Add New Promotion</h2>
             
-            <form>
+            <form onSubmit={handleSubmit}>
                 {/* Tiêu đề */}
                 <div className="mb-4">
                     <h5>Promotion Title</h5>
@@ -102,7 +105,7 @@ function AddPromotion() {
                     <input 
                         type="file" 
                         name="img" 
-                        value={formData.img} 
+                        accept="image/*"
                         onChange={handleImageChange} 
                         required 
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"
@@ -137,6 +140,18 @@ function AddPromotion() {
                     </button>
                 </div>
             </form>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 }

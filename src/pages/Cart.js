@@ -1,51 +1,29 @@
-import React,{useEffect,useState, useCallback} from 'react'
+import React from 'react'
 import Title from '../components/Title'
 import CartTotal from '../components/CartTotal'
 import { useUserContext } from '../context/UserContext'
-import { myAssets } from '../assets/assets'
-import { toast } from 'react-hot-toast';
-import CartService from '../services/CartService'; 
 import CartItem from '../components/CartItem'
+import {ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import useAuth from '../hooks/useAuth';
 
 const Cart = () => {
 
   const{
     navigate,
     cart,
-    isAuthenticated,
   }=useUserContext();
 
-//   const[basket,setBasket]=useState([]);
+  const { 
+      isAuthenticated, 
+  } = useAuth();
 
-//   const fetchCarts = (async () => {
-//       try{
-//         const cartResponse = await CartService.getCart();
-//         const cartList=cartResponse.result;
-//         setBasket(cartList.cartItems);
-//       }catch{
-//         toast.error("Không thể tải giỏ hàng. Vui lòng thử lại.");
-//         setBasket([]);
-//       }
-//     });
-//   useEffect(() => {
-//     if (isAuthenticated) {
-//         fetchCarts();
-//     }
-// }, [isAuthenticated]);
   const cartItems = cart?.cartItems || [];
 
-    if (!isAuthenticated) {
-        return (
-            <div className='max-padd-container py-16 xl:py-28 text-center bg-primary'>
-                <h2 className='text-2xl font-bold'>Vui lòng đăng nhập để xem giỏ hàng</h2>
-                <button 
-                    onClick={() => navigate('/login')} 
-                    className='mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600'>
-                    Đi đến trang Đăng nhập
-                </button>
-            </div>
-        );
-    }
+  if (isAuthenticated() === false) {
+      toast.error("Vui lòng đăng nhập để xem giỏ hàng của bạn.");
+      setTimeout(() => navigate('/login'), 3000)
+  }
 
   return (
     <div className='max-padd-container py-16 xl:py-28 bg-primary'>
@@ -56,9 +34,9 @@ const Cart = () => {
           <Title title1={"Cart"} title2={"Overview"} titleStyles={"pb-5 items-start"} paraStyles={"hidden"} />
           <div className='grid grid-cols-[6fr_2fr_1fr] font-medium bg-white p-2
           rounded-xl'>
-            <h5 className='text-left'>Product Detials</h5>         
-            <h5 className='text-center'>Total</h5>         
-            <h5 className='text-center'>Action</h5>         
+            <h5 className='text-left text-gray-900'>Product Detials</h5>         
+            <h5 className='text-center text-gray-900'>Total</h5>         
+            <h5 className='text-center text-gray-900'>Action</h5>         
             </div>
             {cartItems.length > 0 ? (
               cartItems.map((cart)=>(
@@ -83,6 +61,18 @@ const Cart = () => {
           </div>
             </div>
         </div>
+        <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+        />
     </div>
   )
 }

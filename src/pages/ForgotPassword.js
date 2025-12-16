@@ -29,10 +29,10 @@ const ForgotPassword = () => {
             const { data } = response;
             if (data.code === 1000) {
                 if (data.result === true) {
-                    // THÀNH CÔNG: result: true
-                    toast.success("Đặt lại mật khẩu thành công. Vui lòng kiểm tra email của bạn!");
-                    // Chuyển hướng về trang login sau 3 giây
-                    setTimeout(() => navigate('/login'), 3000); 
+
+                    toast.success("Đặt lại mật khẩu success. Vui lòng kiểm tra email của bạn!");
+
+                    setTimeout(() => navigate('/login'), 3000)
                 } else {
                     // THẤT BẠI LOGIC: code 1000 nhưng result: false
                     toast.error("Vui lòng kiểm tra lại username hoặc email.");

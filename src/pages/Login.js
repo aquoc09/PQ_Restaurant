@@ -4,7 +4,8 @@ import AuthService from '../services/AuthService';
 import { jwtDecode } from 'jwt-decode';
 import {useAuth} from '../hooks/useAuth'
 import {useAuthContext} from '../context/AuthContext'
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
@@ -27,21 +28,18 @@ const Login = () => {
     try {
       const response = await AuthService.login({ username, password });
       
-      // Giả định API trả về { token: "...", roles: ["USER", "ADMIN"] }
-      const { token, refreshToken } = response.data.result; // Nhớ lấy refreshToken
-      
-      // 1. Lưu Token và Vai trò vào Local Storage
+      const { token, refreshToken } = response.data.result;
+
       localStorage.setItem('accessToken', token);
       localStorage.setItem('refreshToken', refreshToken); // Lưu Refresh Token
-      // refreshAuthStatus();
       setAccessToken(token);
-      toast.success('Đăng nhập thành công!');
+      toast.success('Đăng nhập success!');
 
       const decodedToken = jwtDecode(token);
       const userScope = decodedToken?.scope?.trim() || '';
 
       
-      // 2. KIỂM TRA VAI TRÒ VÀ ĐIỀU HƯỚNG
+      // KIỂM TRA VAI TRÒ VÀ ĐIỀU HƯỚNG
       if (userScope === ROLE_ADMIN_STRING) {
         navigate('/admin');
       }
@@ -68,7 +66,6 @@ const Login = () => {
         </h2>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* ... (Các input email/password không đổi) ... */}
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="username" className="sr-only">Username</label>
@@ -123,22 +120,31 @@ const Login = () => {
             </Link>
         </div>
 
-        {/* PHẦN ĐƯỜNG DẪN MỚI */}
         <div className="text-sm text-center mt-6">
           <span className="font-medium text-gray-600">
             Không có tài khoản?{' '}
           </span>
           <Link 
-            // Giả sử đường dẫn (route) của trang SignUp là "/signup"
             to="/signup" 
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
             Đăng ký
           </Link>
         </div>
-        {/* KẾT THÚC PHẦN ĐƯỜNG DẪN MỚI */}
 
       </div>
+      <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+      />
     </div>
   );
 };

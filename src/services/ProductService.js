@@ -1,6 +1,5 @@
 import api from "../api/api";
 
-
 const ProductService = {
 
   getProducts: async (keyword = '', categoryId = 0, page = 0, limit = 10) => {
@@ -13,7 +12,7 @@ const ProductService = {
                 limit: limit,
             }
         });
-        return response.data; // Trả về ApiResponse<ProductListResponse>
+        return response.data; 
     } catch (error) {
         console.error("Error fetching paginated products:", error);
         throw error;
@@ -26,7 +25,7 @@ const ProductService = {
                 limit: limit,
             }
         });
-        return response.data; // Trả về ApiResponse<List<ProductResponse>>
+        return response.data;
     } catch (error) {
         console.error("Error fetching products by category code:", error);
         throw error;
@@ -54,7 +53,7 @@ const ProductService = {
   getProductById: async (productId) => {
     try {
         const response = await api.get(`/products/${productId}`);
-        return response.data; // Trả về ApiResponse<ProductResponse>
+        return response.data;
     } catch (error) {
         console.error(`Error fetching product with ID ${productId}:`, error);
         throw error;
@@ -72,7 +71,7 @@ const ProductService = {
   updateProduct: async (productId, productRequest) => {
     try {
         const response = await api.put(`/products/${productId}`, productRequest);
-        return response.data; // Trả về ApiResponse<ProductResponse> đã cập nhật
+        return response.data; 
     } catch (error) {
         console.error(`Error updating product with ID ${productId}:`, error);
         throw error;
@@ -81,7 +80,7 @@ const ProductService = {
   deleteProduct: async (productId) => {
     try {
         const response = await api.delete(`/products/${productId}`);
-        return response.data; // Trả về ApiResponse<String> (message: "Product has been deleted")
+        return response.data;
     } catch (error) {
         console.error(`Error deleting product with ID ${productId}:`, error);
         throw error;

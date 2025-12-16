@@ -2,16 +2,14 @@ import React, {useState, useEffect} from 'react'
 import { myAssets } from '../assets/assets'
 import ProductService from '../services/ProductService'; 
 import { useUserContext } from '../context/UserContext'
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CartItem = ({cart}) => {
 
-    const{formatCurrency, updateQuantity, removeFromCart}=useUserContext();
+    const{formatCurrency, updateQuantity, removeFromCart, navigate}=useUserContext();
     const [product, setProduct]=useState([]);
-    // const safeProducts = products || [];
     let subtotal = cart.totalMoney ;
-    // const productData = safeProducts.find((product) => { return product.id === cart.productId});
-    // console.log(productData)
     
     useEffect(() => {
         const fetchProducts = async () => {
@@ -22,9 +20,7 @@ const CartItem = ({cart}) => {
                 const productListResponse = response.result;
                 setProduct(productListResponse);
             } catch (err) {
-                // console.error("Lỗi khi tải sản phẩm:", err);
                 toast.error("Không thể tải sản phẩm trong giỏ hàng. Vui lòng thử lại.");
-                // setError("Không thể tải sản phẩm.");
                 setProduct([]);
             }
 
@@ -61,11 +57,15 @@ const CartItem = ({cart}) => {
     <div className='grid grid-cols-[6fr_2fr_1fr] items-center bg-white p-2 rounded-xl'>
         <div className='flex items-center md:gap-6 gap-3'>
         <div className='flex bg-primary rounded-xl'>
-            <img src={myAssets[product.productImage]} alt="productImg" className='w-20' />
+            <img 
+            src={myAssets[product.productImage]} 
+            alt="productImg" 
+            onClick={()=>{navigate(`/product-details/${product.id}`)}}
+            className='w-20' />
         </div>
         <div>
-            <h5 className='hidden sm:block line-clamp-1'>{product.name}</h5>
-            <div className='bold-14 flexStart gap-2 mb-1'>Size: <p>{cart.size}</p></div>
+            <h5 className='hidden sm:block line-clamp-1 text-gray-900'>{product.name}</h5>
+            <div className='bold-14 flexStart gap-2 mb-1 text-gray-900'>Size: <p>{cart.size}</p></div>
             <div className='flexBetween'>
             <div className='flex items-center right-1 ring-slate-900/15 
             rounded-full overflow-hidden bg-primary'>
@@ -91,7 +91,19 @@ const CartItem = ({cart}) => {
         className='cursor-pointer mx-auto'>
             <img src={myAssets.cart_remove} alt="" width={22} />
         </button>
-        </div>
+        <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+        />
+    </div>
     );
 
 }

@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import CartService from '../services/CartService'; 
 import ProductService from '../services/ProductService';
 import useAuth from '../hooks/useAuth';
-import { toast } from 'react-hot-toast';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const UserContext=createContext();
@@ -21,34 +22,26 @@ const formatCurrency = (value) => {
 
 const initialCartState = {
     cartItems: [],
-    totalMoney: 0, // Giá trị tổng tiền do BE trả về
-    id: null, // Cart ID
+    totalMoney: 0, 
+    id: null, 
     cartItemCount: 0,
 };
 
 export const UserContextProvider = ({children}) => {
 
-    const[products, setProducts]=useState([]);
+    const [products, setProducts]=useState([]);
     const [cart, setCart] = useState(initialCartState);
     const [searchQuery, setSearchQuery]=useState("");
     const delivery_charges=20000;
     const navigate=useNavigate();
-    // const [cardItems, setCartItems]=useState([]);
-    const[method,setMethod]=useState("COD");
-    // const [isAdmin, setIsAdmin]=useState(() => {
-    //   const adminToken = localStorage.getItem('adminToken');
-    //   return !!adminToken; // Convert to boolean
-    // });
 
     const { 
         isUser, 
-        isAuthenticated, // Lấy trạng thái đăng nhập đầy đủ
-        user, // Thông tin user cơ bản từ token (hoặc chi tiết nếu có)
-        logout // Hàm đăng xuất
+        isAuthenticated,
+        user, 
+        logout 
     } = useAuth();
-    // const [isUser, setIsUser]=useState(true);
-    //Clerk
-    // const {user}=useUser();
+
 
     const fetchProducts = useCallback(async()=>{
         try {
@@ -67,13 +60,13 @@ export const UserContextProvider = ({children}) => {
     }, []);
 
     const fetchCart = useCallback(async () => {
-    if (!isAuthenticated) {
-             setCart([]); // Xóa giỏ hàng nếu chưa đăng nhập
-             return;
+    if (isAuthenticated() === false) {
+            setCart([]); 
+            toast.error("Log in to view cart");
+            return;
         }
 
         try {
-            // Lấy CartResponse, giả định nó có cấu trúc { id, cartItems: [] }
             const response = await CartService.getCart();
             const newCartData = response.result; 
 
@@ -83,52 +76,52 @@ export const UserContextProvider = ({children}) => {
                 cartItemCount: newCartData.cartItems.reduce((sum, item) => sum + item.quantity, 0)
             });
             } else {
-            setCart(initialCartState); // Giỏ hàng trống hoặc dữ liệu không hợp lệ
+            setCart(initialCartState); 
         }
         } catch (error) {
             console.error("Lỗi khi tải giỏ hàng:", error);
-            // Quan trọng: Đặt giỏ hàng rỗng nếu lỗi để ngăn lỗi runtime trong các component khác
+
             setCart(initialCartState); 
         }
     }, [isAuthenticated]);
 
-    //Add Products to Cart
-    // 1. Thêm/Cập nhật Sản phẩm vào Giỏ hàng (Sử dụng API)
+    // Thêm Product vào Giỏ hàng 
     const addToCart = useCallback(async (quantity, size, note, productId) => {
-        if (!isAuthenticated) {
+        if (isAuthenticated() === false) {
             toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
         }
         if (!size) return toast.error("Vui lòng chọn kích cỡ.");
 
         const cartItemRequest = {
-            "quantity" : parseInt(quantity),
+            "quantity" : quantity,
             "size" : size,
             "note" : note,
             "productId" : productId
         };
 
+        console.log("Item", cartItemRequest);
+
         try {
-            await CartService.addItemToCart(cartItemRequest); // BE tự động thêm/cập nhật
-            await fetchCart(); // Tải lại toàn bộ giỏ hàng để cập nhật UI
-            toast.success("Đã thêm sản phẩm vào giỏ hàng!");
+            await CartService.addItemToCart(cartItemRequest); 
+            toast.success("Add to cart success!");
+            await fetchCart(); 
         } catch (error) {
-            const errorMessage = error.response?.data?.message || "Thêm vào giỏ hàng thất bại.";
-            toast.error(errorMessage);
+            toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.");
         }
     }, [isAuthenticated, fetchCart]);
 
-    // 2. Xóa 1 mục khỏi Giỏ hàng (API)
+    // Xóa 1 Product mục khỏi Giỏ hàng 
     const removeFromCart = useCallback(async (itemId) => {
         try {
             await CartService.deleteCartItem(itemId);
-            await fetchCart(); // Tải lại giỏ hàng
             toast.success("Đã xóa sản phẩm khỏi giỏ hàng.");
+            await fetchCart();
         } catch (error) {
             toast.error("Lỗi khi xóa sản phẩm.");
         }
     }, [fetchCart]);
 
-    // 3. Cập nhật Số lượng (API)
+    // Cập nhật Số lượng Product
     const updateQuantity = useCallback(async (itemId, newQuantity) => {
 
         const currentItem = cart.cartItems.find(item => item.id === itemId);
@@ -145,8 +138,9 @@ export const UserContextProvider = ({children}) => {
                 productId: currentItem.productId
             };
             await CartService.updateItemQuantity(request);
-            await fetchCart(); // Tải lại giỏ hàng
             toast.success("Đã cập nhật số lượng.");
+            await fetchCart();
+
         } catch (error) {
             toast.error("Lỗi khi cập nhật số lượng.");
         }
@@ -164,8 +158,6 @@ export const UserContextProvider = ({children}) => {
         }
 
         try {
-            // 2. TẠO REQUEST BODY ĐẦY ĐỦ với size mới
-            // Hàm updateItemSize của bạn dùng PUT /items/sizes và cần request body:
             await CartService.updateItemSize({ 
                 id: cartItemId, // long id
                 quantity: currentItem.quantity, // int quantity
@@ -173,10 +165,8 @@ export const UserContextProvider = ({children}) => {
                 note: currentItem.note, // String
                 productId: currentItem.productId // Long productId
             });
-
-            await fetchCart();
             toast.success("Đã cập nhật kích cỡ.");
-            
+            await fetchCart();
         } catch (error) {
             toast.error("Lỗi khi cập nhật kích cỡ.");
         }
@@ -185,13 +175,8 @@ export const UserContextProvider = ({children}) => {
     // Lấy tổng số lượng mục
     const getCartCount = useMemo(() => cart.cartItemCount, [cart.cartItemCount]);
 
-    // Lấy tổng tiền (Dựa vào trường 'totalAmount' hoặc tính toán thủ công)
+    // Lấy tổng tiền
     const getCartAmount = useMemo(() => {
-        // Ưu tiên dùng tổng tiền do Server tính toán và gửi về
-        // if (cart.totalMoney > 0) {
-        //     return cart.totalMoney;
-        // }
-        // Fallback: Tính lại ở FE nếu cần
         return cart.cartItems.reduce((total, item) => total + item.totalMoney, 0);
 
     }, [cart.cartItems]);
@@ -203,35 +188,40 @@ export const UserContextProvider = ({children}) => {
     },[fetchCart, fetchProducts]);
 
     const value={
-        // user
         isAuthenticated,
         user,
         logout,
         isUser,
-
         cart,
         products,
-        // fetchProducts,
         fetchCart,
         formatCurrency,
         delivery_charges,
         navigate,
         searchQuery,
         setSearchQuery,
-        // cardItems,
         addToCart,
         getCartCount,
         updateQuantity,
+        updateSize,
         getCartAmount,
         removeFromCart,
-        method,
-        setMethod,
-        // isUser,
-        // setIsUser,
     };
     
   return <UserContext.Provider value={value}>
         {children}
+        <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+        />
     </UserContext.Provider>;
 };
 

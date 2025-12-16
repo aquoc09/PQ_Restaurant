@@ -1,7 +1,8 @@
 // src/components/AddPromotion.jsx (Chỉnh sửa để dùng key/string cho img)
 import React, { useState, useEffect } from 'react';
 import PromotionService from '../../services/PromotionService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
 // Giả định: Import thư viện assets của bạn để xem trước
 import { myAssets } from '../../assets/assets'; 
@@ -11,6 +12,11 @@ const initialFormState = {
     title: '',
     img: '',
     inStock: true,
+};
+
+// Hàm lấy URL từ key (tên file) để xem trước ảnh cũ
+const getImageUrl = (key) => {
+    return myAssets[key] || '';
 };
 
 function EditPromotion() {
@@ -24,28 +30,29 @@ function EditPromotion() {
     // State để hiển thị bản xem trước ảnh mới (dùng FileReader )
     const [imagePreview, setImagePreview] = useState(null);
 
+    const fetchData = async () => {
+        try {
+            const currentPromo = await PromotionService.getPromotionById(promotionId);
+            const promoData = currentPromo.result;
+            setFormData({
+                id: promotionId,
+                title: promoData.title,
+                img: promoData.img, // Tên file hiện tại được lưu
+                inStock: promoData.inStock,
+            });
+            // Thiết lập ảnh hiện tại làm preview ban đầu
+            setImagePreview(getImageUrl(promoData.img));
+        } catch (error) {
+            toast.error("Không thể tải dữ liệu khuyến mãi để sửa.");
+            navigate('/admin/list-promotion');
+        } finally {
+            setLoading(false);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const currentPromo = await PromotionService.getPromotionById(promotionId);
-                
-                setFormData({
-                    id: promotionId,
-                    title: currentPromo.title,
-                    img: currentPromo.img, // Tên file hiện tại được lưu
-                    inStock: currentPromo.inStock,
-                });
-                // Thiết lập ảnh hiện tại (từ assets) làm preview ban đầu
-                setImagePreview(myAssets[currentPromo.img]);
-            } catch (error) {
-                toast.error("Không thể tải dữ liệu khuyến mãi để sửa.");
-                navigate('/admin/list-promotion');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [promotionId, navigate]);
+        if(promotionId)
+            fetchData();
+    }, [promotionId]);
 
     // Xử lý chung cho title, img, inStock
     const handleInputChange = (e) => {
@@ -60,15 +67,18 @@ function EditPromotion() {
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImageFile(file); // Lưu File Object
+            setImageFile(file);
             
-            // Tạo  tạm thời để xem trước
+            // Tạo URL xem trước cho ảnh mới
             const reader = new FileReader();
-            reader.onloadend = () => setImagePreview(reader.result);
+            reader.onloadend = () => {
+                setImagePreview(reader.result);
+            };
             reader.readAsDataURL(file);
         } else {
             setImageFile(null);
-            setImagePreview(null);
+            // Nếu xóa file, quay lại hiển thị ảnh cũ (từ tên file đã lưu)
+            setImagePreview(getImageUrl(formData.img));
         }
     };
 
@@ -76,7 +86,7 @@ function EditPromotion() {
         e.preventDefault();
         setLoading(true);
 
-        const imageFileName = imageFile ? imageFile.name : formData.img;
+        const imageFileName = imageFile ? imageFile.name.split('.')[0] : formData.img;
         if (!imageFileName) {
             setLoading(false);
             toast.error('Vui lòng chọn ảnh khuyến mãi.');
@@ -92,8 +102,8 @@ function EditPromotion() {
 
         // Gọi API Thêm Khuyến mãi
         try {
-            await PromotionService.createPromotion(promotionRequest);
-            toast.success('Thêm khuyến mãi thành công!');
+            await PromotionService.updatePromotion(promotionId,promotionRequest);
+            toast.success('Update promotion success!');
             navigate('/admin/list-promotion');
         } catch (error) {
             console.error("Lỗi khi thêm khuyến mãi:", error);
@@ -105,7 +115,7 @@ function EditPromotion() {
 
     return (
         <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
-            <h2 className='text-2xl font-bold mb-6'>Add New Promotion</h2>
+            <h2 className='text-2xl font-bold mb-6'>Edit Promotion</h2>
             
             <form onSubmit={handleSubmit}>
                 {/* Tiêu đề */}
@@ -125,9 +135,8 @@ function EditPromotion() {
                     <input 
                         type="file" 
                         name="img" 
-                        value={formData.img} 
+                        accept="image/*"
                         onChange={handleImageChange} 
-                        required 
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"
                     />
                     {/* Xem trước ảnh */}
@@ -160,6 +169,18 @@ function EditPromotion() {
                     </button>
                 </div>
             </form>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     );
 }

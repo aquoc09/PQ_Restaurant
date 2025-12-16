@@ -84,17 +84,17 @@ const Comments = () => {
             </div>
             
 
-        <div class="flex flex-wrap items-center justify-center gap-6"> 
-    <div class="text-sm max-w-sm border border-gray-200 pb-6 rounded-lg bg-[#edbdcd] shadow-[0px_4px_15px_0px] shadow-black/5 overflow-hidden">
-        <div class="flex items-center gap-4 px-5 py-4 border-b border-slate-900/10">
-            <img class="h-12 w-12 rounded-full" src={myAssets.user1} alt="userImage1" />
+        <div className="flex flex-wrap items-center justify-center gap-6"> 
+    <div className="text-sm max-w-sm border border-gray-200 pb-6 rounded-lg bg-[#edbdcd] shadow-[0px_4px_15px_0px] shadow-black/5 overflow-hidden">
+        <div className="flex items-center gap-4 px-5 py-4 border-b border-slate-900/10">
+            <img className="h-12 w-12 rounded-full" src={myAssets.user1} alt="userImage1" />
             <div>
-                <h1 class="text-lg font-medium text-gray-800">Donald Jackman</h1>
-                <p class="text-black">Content Creator</p>
+                <h1 className="text-lg font-medium text-gray-800">Donald Jackman</h1>
+                <p className="text-black">Content Creator</p>
             </div>
         </div>
-        <div class="p-5 pb-7">
-            <div class="flex gap-0.5">
+        <div className="p-5 pb-7">
+            <div className="flex gap-0.5">
                 <img src={myAssets.star_black} alt="" width={16} />
                 <img src={myAssets.star_black} alt="" width={16} />
                 <img src={myAssets.star_black} alt="" width={16} />

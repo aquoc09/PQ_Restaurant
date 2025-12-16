@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
-// import DEFAULT_AVATAR_MAP from '../../constants/avatarMapping';
-import { myAssets } from "../../assets/assets";
+import useAuth from '../hooks/useAuth';
+import { myAssets } from "../assets/assets";
 
-const AdminButton = () => {
+const AdminPanel = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -13,6 +12,7 @@ const AdminButton = () => {
     
     // 💡 Lấy thông tin từ useAuth
     const { username, logout } = useAuth();
+    // const { username, isAuth, logout } = useAuth();
     
     // Logic đóng menu khi click ra ngoài
     useEffect(() => {
@@ -28,7 +28,7 @@ const AdminButton = () => {
 
 
     const handleEditProfile = () => {
-        navigate('/admin/my-profile');
+        navigate('/user-profile');
         setIsOpen(false); 
     };
 
@@ -49,14 +49,14 @@ const AdminButton = () => {
         } finally {
           setLoading(false);
         }
-    };
+      };
 
     const cancelLogout = () => {
-    setShowLogoutConfirm(false); // Hủy, đóng dialog
+      setShowLogoutConfirm(false); // Hủy, đóng dialog
     };
 
     return (
-        <div className='w-full md:flex items-center gap-3 p-2 pl-5 lg:pl-10'>
+        <div className='w-full md:flex items-center gap-3 p-2 pl-5 lg:pl-10'> {/* Điều chỉnh layout cho phù hợp với Sidebar */}
             <div className="relative inline-block text-left w-full" ref={menuRef}>
                 <button
                     type="button"
@@ -69,15 +69,16 @@ const AdminButton = () => {
                         <img src={myAssets.admin} alt="Admin Avatar" className="w-8 h-8 rounded-full object-cover"/>
                         <span className="font-medium">{username || 'Admin'}</span>
                     </div>
+                    
                 </button>
 
                 {/* Dropdown Menu */}
                 {isOpen && (
-                    <div className="absolute right-10 w-30 bg-white rounded-md shadow-lg z-40 ring-1 ring-black ring-opacity-5">
+                    <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50 ring-1 ring-black ring-opacity-5">
                         <ul className="flex flex-col">
                             <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
-                            <button onClick={() => navigate('/')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
-                                <h5>Home</h5>
+                            <button onClick={()=> navigate('/admin')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
+                                <h5>Dashboard</h5>
                             </button>
                             </li>
                             <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded">
@@ -97,39 +98,39 @@ const AdminButton = () => {
 
             {/* Logout Confirmation Dialog */}
             {showLogoutConfirm && (
-            <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[100] 
-            flex items-center justify-center" onClick={cancelLogout}>
-                <div 
-                    className="p-5 border w-96 shadow-lg rounded-md bg-white"
-                    onClick={e => e.stopPropagation()} // Ngăn chặn đóng khi click vào dialog
-                >
-                    <h3 className="text-lg font-bold text-gray-900 mb-3">Xác nhận Đăng Xuất</h3>
-                    <p className="text-sm text-gray-500 mb-4">
-                        Bạn có chắc chắn muốn "Đăng Xuất" khỏi hệ thống không?
-                    </p>
-                    
-                    <div className="flex justify-end space-x-3">
-                        {/* Nút KHÔNG */}
-                        <button 
-                            onClick={cancelLogout}
-                            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
-                        >
-                            Không
-                        </button>
-                        {/* Nút ĐĂNG XUẤT */}
-                        <button 
-                            onClick={confirmLogout}
-                            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition"
-                            disabled={loading}
-                        >
-                            {loading ? 'Đang xử lý...' : 'Đăng Xuất'}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            )}
+              <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[100] 
+              flex items-center justify-center" onClick={cancelLogout}>
+                  <div 
+                      className="p-5 border w-96 shadow-lg rounded-md bg-white"
+                      onClick={e => e.stopPropagation()} // Ngăn chặn đóng khi click vào dialog
+                  >
+                      <h3 className="text-lg font-bold text-gray-900 mb-3">Xác nhận Đăng Xuất</h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                          Bạn có chắc chắn muốn "Đăng Xuất" không?
+                      </p>
+                      
+                      <div className="flex justify-end space-x-3">
+                          {/* Nút KHÔNG */}
+                          <button 
+                              onClick={cancelLogout}
+                              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition"
+                          >
+                              Không
+                          </button>
+                          {/* Nút ĐĂNG XUẤT */}
+                          <button 
+                              onClick={confirmLogout}
+                              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition"
+                              disabled={loading}
+                          >
+                              {loading ? 'Đang xử lý...' : 'Đăng Xuất'}
+                          </button>
+                      </div>
+                  </div>
+              </div>
+              )}
         </div>
     );
 };
 
-export default AdminButton;
+export default AdminPanel;

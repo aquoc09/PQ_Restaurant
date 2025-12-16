@@ -1,30 +1,23 @@
 import React, {useEffect, useState} from 'react'
 import Title from './Title'
 import Items from './Items';
-// import { useUserContext } from '../context/UserContext';
 import { environment } from '../environment/environment';
 import axios from 'axios';
-//import to get data from api
-import ProductService from '../services/ProductService';
+
 
 const PopularProducts = () => {
 
-  // const [popularProducts,setPopularProducts]=useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const[items,setItems]=useState([]);
-  // const {products}=useUserContext();
 
   const fetchPopularItems = async () => {
     try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${environment.apiBaseUrl}/products/popular-products`); // Endpoint để lấy danh sách sản phẩm
-        // if (response.data) // Điều kiện response
-        // const response = await ProductService.getPopulars(); //Này để chuyển đường dẫn
-        if (response.data.result) // Điều kiện response
+        const response = await axios.get(`${environment.apiBaseUrl}/products/popular-products`); 
+        if (response.data.result) 
         {
-            // Lọc các item có popular và inStock đều là true
             const filteredData = response.data.result.filter((item) => item.inPopular && item.inStock);
             setItems(filteredData); 
         }

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import api from '../api/api';   
 
 const AUTH_API_URL = '/auth';

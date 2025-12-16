@@ -1,47 +1,50 @@
 import React, {useEffect,useState, useCallback} from 'react'
 import { useUserContext } from '../context/UserContext'
-import { toast } from 'react-hot-toast';
-// import useAuth from '../hooks/useAuth';
+import { useOrderContext } from '../context/OrderContext'
+import AddressService from '../services/AddressService';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function CartTotal() {
 
   const {
     navigate,
     formatCurrency,
-    method,
-    setMethod,
     delivery_charges,
     getCartCount,
     getCartAmount,
     isAuthenticated
-    // isUser,
   } =useUserContext();
 
-  // const {isUser}=useAuth();
+  const {    
+    method,
+    setMethod, 
+    processOrder,
+    selectedAddress, 
+    setSelectedAddress,
+    orderNote,
+    setOrderNote
+  }=useOrderContext();
 
   const [addresses, setAddresses] = useState([]);
   const [showAddress, setShowAddress] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
+
   const [addressLoading, setAddressLoading] = useState(true);
 
   const fetchAddresses = useCallback(async () => {
         setAddressLoading(true);
         try {
             
-            // TẠM THỜI: Dùng dữ liệu dummy hoặc giá trị rỗng nếu API chưa có
-            const dummyAddresses = [
-                 { id: 1, address: '456 Lê Lai', city: 'Quận 1', state: 'TP Hồ Chí Minh', zip: '70000', isDefault: true },
-                 { id: 2, address: '123 Nguyễn Văn Cừ', city: 'Quận 5', state: 'TP Hồ Chí Minh', zip: '70000' }
-            ];
-            
-            setAddresses(dummyAddresses);
-            
-            // Chọn địa chỉ mặc định
-            const defaultAddress = dummyAddresses.find(addr => addr.isDefault) || dummyAddresses[0];
+            const response = await AddressService.findAllByUser();
+            const list = response && response.result ? response.result : (response || []);
+            setAddresses(list);
+            console.log("Địa chỉ người dùng:", list);
+
+            // Chọn địa chỉ mặc định (use fetched list, not stale state)
+            const defaultAddress = (list.find ? list.find(addr => addr.isDefault) : null) || (list[0] || null);
             setSelectedAddress(defaultAddress);
 
         } catch (error) {
-            console.error("Lỗi khi tải địa chỉ:", error);
             toast.error("Không thể tải danh sách địa chỉ.");
             setAddresses([]);
         } finally {
@@ -68,49 +71,34 @@ function CartTotal() {
 
     const totalAmount = cartAmount + shippingFee + taxAmount;
     
-    // --- Xử lý Đặt hàng (Checkout) ---
-    const handleCheckout = () => {
-      if (!isAuthenticated) {
-            toast.error("Vui lòng đăng nhập để tiến hành đặt hàng.");
-            navigate('/login');
-            return;
-        }
-        if (cartAmount === 0) {
-            toast.error("Giỏ hàng của bạn đang trống.");
-            return;
-        }
-        if (!selectedAddress) {
-            toast.error("Vui lòng chọn địa chỉ giao hàng.");
-            return;
-        }
-        toast.success(`Đã chuẩn bị đặt hàng. Thanh toán bằng: ${method}.`);
-        // navigate('/checkout-page');
+    // --- Xử lý Đặt hàng ---
+    const handleCheckout = async () => {
+        await processOrder(totalAmount);
     };
+
     if (!isAuthenticated) {
-        // Có thể hiển thị component trống nếu Cart.js đã xử lý trạng thái chưa đăng nhập
         return null; 
     }
 
   return (
     <div>
-      <h3>
+      <h3 className='text-gray-900'>
         Order Detials 
-        <span className='text-black font-bold text-lg'>({getCartCount}) </span>Items
+        <span className='text-action font-bold text-lg'>({getCartCount}) Items</span>
       </h3>
       <hr className='border-gray-300 my-5' />
-      Payment & AddressForm
       <div className='mb-5'>
         <div className='my-5'>
-          <h4 className='mb-5'>Where to ship your order?</h4>
+          <h4 className='text-gray-900'>Where to ship your order?</h4>
           {addressLoading ? 
           (
               <p className='text-sm text-gray-500'>Đang tải địa chỉ...</p>
           ) : (
           <div className='relative flex justify-between items-start mt-2'>
-          <p>
+          <p className='text-gray-400'>
           {selectedAddress ? 
           ( 
-              `${selectedAddress.address}, ${selectedAddress.city}, ${selectedAddress.state}` 
+              `${selectedAddress.fullAddress} `
           ) : ( 
               "Chưa có địa chỉ được chọn." 
           )}
@@ -128,15 +116,14 @@ function CartTotal() {
                   setShowAddress(false);
                 }}
                 className='p-2 cursor-pointer hover:bg-gray-100 text-sm font-medium'>
-                  {address.address}, {address.city}, {address.state}
+                  {address.fullAddress}
                 </p>
               ))
               ) : (
                   <p className='p-2 text-center text-red-500'>Không tìm thấy địa chỉ nào.</p>
               )}
                 <p onClick={()=>{
-                navigate("/address-form")
-                // ensure the page is scrolled to top after navigation
+                navigate("/address")
                 setTimeout(()=> window.scrollTo({ top: 0, left: 0, behavior: 'smooth' }), 50)
               }}
               className='p-2 text-center cursor-pointer hover:bg-tertiary hover:text-white'
@@ -153,21 +140,36 @@ function CartTotal() {
         <div>
           <hr className='border-gray-300 mt-5' />
           <div>
-            <h4>Payment Method</h4>
+            <h4 className='text-gray-900'>Payment Method</h4>
             <div className='flex gap-3'>
               <div onClick={()=>setMethod("COD")}
-              className={`${method === "COD" ? 'btn-solid' : 'btn-light'} 
+              className={`${method === "COD" ? 'btn-solid text-white' : 'btn-light'} 
               !py-1 text-xs cursor-pointer`}
               >
                 Cash On Delivery
               </div>
-              <div onClick={()=>setMethod("stripe")}
-              className={`${method === "stripe" ? 'btn-solid' : 'btn-light'} 
-              !py-1 text-xs cursor-pointer`}
+              <div onClick={()=>setMethod("VNPAY")}
+              className={`${method === "VNPAY" ? 'btn-solid text-white' : 'btn-light'} 
+              !py-1 text-xs cursor-pointer `}
               >
-                Stripe
+                VNPAY
               </div>
             </div>
+          </div>
+          <hr className='border-gray-300 mt-5' />
+        </div>
+
+        {/* Note */}
+        <div>
+          <div>
+            <h4 className='text-gray-900'>Note</h4>
+            <textarea
+                name="orderNote"
+                value={orderNote}
+                onChange={(e) => setOrderNote(e.target.value)}
+                className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700 h-24'
+                placeholder='Ghi chú (ví dụ: cạnh cửa hàng, tầng, căn hộ...)'
+            />
           </div>
           <hr className='border-gray-300 mt-5' />
         </div>
@@ -177,27 +179,27 @@ function CartTotal() {
 
           {/* Giá sản phẩm */}
           <div className='flex justify-between'>
-            <h5>Price ({getCartCount} items)</h5>
-            <p className='font-bold text-black'>{formatCurrency(cartAmount)}</p>
+            <h5 className='text-gray-900'>Price ({getCartCount} items)</h5>
+            <p className='font-bold text-gray-900'>{formatCurrency(cartAmount)}</p>
           </div>
 
           {/* Phí vận chuyển */}
           <div className='flex justify-between'>
-            <h5>Shipping Fee</h5>
-            <p className='font-bold text-black'>
+            <h5 className='text-gray-900'>Shipping Fee</h5>
+            <p className='font-bold text-gray-900'>
               {cartAmount === 0 ? formatCurrency(0) : formatCurrency(shippingFee)}
             </p>
           </div>
 
           {/* Thuế (8%) */}
           <div className='flex justify-between'>
-            <h5>Tax (8%)</h5>
-            <p className='font-bold text-black'>{formatCurrency(taxAmount)}</p>
+            <h5 className='text-gray-900'>Tax (8%)</h5>
+            <p className='font-bold text-gray-900'>{formatCurrency(taxAmount)}</p>
           </div>
 
           {/* Tổng cộng */}
           <div className='flex justify-between'>
-            <h5>Total Amount</h5>
+            <h5 className='text-gray-900'>Total Amount</h5>
             <p className='text-lg font-bold text-solid'>
               {formatCurrency(totalAmount)}
             </p>
@@ -208,10 +210,22 @@ function CartTotal() {
         <button 
         onClick={handleCheckout} 
         disabled={cartAmount === 0 || !selectedAddress} 
-        className='btn-solid w-full mt-8 !rounded-md py-2 disabled:opacity-50 disabled:cursor-not-allowed'
+        className='text-white btn-solid w-full mt-8 !rounded-md py-2 disabled:opacity-50 disabled:cursor-not-allowed'
         >
         Proceed to Order
         </button>
+        <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+        />
     </div>
     
   )

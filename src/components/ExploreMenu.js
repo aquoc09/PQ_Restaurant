@@ -1,7 +1,4 @@
 import React, {useEffect, useState} from 'react'
-// import { menuList } from '../assets/assets'
-// import NewArrivals from './NewArrivals'
-// import FoodItems from './FoodItems'
 import { environment } from '../environment/environment';
 import axios from 'axios';
 const ExploreMenu = ({category, setCategory}) => {

@@ -8,7 +8,6 @@ import Menu from './pages/Menu';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Cart from './pages/Cart';
-import AddressForm from './pages/AddressForm';
 import MyOrders from './pages/MyOrders';
 import { Toaster } from 'react-hot-toast';
 import Sidebar from './components/admin/Sidebar';
@@ -35,6 +34,14 @@ import AddPromotion from './pages/admin/AddPromotion';
 import EditProduct from './pages/admin/EditProduct';
 import AddUser from './pages/admin/AddUser';
 import EditUser from './pages/admin/EditUser';
+import EditPromotion from './pages/admin/EditPromotion';
+import MyProfile from './pages/admin/MyProfile';
+import UserProfile from './pages/UserProfile';
+import UserOrderDetails from './pages/UserOrderDetails';
+import UserAddress from './pages/UserAddress';
+import Address from './pages/Address';
+import ItemDetails from './pages/ItemDetails';
+import PaymentStatus from './components/PaymentStatus';
 
 const MainLayout = ({ children }) => {
   return (
@@ -56,15 +63,6 @@ const ProtectedAdminRoute = ({ children }) => {
   return children;
 };
 
-// const ProtectedUserRoute = ({ children }) => {
-//   const { isUser } =useAuth();
-  
-//   if (!isUser()) {
-//     return <Navigate to="/" replace />;
-//   }
-
-//   return children;
-// };
 
 function App() {
   return (
@@ -85,25 +83,7 @@ function App() {
           <Route path='/login' element={<MainLayout><Login /></MainLayout>} />
           <Route path='/signup' element={<MainLayout><Signup /></MainLayout>} />
         </Route>
-        {/* Admin routes */}
-        {/* <Route path='/admin'>
-         
-          <Route path='login' element={<AdminLogin />} />
-          <Route
-            path='*'
-            element={
-              
-              <ProtectedAdminRoute>
-                <Sidebar />
-              </ProtectedAdminRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            <Route path='add-product' element={<AddProducts />} />
-            <Route path='list-product' element={<ListProducts />} />
-          </Route>
-        </Route> */}
-
+        
     {/* Tuyến đường riêng dành cho Admin */}
         <Route path='/admin' element={<AdminRoute />}>
           <Route path='*'
@@ -114,55 +94,40 @@ function App() {
               </ProtectedAdminRoute>
             }>
             <Route index element={<Dashboard />} />
+              <Route path='my-profile' element={<MyProfile />} />
               <Route path='list-user' element={<ViewUser />} />
               <Route path='add-user' element={<AddUser />} />
-              <Route path='edit-user' element={<EditUser />} />
+              <Route path='edit-user/:userId' element={<EditUser />} />
               <Route path='list-product' element={<ViewProducts />} />
               <Route path='add-product' element={<AddProducts />} />
-              <Route path='edit-product' element={<EditProduct />} />
+              <Route path='edit-product/:id' element={<EditProduct />} />
               <Route path='list-category' element={<ViewCategory />} />
               <Route path='add-category' element={<AddCategory />} />
-              <Route path='edit-category' element={<EditCategory />} />
+              <Route path='edit-category/:categoryId' element={<EditCategory />} />
               <Route path='list-promotion' element={<ViewPromotion />} />
               <Route path='add-promotion' element={<AddPromotion />} />
+              <Route path='edit-promotion/:promotionId' element={<EditPromotion />} />
               <Route path='list-banner' element={<ViewProducts />} />
-              <Route path='list-user' element={<ViewUser />} />
               <Route path='list-about' element={<ViewProducts />} />
               <Route path='list-comment' element={<ViewProducts />} />
               <Route path='list-blog' element={<ViewProducts />} />
           </Route>
           <Route path="login" element={<MainLayout><Login /></MainLayout>} />
         </Route>
-        {/* <Route path='/admin' element={<Sidebar />}>
-        <Route index element={<Dashboard />} />
-          <Route path='list-user' element={<ViewUser />} />
-          <Route path='add-user' element={<AddUser />} />
-          <Route path='edit-user' element={<EditUser />} />
-          <Route path='list-product' element={<ViewProducts />} />
-          <Route path='add-product' element={<AddProducts />} />
-          <Route path='edit-product' element={<EditProduct />} />
-          <Route path='list-category' element={<ViewCategory />} />
-          <Route path='add-category' element={<AddCategory />} />
-          <Route path='edit-category' element={<EditCategory />} />
-          <Route path='list-promotion' element={<ViewPromotion />} />
-          <Route path='add-promotion' element={<AddPromotion />} />
-          <Route path='list-banner' element={<ViewProducts />} />
-          <Route path='list-user' element={<ViewUser />} />
-          <Route path='list-about' element={<ViewProducts />} />
-          <Route path='list-comment' element={<ViewProducts />} />
-          <Route path='list-blog' element={<ViewProducts />} />
-        </Route> */}
 
         {/* Tuyến đường riêng dành cho User */}
         <Route path= '/' element={<UserRoute />}>
+         <Route path='/product-details/:productId' element={<MainLayout><ItemDetails /></MainLayout>} />
+          <Route path='user-profile' element={<MainLayout><UserProfile /> </MainLayout>} />
+          <Route path='user-address' element={<MainLayout><UserAddress /></MainLayout>} />
+          <Route path='address' element={<MainLayout><Address /> </MainLayout>} />
+          <Route path='user-order-detail/:id' element={<MainLayout><UserOrderDetails /></MainLayout>} />
           <Route path='cart' element={<MainLayout><Cart /></MainLayout>} />
-          <Route path='address-form' element={<MainLayout><AddressForm /></MainLayout>} />
           <Route path='my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
-          
+          <Route path='payment-status' element={<MainLayout><PaymentStatus /></MainLayout>} />
         </Route>
       </Routes>
       </AuthProvider>
-      {/* {isAdmin && <Footer />} */}
     </main>
   );
 }

@@ -2,6 +2,8 @@ import {useCallback, useMemo, useState, useEffect}from 'react'
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import AuthService from '../services/AuthService'; // Giả định đường dẫn tới AuthService
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Constants for Role Names (nên định nghĩa cố định để tránh lỗi chính tả)
 const ROLE_ADMIN_STRING = "ROLE_ADMIN";
@@ -14,7 +16,7 @@ const getDecodedToken = () => {
     if (!token) return null;
     try {
         const decoded = jwtDecode(token);
-        console.log("Token giải mã thành công:", decoded);
+        console.log("Token giải mã success:", decoded);
         return decoded;
     } catch (e) {
         // Lỗi giải mã thường xảy ra khi token bị hỏng hoặc không phải JWT
@@ -27,30 +29,26 @@ const getDecodedToken = () => {
 export const useAuth = ()=> {
     const navigate = useNavigate();
     const [accessToken, setAccessToken] = useState(() => localStorage.getItem('accessToken'));
-    
-    // const decodedToken = getDecodedToken(accessToken);
     const decodedToken = useMemo(() => getDecodedToken(accessToken), [accessToken]);
 
-    // Lấy Role từ trường "scope" (Giả định là chuỗi "ROLE_USER" hoặc "ROLE_ADMIN")
-    // const userScope = decodedToken?.scope?.trim() || '';
-    
-    // // Chuyển đổi Scope thành mảng để tương thích với hàm includes()
-    // const userRoles = Array.isArray(userScope) ? userScope : [userScope];
 
     const userRoles = useMemo(() => {
         const scope = decodedToken?.scope;
         if (!scope) return [];
-        // Giả định 'scope' là mảng hoặc chuỗi
+      
         if (Array.isArray(scope)) {
             return scope.map(r => r.toUpperCase());
         }
-        // Nếu là chuỗi (ví dụ: "ROLE_USER ROLE_ADMIN")
+
         return scope.toUpperCase().split(' ').map(r => r.trim()).filter(r => r.length > 0);
     }, [decodedToken]);
     
-    // 2. Kiểm tra trạng thái đăng nhập và hết hạn
+    // Kiểm tra trạng thái đăng nhập và hết hạn
     const isAuthenticated = useCallback(() => {
-        if (!accessToken ||!decodedToken) return false;
+        if (!accessToken ||!decodedToken)
+        {
+            return true;
+        }
         
         // exp là thời gian hết hạn dưới dạng Unix timestamp (giây)
         const currentTime = Date.now() / 1000;
@@ -69,14 +67,14 @@ export const useAuth = ()=> {
         return isAuthenticated() && userRoles.includes(role);
     }, [isAuthenticated, userRoles]);
 
-    // 3. Kiểm tra quyền Admin
+    //Kiểm tra quyền Admin
     const isAdmin = useCallback(() => hasRole(ROLE_ADMIN_STRING), [hasRole]);
     // Kiểm tra quyền User
     const isUser = useCallback(() => hasRole(ROLE_USER_STRING), [hasRole]);
     // Kiểm tra quyền Manager
     const isManager = useCallback(() => hasRole(ROLE_MANAGER_STRING), [hasRole]);
 
-    // 4. Hàm Đăng xuất
+    // Hàm Đăng xuất
     const logout = useCallback(async () => {
         const token = localStorage.getItem('refreshToken');
         
@@ -85,6 +83,7 @@ export const useAuth = ()=> {
                 // Gửi yêu cầu vô hiệu hóa token lên Back-end
                 await AuthService.logout({ token: token });
                 window.location.reload();
+                toast.success("Đăng xuất thành công.");
             } catch (error) {
                 // Ignore lỗi nếu token đã hết hạn ở phía server
                 console.warn("Logout API failed (token có thể đã hết hạn), proceeding with local clear.", error);
@@ -97,7 +96,7 @@ export const useAuth = ()=> {
         setAccessToken(null);
         
         // Chuyển hướng về trang đăng nhập
-        navigate('/login'); 
+        setTimeout(() => navigate('/login'), 3000); 
     }, [navigate]);
 
     //Cơ chế lắng nghe sự kiện localStorage (để đồng bộ hóa giữa các tab)
@@ -130,6 +129,7 @@ export const useAuth = ()=> {
         expirationTime: decodedToken?.exp,
         logout,
         setAccessToken,
+        
     };
 };
 
