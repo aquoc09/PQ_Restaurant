@@ -19,7 +19,8 @@ module.exports = {
         solidFour:"#1e3a8a",
         solidFive:"#6bbf59",
         action:"#ff6f61",
-        tinhte:"#ffb6a6"
+        tinhte:"#ffb6a6",
+        xinxo: "#ffcc00",
       },
       fontFamily: {
         outfit: ["'Outfit'", 'sans-serif'],

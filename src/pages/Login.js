@@ -119,7 +119,7 @@ const Login = () => {
             </Link>
         </div>
 
-        <div className="text-sm text-center mt-6">
+        <div className="text-sm text-center mt-4">
           <span className="font-medium text-gray-600">
             Không có tài khoản?{' '}
           </span>

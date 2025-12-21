@@ -17,7 +17,7 @@ const CouponConditionService = {
     getCondition: async (conditionId) => {
         try {
             const response = await api.get(`/conditions/${conditionId}`);
-            return response.data;
+            return response.data.result;
         } catch (error) {
             console.error(`Error fetching coupon condition by ID ${conditionId}:`, error);
             throw error;

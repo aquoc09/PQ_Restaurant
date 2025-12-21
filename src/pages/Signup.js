@@ -136,7 +136,7 @@ function SignUp() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className=" min-h-[90vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="md:px-8 pt-20 pb-10 xl:py-15 m-1 sm:m-3 w-full lg:w-1/2 bg-primary shadow rounded-xl">    
             <h2 className='text-3xl mb-6 text-center font-extrabold text-gray-900'>Đăng Ký Tài Khoản</h2>
             

@@ -93,13 +93,18 @@ const OrderService = {
     },
 
     // Xử lý callback từ VNPay (Thường được backend gọi)
-    vnPayCallback: async (trackingNumber, success) => {
+    vnPayCallback: async (trackingNumber, isSuccess) => {
         try {
-            const url = `/orders/vnpay/callback?trackingNumber=${trackingNumber}&success=${success}`;
-            const response = await api.get(url);
-            return response.data.result;
+            // Thêm '/orders' vào trước endpoint
+            const response = await api.get('/orders/vnpay/callback', {
+                params: {
+                    trackingNumber: trackingNumber,
+                    success: isSuccess
+                }
+            });
+            return response.data; 
         } catch (error) {
-            console.error("Error handling VNPay callback:", error);
+            console.error("Lỗi xác nhận VNPAY:", error);
             throw error;
         }
     }

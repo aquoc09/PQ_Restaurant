@@ -17,7 +17,7 @@ const CouponService = {
     getCouponByCode: async (code) => {
         try {
             const response = await api.get(`/coupons/${code}`);
-            return response.data;
+            return response.data.result;
         } catch (error) {
             console.error(`Error fetching coupon by code ${code}:`, error);
             throw error;

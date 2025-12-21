@@ -44,6 +44,7 @@ import Address from './pages/Address';
 import ItemDetails from './pages/ItemDetails';
 import PaymentStatus from './components/PaymentStatus';
 import ViewOrder from './pages/admin/ViewOrder';
+import Checkout from './pages/Checkout';
 
 const MainLayout = ({ children }) => {
   return (
@@ -126,6 +127,7 @@ function App() {
           <Route path='user-order-detail/:id' element={<MainLayout><UserOrderDetails /></MainLayout>} />
           <Route path='cart' element={<MainLayout><Cart /></MainLayout>} />
           <Route path='my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
+          <Route path='check-out' element={<MainLayout><Checkout /></MainLayout>} />
           <Route path='payment-status' element={<MainLayout><PaymentStatus /></MainLayout>} />
         </Route>
       </Routes>

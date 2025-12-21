@@ -70,7 +70,7 @@ const NewArrivals = () => {
       >
         {newArrivals.map((product)=>(
           <SwiperSlide key={product.id}>
-            <Items product={product} /> 
+            <Items key={product.id} product={product} /> 
           </SwiperSlide>
         ))}
       </Swiper>
