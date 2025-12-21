@@ -16,10 +16,11 @@ const useLogout = () => {
             
             // Hiển thị thông báo thành công
             toast.success("Đăng xuất thành công!");
+            window.location.reload();
             
             // Chuyển hướng về login sau 500ms
             setTimeout(() => {
-                setTimeout(() => navigate('/login'), 3000);
+                setTimeout(() => navigate('/login'), 1000);
             }, 500);
         } catch (error) {
             console.error('Logout error:', error);
@@ -27,7 +28,7 @@ const useLogout = () => {
             
             // Vẫn chuyển hướng về login dù có lỗi
             setTimeout(() => {
-                setTimeout(() => navigate('/login'), 3000);
+                setTimeout(() => navigate('/login'), 1000);
             }, 1500);
         } finally {
             setLoading(false);

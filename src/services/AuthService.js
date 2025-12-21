@@ -29,7 +29,18 @@ const AuthService = {
     forgotPassword: (forgotPasswordRequest) => {
         // forgotPasswordRequest thường chứa email hoặc username
         return api.post(`${AUTH_API_URL}/forgot-passwd`, forgotPasswordRequest);
-    }
+    },
+    getGoogleLoginUrl: async () => {
+        try {
+            // Vì bên Java dùng @PostMapping nên ở đây dùng api.post
+            // Nếu bạn không gửi body, có thể để object rỗng {}
+            const response = await api.post(`${AUTH_API_URL}/log-in/google`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching Google login URL:", error);
+            throw error;
+        }
+    },
 };
 
 export default AuthService;

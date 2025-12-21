@@ -59,9 +59,8 @@ export const UserContextProvider = ({children}) => {
     }, []);
 
     const fetchCart = useCallback(async () => {
-    if (isAuthenticated() === false) {
-            setCart([]); 
-            toast.error("Log in to view cart");
+    if (!isAuthenticated()) {
+            setCart(initialCartState);
             return;
         }
 
@@ -192,7 +191,7 @@ export const UserContextProvider = ({children}) => {
 
     // Lấy tổng tiền
     const getCartAmount = useMemo(() => {
-        return cart.cartItems.reduce((total, item) => total + item.totalMoney, 0);
+        return (cart?.cartItems || []).reduce((total, item) => total + item.totalMoney, 0);
 
     }, [cart.cartItems]);
 

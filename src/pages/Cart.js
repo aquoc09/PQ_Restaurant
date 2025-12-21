@@ -66,12 +66,13 @@ const Cart = () => {
 
   // --- 5. KIỂM TRA ĐĂNG NHẬP ---
   useEffect(() => {
-    if (isAuthenticated() === false) {
+    if (!isAuthenticated()) {
       toast.error("Vui lòng đăng nhập để xem giỏ hàng của bạn.");
       const timer = setTimeout(() => navigate('/login'), 2000);
       return () => clearTimeout(timer);
     }
   }, [isAuthenticated, navigate]);
+
 
   return (
     <div className='max-padd-container py-16 xl:py-24 bg-primary'>

@@ -46,7 +46,7 @@ export const useAuth = ()=> {
     const isAuthenticated = useCallback(() => {
         if (!accessToken ||!decodedToken)
         {
-            return true;
+            return false;
         }
         
         // exp là thời gian hết hạn dưới dạng Unix timestamp (giây)

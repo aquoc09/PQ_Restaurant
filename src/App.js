@@ -45,6 +45,7 @@ import ItemDetails from './pages/ItemDetails';
 import PaymentStatus from './components/PaymentStatus';
 import ViewOrder from './pages/admin/ViewOrder';
 import Checkout from './pages/Checkout';
+import OAuth2RedirectHandler from './components/OAuth2RedirectHandler';
 
 const MainLayout = ({ children }) => {
   return (
@@ -84,6 +85,7 @@ function App() {
         <Route element={<PublicRoute />}>
           <Route path='/login' element={<MainLayout><Login /></MainLayout>} />
           <Route path='/signup' element={<MainLayout><Signup /></MainLayout>} />
+          <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         </Route>
         
     {/* Tuyến đường riêng dành cho Admin */}
@@ -121,14 +123,14 @@ function App() {
         {/* Tuyến đường riêng dành cho User */}
         <Route path= '/' element={<UserRoute />}>
          <Route path='/product-details/:productId' element={<MainLayout><ItemDetails /></MainLayout>} />
-          <Route path='user-profile' element={<MainLayout><UserProfile /> </MainLayout>} />
-          <Route path='user-address' element={<MainLayout><UserAddress /></MainLayout>} />
-          <Route path='address' element={<MainLayout><Address /> </MainLayout>} />
-          <Route path='user-order-detail/:id' element={<MainLayout><UserOrderDetails /></MainLayout>} />
-          <Route path='cart' element={<MainLayout><Cart /></MainLayout>} />
-          <Route path='my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
-          <Route path='check-out' element={<MainLayout><Checkout /></MainLayout>} />
-          <Route path='payment-status' element={<MainLayout><PaymentStatus /></MainLayout>} />
+          <Route path='/user-profile' element={<MainLayout><UserProfile /> </MainLayout>} />
+          <Route path='/user-address' element={<MainLayout><UserAddress /></MainLayout>} />
+          <Route path='/address' element={<MainLayout><Address /> </MainLayout>} />
+          <Route path='/user-order-detail/:id' element={<MainLayout><UserOrderDetails /></MainLayout>} />
+          <Route path='/cart' element={<MainLayout><Cart /></MainLayout>} />
+          <Route path='/my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
+          <Route path='/check-out' element={<MainLayout><Checkout /></MainLayout>} />
+          <Route path='/payment-status' element={<MainLayout><PaymentStatus /></MainLayout>} />
         </Route>
       </Routes>
       <ToastContainer
