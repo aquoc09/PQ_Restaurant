@@ -247,7 +247,6 @@ function ItemDetails() {
         )}
 
     </div>
-    
     );
 }
 

@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import { myAssets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
-const LIMIT = 5;
+const DISPLAY_LIMIT = 5;
+const FETCH_LIMIT = 6;
 
 function ViewPromotion() {
 
@@ -12,16 +13,28 @@ function ViewPromotion() {
   const [promotion, setPromotion] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(2);
+  const [hasNextPage, setHasNextPage] = useState(true);
 
   const fetchPromotion = async (page=1) => {
         setLoading(true);
         try {
-            const response = await PromotionService.getAllPromotions(page-1,LIMIT);
-            const promotionListResponse = response.result;
-            setPromotion(promotionListResponse);
+            const response = await PromotionService.getAllPromotions(page-1, FETCH_LIMIT);
+
+            if (response.result.length > DISPLAY_LIMIT) {
+                // Trường hợp 1: Lấy về được 6 món
+                // -> Có trang tiếp theo
+                setHasNextPage(true);
+                
+                // Cắt bỏ phần tử thứ 6, chỉ giữ lại 5 phần tử để hiển thị
+                setPromotion(response.result.slice(0, DISPLAY_LIMIT));
+            } else {
+                // Trường hợp 2: Lấy về <= 5 món
+                // -> Hết trang tiếp theo rồi
+                setHasNextPage(false);
+                setPromotion(response.result);
+            }
+
             setCurrentPage(page);
-            setTotalPages(Math.ceil(response.result.length / LIMIT) + 1 );
         } catch (error) {
             // console.error("Lỗi khi tải sản phẩm:", error);
             toast.error("Không thể tải danh sách promotion.");
@@ -32,14 +45,13 @@ function ViewPromotion() {
 
     // Tải dữ liệu khi component mount lần đầu
     useEffect(() => {
-        fetchPromotion(1,LIMIT);
+        fetchPromotion(1);
     }, []);
     
     // Tải lại dữ liệu khi chuyển trang
     const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= totalPages) {
-            fetchPromotion(newPage,LIMIT);
-        }
+      fetchPromotion(newPage);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleDeletePromotion = async (promotionId) => {
@@ -122,7 +134,6 @@ function ViewPromotion() {
         ))}
 
         {/* Phân Trang */}
-        {totalPages > 1 && (
                 <div className='flex justify-center items-center flex-wrap mt-14 mb-10 gap-3'>
                     <button 
                         disabled={currentPage === 1} 
@@ -132,28 +143,18 @@ function ViewPromotion() {
                     >
                         Previous
                     </button>
-                    
-                    {Array.from({ length: totalPages }, (_, index) => (
-                        <button 
-                            key={index + 1} 
-                            onClick={() => handlePageChange(index + 1)}
-                            className={`px-3 py-1 border rounded-lg text-sm font-semibold transition-all
-                            ${currentPage === index + 1 ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"}`}
-                        >
-                            {index + 1}
-                        </button>
-                    ))}
+
+                    {/* <span className='text-gray-700 px-3 py-1 border rounded-lg text-sm font-semibold transition-all'>{currentPage}</span> */}
                     
                     <button 
-                        disabled={currentPage === totalPages} 
+                        disabled={!hasNextPage} 
                         onClick={() => handlePageChange(currentPage + 1)} 
                         className={`px-3 py-1 border rounded-lg transition-all text-sm font-semibold 
-                        ${currentPage === totalPages ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
+                        ${!hasNextPage ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
                     >
                         Next
                     </button>
                 </div>
-            )}
       </div>
     </div>
   )

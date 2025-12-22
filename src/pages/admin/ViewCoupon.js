@@ -9,7 +9,7 @@ function ViewCoupon() {
     const [coupons, setCoupons] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(2);
+    // const [totalPages, setTotalPages] = useState(2);
 
     const fetchCoupons = async () => {
         setLoading(true);
@@ -30,11 +30,11 @@ function ViewCoupon() {
         fetchCoupons();
     },[]);
 
-        const handlePageChange = (newPage) => {
-        if (newPage >= 1 && newPage <= totalPages) {
-            fetchCoupons(newPage);
-        }
-    };
+    //     const handlePageChange = (newPage) => {
+    //     if (newPage >= 1 && newPage <= totalPages) {
+    //         fetchCoupons(newPage);
+    //     }
+    // };
 
     const handleDelete = async (couponId) => {
         if (!window.confirm(`Bạn có chắc chắn muốn xóa coupon ID: ${couponId} không?`)) {
@@ -126,7 +126,7 @@ function ViewCoupon() {
         </div>
         ))}
 
-        {/* Phân Trang */}
+        {/* Phân Trang
         {totalPages > 1 && (
                 <div className='flex justify-center items-center flex-wrap mt-14 mb-10 gap-3'>
                     <button 
@@ -158,7 +158,7 @@ function ViewCoupon() {
                         Next
                     </button>
                 </div>
-            )}
+            )} */}
         </div>
     </div>
   )
