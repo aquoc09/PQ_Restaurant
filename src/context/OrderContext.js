@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 import OrderService from '../services/OrderSevice';
 import CouponService from '../services/CouponService'
+import CartService from '../services/CartService'
 import { useUserContext } from './UserContext'
 
 // ... (Các import khác) ...
@@ -150,6 +151,7 @@ export const OrderProvider = ({ children }) => {
                 if (responseData?.paymentUrl) {
                     toast.success("Đang chuyển đến trang thanh toán...");
                     window.location.href = responseData?.paymentUrl;
+                    await CartService.deleteSelectedItems(selectedItemIds);
                     await fetchCart();
                     clearOrderData();
                 } else {
