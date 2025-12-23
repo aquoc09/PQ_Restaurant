@@ -46,7 +46,7 @@ const Header = () => {
         </div>
 
       {/* NAVBAR */}
-  <div className='flex justify-center items-center flex-1'>
+      <div className='flex justify-center items-center flex-1'>
         <Navbar setMenuOpened={setMenuOpened} containerStyles={`
           ${menuOpened 
             ? "flex flex-col gap-y-8 fixed top-16 right-6 p-5 bg-white shadow-md w-52 ring-1 ring-slate-900/5 z-50 items-start" 
@@ -54,9 +54,9 @@ const Header = () => {
       </div>
 
       {/* BUTTONS & PROFILE */}
-  <div className='flex flex-1 items-center sm:justify-end gap-x-4 sm:gap-x-8'>
+    <div className='flex flex-1 items-center sm:justify-end gap-x-4 sm:gap-x-8'>
           {/* MENU TOGGLE */}
-  <div className='relative lg:hidden w-7 h-6'>
+      <div className='relative lg:hidden w-7 h-6'>
           <img onClick={toggleMenu} src={myAssets.menu} alt="" 
           className={`absolute inset-0 lg:hidden cursor-pointer transition-opacity duration-700 
           ${menuOpened ? "opacity-0" : "opacity-100"}`}/>

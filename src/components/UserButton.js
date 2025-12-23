@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
-import useLogout from '../hooks/useLogout';
 import { myAssets } from "../assets/assets";
 
 const UserButton = () => {
@@ -9,7 +8,6 @@ const UserButton = () => {
     const [loading, setLoading] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const { username, logout } = useAuth();
-    const { performLogout } = useLogout();
 
 
     const handleEditProfile = () => {
@@ -22,7 +20,16 @@ const UserButton = () => {
 
     const confirmLogout = async () => {
         setShowLogoutConfirm(false); 
-        await performLogout();
+        setLoading(true);
+        try {
+          logout();
+          setTimeout(() => navigate('/login'), 3000);
+        } catch (error) {
+          console.error('Logout error:', error);
+          setTimeout(() => navigate('/login'), 3000);
+        } finally {
+          setLoading(false);
+        }
       };
 
     const cancelLogout = () => {
