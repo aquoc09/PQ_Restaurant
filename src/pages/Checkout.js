@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo, useEffect, useState } from 'react'
 import Title from '../components/Title'
 import { useUserContext } from '../context/UserContext'
 import { useOrderContext } from '../context/OrderContext'
@@ -19,18 +19,20 @@ const Checkout = () => {
         processOrder
     } = useOrderContext();
 
+    const [isProcessing, setIsProcessing] = useState(false);
+
     // 1. Lọc ra danh sách các sản phẩm thực tế người dùng đã chọn từ Cart
     const itemsToDisplay = selectedItemsForCheckout || [];
 
     // 2. Tính toán tổng tiền ngay tại trang Checkout
-    const { subTotal, taxAmount, totalAmount, discountValue } = useMemo(() => {
+    const { subTotal, totalAmount, discountValue } = useMemo(() => {
         const sub = itemsToDisplay.reduce((total, item) => total + item.totalMoney, 0);
-        const tax = sub * 0.08;
+        // const tax = sub * 0.08;
         // Đảm bảo OrderContext trả về đúng trường này (calculatedDiscount)
         const discount = getValidDiscount(sub); 
-        const total = Math.max(0, sub + tax + (sub > 0 ? delivery_charges : 0) - discount);
+        const total = Math.max(0, sub  + (sub > 0 ? delivery_charges : 0) - discount);
         
-        return { subTotal: sub, taxAmount: tax, totalAmount: total, discountValue: discount };
+        return { subTotal: sub, totalAmount: total, discountValue: discount };
     }, [itemsToDisplay, delivery_charges, getValidDiscount]);
 
     // Bảo vệ trang: Nếu chưa chọn món hoặc chưa login thì đẩy về Cart
@@ -42,6 +44,25 @@ const Checkout = () => {
             navigate('/cart');
         }
     }, [itemsToDisplay, isAuthenticated, navigate]);
+
+    // Hàm xử lý khi bấm nút Order
+    const handlePlaceOrder = async () => {
+        if (!selectedAddress) {
+            toast.error("Vui lòng chọn địa chỉ giao hàng trước khi thanh toán.");
+            return;
+        }
+
+        try {
+            setIsProcessing(true);
+            await processOrder(totalAmount);
+            // Sau khi xong, Context hoặc logic bên trong processOrder sẽ điều hướng trang
+        } catch (error) {
+            console.error(error);
+            toast.error("Có lỗi xảy ra khi xử lý đơn hàng.");
+        } finally {
+            setIsProcessing(false);
+        }
+    }
 
     return (
         <div className='max-padd-container py-16 xl:py-24 bg-primary'>
@@ -129,10 +150,10 @@ const Checkout = () => {
                                 <h5 className='text-gray-900'>Shipping Fee</h5>
                                 <p className='font-semibold'>{formatCurrency(delivery_charges)}</p>
                             </div>
-                            <div className='flex justify-between'>
+                            {/* <div className='flex justify-between'>
                                 <h5 className='text-gray-900'>Tax (8%)</h5>
                                 <p className='font-semibold'>{formatCurrency(taxAmount)}</p>
-                            </div>
+                            </div> */}
                             {discountValue > 0 && (
                                 <div className='flex justify-between text-green-600 font-bold'>
                                     <h5>Discount Applied</h5>
@@ -147,10 +168,13 @@ const Checkout = () => {
                         </div>
 
                         <button
-                            onClick={processOrder}
-                            className='text-white btn-solid w-full mt-6 !rounded-xl py-4 disabled:opacity-50 disabled:cursor-not-allowed uppercase font-bold tracking-widest shadow-xl transition-all active:scale-95'
+                            onClick={handlePlaceOrder}
+                            disabled={isProcessing || !selectedAddress}
+                            className={`text-white btn-solid w-full mt-6 !rounded-xl py-4 disabled:opacity-50 disabled:cursor-not-allowed uppercase font-bold tracking-widest shadow-xl transition-all active:scale-95
+                                        ${isProcessing || !selectedAddress ? 'bg-gray-400 cursor-not-allowed opacity-70' : 'btn-solid text-white active:scale-95'}
+                            `}
                         >
-                            ORDER NOW
+                            {isProcessing ? 'PROCESSING...' : 'ORDER NOW'}
                         </button>
                         
                         <p className='text-[12px] text-gray-400 mt-4 text-center'>

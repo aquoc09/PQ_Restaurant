@@ -14,6 +14,17 @@ const OrderService = {
         }
     },
 
+    checkoutSelectedItems: async (payload) => {
+        try {
+            // Giả định prefix đường dẫn controller vẫn là /orders giống hàm trên
+            const response = await api.post('/orders/check-out-selected', payload);
+            return response.data;
+        } catch (error) {
+            console.error("Error during checkout selected items:", error);
+            throw error;
+        }
+    },
+
     //Tạo một đơn hàng mới
     createOrder: async (request) => {
         try {
@@ -29,7 +40,7 @@ const OrderService = {
     getOrder: async (orderId) => {
         try {
             const response = await api.get(`/orders/${orderId}`);
-            return response.data;
+            return response.data.result;
         } catch (error) {
             console.error(`Error fetching order by ID ${orderId}:`, error);
             throw error;

@@ -76,7 +76,7 @@ const PaymentStatus = () => {
 
     // --- GIAO DIỆN HIỂN THỊ ---
     return (
-        <div className='max-padd-container py-18 bg-primary min-h-[90vh] flex items-center justify-center'>
+        <div className='max-padd-container py-18 bg-primary min-h-[110vh] flex items-center justify-center'>
             <div className='max-w-xl w-full bg-white rounded-3xl shadow-xl p-8 md:p-12 text-center ring-1 ring-slate-900/5'>
                 
                 {/* 1. TRẠNG THÁI LOADING */}

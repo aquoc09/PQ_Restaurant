@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ProductService from '../services/ProductService'; 
@@ -7,6 +7,7 @@ import { myAssets } from '../assets/assets';
 import Title from '../components/Title'
 import RelatedProducts from '../components/RelatedProducts';
 import useAuth from '../hooks/useAuth';
+import ProductReviews from '../components/ProductReviews';
 
 function ItemDetails() {
     const { productId } = useParams(); 
@@ -55,7 +56,7 @@ function ItemDetails() {
         } finally {
             setLoading(false);
         }
-    }, [productId]);
+    }, [isAuthenticated, productId, navigate]);
 
     useEffect(() => {
         fetchProductDetail();
@@ -236,6 +237,12 @@ function ItemDetails() {
                     </div>
                 </div>
             </div>
+
+            {/* Review */}
+
+            <div className='mt-10 bg-white p-6 rounded-xl shadow-lg'>
+                <ProductReviews productId={product?.id} />
+            </div>
         </div>
         {product.categoryId && (
             <div className='bg-white'>
@@ -245,7 +252,6 @@ function ItemDetails() {
                 />
             </div>
         )}
-
     </div>
     );
 }

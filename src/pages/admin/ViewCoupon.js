@@ -55,7 +55,7 @@ function ViewCoupon() {
     if (loading) return <div className='p-6'>Đang tải danh sách coupon...</div>;
 
   return (
-    <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
+    <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-slate-50 shadow rounded-xl'>
         <div className='flex justify-between items-center mb-6'> 
         <h2 className='text-2xl font-bold'>Coupon Management</h2>
         <button onClick={()=>{
@@ -103,7 +103,7 @@ function ViewCoupon() {
             </div>
 
             <div className='py-2.5 flex items-center gap-2'>
-                <button onClick={() => navigate(`/admin/coupon-detail/${coupon.id}`)} 
+                <button onClick={() => navigate(`/admin/coupon-detail/${coupon.code}`)} 
                 className='inline-flex items-center justify-center rounded-md font-medium transition duration-150 hover:bg-green-200 text-white px-2 py-1 text-sm'
                 >
                     <img src={myAssets.details} alt="" className='max-h-20 max-w-20 object-contain' />

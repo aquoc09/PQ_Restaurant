@@ -9,7 +9,7 @@ import { useUserContext } from './UserContext'
 const OrderContext = createContext();
 
 export const OrderProvider = ({ children }) => {
-    const { navigate, fetchUserCart } = useUserContext();
+    const { navigate, fetchCart, deleteMultipleItems } = useUserContext();
 
     // --- STATES ---
     const [method, setMethod] = useState("COD");
@@ -104,7 +104,7 @@ export const OrderProvider = ({ children }) => {
     };
 
     // --- 2. XỬ LÝ ĐẶT HÀNG (PROCESS ORDER) ---
-    const processOrder = useCallback(async () => {
+    const processOrder = useCallback(async (finalTotalAmount) => {
         // Kiểm tra điều kiện bắt buộc
         if (!selectedAddress || !selectedAddress.id) {
             toast.error("Vui lòng chọn địa chỉ giao hàng.");
@@ -118,29 +118,39 @@ export const OrderProvider = ({ children }) => {
 
         const paymentMethodBE = method.toUpperCase();
 
+        const selectedItemIds = selectedItemsForCheckout.map(item => item.id);
+
+        const payload = {
+            paymentMethod: paymentMethodBE,
+            addressId: selectedAddress.id,
+            totalAmount: finalTotalAmount,
+            couponCode: appliedCoupon?.code || null,
+            orderNote: orderNote,
+            selectedItems: selectedItemIds
+        };
+
+        console.log("DATA GỬI ĐI (PAYLOAD):", JSON.stringify(payload, null, 2));
+
         try {
             toast.info("Đang xử lý đơn hàng...");
-            
-            const response = await OrderService.checkout(
-                paymentMethodBE,
-                selectedAddress.id,
-                orderNote
-            );
+
+            // 4. GỌI API (Phần này giữ nguyên)
+            const response = await OrderService.checkoutSelectedItems(payload);
+            console.log("KẾT QUẢ TỪ API:", response);
+            const responseData = response?.result || response;
 
             // XỬ LÝ SAU KHI GỌI API THÀNH CÔNG
             if (paymentMethodBE === "COD") {
                 toast.success("Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
-                if (fetchUserCart) await fetchUserCart();
+                await fetchCart();
                 clearOrderData(); // Xóa dữ liệu tạm thời
                 navigate('/my-orders'); 
             } 
             else {
-                // Xử lý thanh toán Online (VNPAY, Stripe, v.v.)
-                const paymentUrl = response?.result?.paymentUrl || response?.paymentUrl;
-                if (paymentUrl) {
+                if (responseData?.paymentUrl) {
                     toast.success("Đang chuyển đến trang thanh toán...");
-                    window.location.href = paymentUrl;
-                    if (fetchUserCart) await fetchUserCart();
+                    window.location.href = responseData?.paymentUrl;
+                    await fetchCart();
                     clearOrderData();
                 } else {
                     toast.warn("Đơn hàng đã tạo nhưng không tìm thấy link thanh toán.");
@@ -154,7 +164,7 @@ export const OrderProvider = ({ children }) => {
             toast.error(errorMessage);
             return false;
         }
-    }, [method, selectedAddress, orderNote, selectedItemsForCheckout, appliedCoupon, navigate]);
+    }, [method, selectedAddress, orderNote, selectedItemsForCheckout, appliedCoupon, navigate, fetchCart]);
 
     // --- 3. DỌN DẸP DỮ LIỆU ---
     const clearOrderData = () => {

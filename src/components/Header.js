@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { myAssets } from '../assets/assets'
 import Navbar from './Navbar'
@@ -17,9 +17,21 @@ const Header = () => {
   // const {openSignIn}=useClerk();
   const {navigate, getCartCount}=useUserContext();
   const isHomePage=useLocation().pathname.endsWith('/')
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  //Lắng nghe sự kiện cuộn
+  useEffect(() => {
+    const handleScroll = () => {
+      // Nếu cuộn xuống hơn 0px thì set state
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className={`absolute top-0 left-0 right-0 z-50 py-3 ${!isHomePage && 'bg-white'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled || !isHomePage ? 'bg-white shadow-md py-2' : 'bg-transparent py-3'}`}>
       {/* CONTAINER */}
       <div className='max-padd-container flexBetween'>
         {/* LOGO */}

@@ -14,7 +14,7 @@ function ViewProducts() {
   };
 
   return (
-    <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
+    <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-slate-50 shadow rounded-xl'>
       <div className='flex justify-between items-center mb-6'> 
         <h2 className='text-2xl font-bold'>Product Management</h2>
         {/* Thanh tìm kiếm */}

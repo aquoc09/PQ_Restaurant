@@ -65,15 +65,14 @@ function EditCategory() {
         e.preventDefault();
         setLoading(true);
 
-        if (!formData.parentCategory) {
-            setLoading(false);
-            toast.error("Lỗi: Danh mục cha là bắt buộc (theo yêu cầu Backend). Vui lòng chọn Category cha.");
-            return; // Dừng Request
-        }
-        const parentCategoryObject = { 
-            categoryCode: formData.parentCategory 
-        };
         const isActive = formData.active === 'true';
+        let parentCategoryObject = {};
+
+        if (formData.parentCategory && formData.parentCategory !== "") {
+            parentCategoryObject = { 
+                categoryCode: formData.parentCategory
+            };
+        }
 
         try {
             const requestData = {
@@ -98,7 +97,7 @@ function EditCategory() {
     if (loading) return <div className='p-6'>Đang tải dữ liệu danh mục...</div>;
     
     return (
-        <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-primary shadow rounded-xl'>
+        <div className='md:px-8 py-6 xl:py-8 m-1 sm:m-3 h-[97vh] overflow-y-scroll w-full lg:w-11/12 bg-slate-50 shadow rounded-xl'>
             <h2 className='text-2xl font-bold text-gray-800 mb-6'>Edit Category ID: {formData.id}</h2>
             
             <form onSubmit={handleSubmit} className='flex flex-col gap-y-3.5 px-2 text-sm w-full lg:w-full'>
@@ -142,7 +141,7 @@ function EditCategory() {
                     value={formData.parentCategory} 
                     onChange={handleInputChange} required
                     className="px-3 py-1.5 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
-                        <option value="">-- Chose parent category --</option>
+                        <option value="">Không</option>
                         {allCategories.map(cat => (
                             <option key={cat.id} value={cat.categoryCode}>
                                 {cat.name}

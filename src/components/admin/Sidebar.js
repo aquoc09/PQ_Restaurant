@@ -78,7 +78,7 @@ function Sidebar() {
       <div className='mx-auto max-w-[1440px] flex flex-col md:flex-row bg-white'>
 
         {/* Mobile Navbar */}
-        <div className='md:hidden w-full bg-primary shadow-xl rounded-b-xl'>
+        <div className='md:hidden w-full bg-slate-50 shadow-xl rounded-b-xl'>
           
           {/* A. Logo và User Info (Hàng trên cùng) */}
 
@@ -118,7 +118,7 @@ function Sidebar() {
         </div>
 
         {/* Full Screen */}
-        <div className='hidden md:flex flex-col bg-primary sm:m-3 md:min-w-[20%] md:min-h-[97vh] rounded-xl shadow'>
+        <div className='hidden md:flex flex-col bg-slate-50 sm:m-3 md:min-w-[20%] md:min-h-[97vh] rounded-xl shadow'>
           {/* A. Logo */}
           <div className='flex flex-col'>
               <div className='flex flex-1 p-3 lg:pl-12'>

@@ -31,7 +31,7 @@ export const UserContextProvider = ({children}) => {
     const [products, setProducts]=useState([]);
     const [cart, setCart] = useState(initialCartState);
     const [searchQuery, setSearchQuery]=useState("");
-    const delivery_charges=20000;
+    const delivery_charges=30000;
     const navigate=useNavigate();
 
     const { 
@@ -111,7 +111,7 @@ export const UserContextProvider = ({children}) => {
     // Xóa 1 Product mục khỏi Giỏ hàng 
     const removeFromCart = useCallback(async (itemId) => {
         try {
-            await CartService.deleteCartItem(itemId);
+            await CartService.deleteCartItem(itemId);            
             toast.success("Đã xóa sản phẩm khỏi giỏ hàng.");
             await fetchCart();
         } catch (error) {
@@ -122,11 +122,11 @@ export const UserContextProvider = ({children}) => {
     // Xóa nhiều Product mục khỏi Giỏ hàng 
     const deleteMultipleItems = useCallback(async (itemIds) => {
         try {
-            const deletePromises = itemIds.map(itemId => 
-                CartService.deleteCartItem(itemId)
-            );
-            await Promise.all(deletePromises);
-            toast.success("Đã xóa sản phẩm khỏi giỏ hàng.");
+            const response = await CartService.deleteSelectedItems(itemIds);
+     
+            if (response.code === 1000) { 
+                toast.success("Đã xóa các sản phẩm đã chọn"); 
+            }
             await fetchCart(); 
         } catch (error) {
             console.error("Lỗi khi xóa nhiều mặt hàng:", error);

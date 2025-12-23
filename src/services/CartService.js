@@ -70,6 +70,12 @@ const CartService = {
             throw error;
         }
     },
+    deleteSelectedItems: async (selectedIds) => {
+        // selectedIds là một mảng các số: ví dụ [1, 5, 8]
+        return await api.delete(`${CART_API_URL}/selected-items`, {
+        data: selectedIds 
+        });
+    },
   
 };
 

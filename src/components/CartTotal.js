@@ -54,15 +54,15 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
   }, [selectedAmount, appliedCoupon, setAppliedCoupon, formatCurrency]);
 
   // 3. Logic Tính Toán Chi Phí
-  const { taxAmount, shippingFee, discountValue, totalAmount } = useMemo(() => {
-    const tax = selectedAmount * 0.08;
+  const { shippingFee, discountValue, totalAmount } = useMemo(() => {
+    // const tax = selectedAmount * 0.08;
     const ship = selectedAmount === 0 ? 0 : delivery_charges;
     
     // Tính toán discount từ các condition hợp lệ của coupon
     const discount = getValidDiscount(selectedAmount);
 
-    const total = Math.max(0, selectedAmount + ship + tax - discount);
-    return { taxAmount: tax, shippingFee: ship, discountValue: discount, totalAmount: total };
+    const total = Math.max(0, selectedAmount + ship - discount);
+    return { shippingFee: ship, discountValue: discount, totalAmount: total };
   }, [selectedAmount, delivery_charges, getValidDiscount]);
 
   // 4. Xử lý sự kiện
@@ -177,10 +177,10 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
           <h5 className='text-gray-900'>Shipping Fee</h5>
           <p className='font-bold text-gray-900'>{formatCurrency(shippingFee)}</p>
         </div>
-        <div className='flex justify-between'>
+        {/* <div className='flex justify-between'>
           <h5 className='text-gray-900'>Tax (8%)</h5>
           <p className='font-bold text-gray-900'>{formatCurrency(taxAmount)}</p>
-        </div>
+        </div> */}
 
         {/* Dòng giảm giá khuyến mãi */}
         {discountValue > 0 && (
