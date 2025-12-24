@@ -13,7 +13,7 @@ const ReviewService = {
     getAllReviews: async () => {
         try {
             const response = await api.get('/reviews');
-            return response.data;
+            return response.data.result;
         } catch (error) {
             throw error;
         }
@@ -22,7 +22,7 @@ const ReviewService = {
     getMyReviews: async () => {
         try {
             const response = await api.get('/reviews/by-current-user');
-            return response.data;
+            return response.data.result;
         } catch (error) {
             throw error;
         }

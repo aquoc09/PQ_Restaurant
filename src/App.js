@@ -53,6 +53,7 @@ import EditCoupon from './pages/admin/EditCoupon';
 import OrderDetail from './pages/admin/OrderDetail';
 import EditOrder from './pages/admin/EditOrder';
 import AddCoupon from './pages/admin/AddCoupon';
+import MyReview from './pages/MyReview';
 
 const MainLayout = ({ children }) => {
   return (
@@ -141,6 +142,7 @@ function App() {
           <Route path='/user-order-detail/:id' element={<MainLayout><UserOrderDetails /></MainLayout>} />
           <Route path='/cart' element={<MainLayout><Cart /></MainLayout>} />
           <Route path='/my-orders' element={<MainLayout><MyOrders /></MainLayout>} />
+          <Route path='/my-review' element={<MainLayout><MyReview /></MainLayout>} />
           <Route path='/check-out' element={<MainLayout><Checkout /></MainLayout>} />
           <Route path='/payment-status' element={<MainLayout><PaymentStatus /></MainLayout>} />
         </Route>

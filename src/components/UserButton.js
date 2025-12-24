@@ -72,6 +72,11 @@ const UserButton = () => {
                             </button>
                         </li>
                         <li>
+                            <button onClick={() => navigate('/my-review')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
+                                <h5>My Review</h5>
+                            </button>
+                        </li>
+                        <li>
                             <button onClick={() => navigate('/user-address')} className="w-full text-center px-3 py-3 text-sm text-gray-700 hover:bg-gray-200">
                                 <h5>My Address</h5>
                             </button>

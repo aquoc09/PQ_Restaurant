@@ -299,7 +299,7 @@ function UserAddress() {
             <div className='flex gap-10 items-start flex-col lg:flex-row'> 
                 
                 {/* 1. Navbar bên trái (Giữ chiều rộng cố định) */}
-                <div className='lg:w-1/4 w-full sticky top-28'>
+                <div className='w-fit lg:flex-none sticky top-28 gap-20'>
                     <UserNavbar />
                 </div>
 

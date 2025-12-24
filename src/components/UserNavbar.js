@@ -48,6 +48,11 @@ function UserNavbar() {
                 </button>
                 </li>
                 <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded border-b border-gray-400" >
+                <button onClick={() => navigate('/my-review')} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
+                    <h5>My Review</h5>
+                </button>
+                </li>
+                <li className="flex items-center gap-2 text-white cursor-pointer px-3 py-1 rounded border-b border-gray-400" >
                 <button onClick={() => navigate('/user-address')} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-200">
                     <h5>My Address</h5>
                 </button>

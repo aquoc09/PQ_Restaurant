@@ -57,20 +57,19 @@ const ProductReviews = ({ productId }) => {
 
         setSubmitting(true);
         try {
-            // Cấu trúc ReviewRequest giống Backend bạn đưa
             const reviewRequest = {
                 rating: rating,
                 comment: comment,
                 productId: productId,
-                userId: user?.id, // Đảm bảo lấy đúng ID user
-                reviewStatus: "PENDING" // Hoặc logic backend tự set
+                userId: user?.id,
+                reviewStatus: "PENDING"
             };
 
             await ReviewService.createReview(reviewRequest);
             toast.success("Gửi đánh giá thành công!");
             setComment("");
-            setRating(5);
-            loadReviews(); // Reload lại list sau khi post
+            setRating(rating);
+            loadReviews();
         } catch (error) {
             toast.error("Gửi đánh giá thất bại. Có thể bạn chưa mua hàng?");
             console.error(error);

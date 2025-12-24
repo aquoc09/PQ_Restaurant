@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 const MyOrders = () => {
 
-  const {formatCurrency}=useUserContext();
+  const {formatCurrency, navigate, addToCart}=useUserContext();
   const [orders, setOrders]=useState([]);
 
   const fetchMyOrders = useCallback(async () => {
@@ -25,13 +25,31 @@ const MyOrders = () => {
     }
   }, []);
 
-  const loadOrderData = useCallback(() => {
-    fetchMyOrders();
-  }, [fetchMyOrders]);
-
   useEffect(()=>{
       fetchMyOrders();
   },[fetchMyOrders]);
+
+  const handleBuyAgain = async (order) => {
+    try {
+
+      toast.info("Đang thêm sản phẩm vào giỏ hàng...");
+      for (const item of order.orderDetails) {
+
+        await addToCart(
+            1, 
+            item.size, 
+            "",
+            item.product.id
+        );
+      }
+
+      navigate('/cart');
+      
+    } catch (error) {
+      console.error("Lỗi khi mua lại:", error);
+      toast.error("Có lỗi xảy ra khi thực hiện mua lại.");
+    }
+  };
   
   return (
     <div className='max-padd-container py-16 pt-28 bg-primary'>
@@ -89,7 +107,7 @@ const MyOrders = () => {
               <div className='flex flex-col gap-2'>
                 <div className='flex gap-4'>
                   <div className='flex items-center gap-x-2'>
-                    <h5 className='text-sm font-medium'>Customer Name:</h5>
+                    <h5 className='text-sm font-medium'>Name:</h5>
                     <p className='text-gray-400 text-sm break-all'>
                           {order.address.user.fullName}
                     </p>
@@ -132,7 +150,7 @@ const MyOrders = () => {
                 </div>
                 </div>
 
-                  <div className='flex gap-3'>
+                  <div className='flex gap-4'>
                     <div className='flex items-center gap-x-2'>
                       <h5 className='text-sm font-medium'>Status:</h5>
                       <div className='flex items-center gap-1'>
@@ -140,7 +158,8 @@ const MyOrders = () => {
                         <p>{order.status}</p>
                       </div>
                     </div>
-                    <button onClick={loadOrderData} className='btn-solid !py-1 !text-xs rounded-sm'>Order Detail</button>
+                    <button onClick={() => handleBuyAgain(order)} className='btn-solid !py-1 !text-xs rounded-sm'>Mua Lại</button>
+                    <button onClick={() => navigate('')} className='btn-solid !py-1 !text-xs rounded-sm'>Review</button>
                 </div>
             </div>
             <div className='border-t border-gray-100 pt-2 mt-2 text-xs text-gray-500'>
