@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { myAssets } from "../assets/assets";
 
-const AdminPanel = () => {
+const AdminButton = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
@@ -118,4 +118,4 @@ const AdminPanel = () => {
     );
 };
 
-export default AdminPanel;
+export default AdminButton;

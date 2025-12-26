@@ -52,7 +52,7 @@ const MyOrders = () => {
   };
   
   return (
-    <div className='max-padd-container py-16 pt-28 bg-primary'>
+    <div className='max-padd-container py-16 pt-28 bg-gradient-to-br from-slate-50 to-primary min-h-screen'>
       <Title 
       title1={"My"}
       title2={"Orders List"}

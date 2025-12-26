@@ -288,7 +288,7 @@ function UserAddress() {
 
     return (
 
-        <div className='max-padd-container pt-28 pb-8 bg-primary min-h-screen'>
+        <div className='max-padd-container pt-28 pb-8 bg-gradient-to-br from-slate-50 to-primary min-h-screen'>
             <Title 
                 title1={"My"}
                 title2={"Address"}

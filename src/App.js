@@ -12,6 +12,7 @@ import MyOrders from './pages/MyOrders';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from './components/admin/Sidebar';
+import SidebarManager from './components/manager/SidebarManager';
 import Dashboard from './pages/admin/Dashboard';
 import AddProducts from './pages/admin/AddProducts';
 import ViewProducts from './pages/admin/ViewProducts';
@@ -54,6 +55,7 @@ import OrderDetail from './pages/admin/OrderDetail';
 import EditOrder from './pages/admin/EditOrder';
 import AddCoupon from './pages/admin/AddCoupon';
 import MyReview from './pages/MyReview';
+import ManagerRoute from './components/ManagerRoutes';
 
 const MainLayout = ({ children }) => {
   return (
@@ -70,6 +72,15 @@ const ProtectedAdminRoute = ({ children }) => {
   
   if (!isAdmin()) {
     return <Navigate to="/admin" replace />;
+  }
+
+  return children;
+};
+const ProtectedManagerRoute = ({ children }) => {
+  const { isManager } =useAuth();
+  
+  if (!isManager()) {
+    return <Navigate to="/manager" replace />;
   }
 
   return children;
@@ -113,6 +124,40 @@ function App() {
               <Route path='list-user' element={<ViewUser />} />
               <Route path='add-user' element={<AddUser />} />
               <Route path='edit-user/:userId' element={<EditUser />} />
+              <Route path='list-product' element={<ViewProducts />} />
+              <Route path='add-product' element={<AddProducts />} />
+              <Route path='edit-product/:id' element={<EditProduct />} />
+              <Route path='list-category' element={<ViewCategory />} />
+              <Route path='add-category' element={<AddCategory />} />
+              <Route path='edit-category/:categoryId' element={<EditCategory />} />
+              <Route path='list-promotion' element={<ViewPromotion />} />
+              <Route path='add-promotion' element={<AddPromotion />} />
+              <Route path='edit-promotion/:promotionId' element={<EditPromotion />} />
+              <Route path='list-coupon' element={<ViewCoupon />} />
+              <Route path='add-coupon' element={<AddCoupon />} />
+              <Route path='coupon-detail/:couponCode' element={<CouponDetail />} />
+              <Route path='edit-coupon/:couponCode' element={<EditCoupon />} />
+              <Route path='list-review' element={<ViewReview />} />
+              <Route path='list-comment' element={<ViewProducts />} />
+              <Route path='list-blog' element={<ViewProducts />} />
+          </Route>
+          <Route path="login" element={<MainLayout><Login /></MainLayout>} />
+        </Route>
+
+        {/* Tuyến đường riêng dành cho Manager */}
+        <Route path='/manager' element={<ManagerRoute />}>
+          <Route path='*'
+            element={
+              
+              <ProtectedManagerRoute>
+                <SidebarManager />
+              </ProtectedManagerRoute>
+            }>
+            <Route index element={<ViewOrder />} />
+              <Route path='my-profile' element={<MyProfile />} />
+              <Route path='list-order' element={<ViewOrder />} />
+              <Route path='order-detail/:orderId' element={<OrderDetail />} />
+              <Route path='edit-order/:orderId' element={<EditOrder />} />
               <Route path='list-product' element={<ViewProducts />} />
               <Route path='add-product' element={<AddProducts />} />
               <Route path='edit-product/:id' element={<EditProduct />} />

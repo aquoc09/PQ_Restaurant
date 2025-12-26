@@ -75,7 +75,7 @@ const Cart = () => {
 
 
   return (
-    <div className='max-padd-container py-16 xl:py-24 bg-primary'>
+    <div className='max-padd-container py-16 xl:py-24 bg-gradient-to-br from-slate-50 to-primary'>
       <div className='flex flex-col xl:flex-row gap-10 xl:gap-16'>
         
         {/* Left Side: Cart Items */}

@@ -1,13 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import { myAssets } from "../assets/assets";
+import UserService from '../services/UserService';
+import { toast } from 'react-toastify';
 
 const UserButton = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
     const { username, logout } = useAuth();
+    const [gender, setGender] = useState('');
+
+    const fetchUserData = async () => {
+        try {
+            const currentUser = await UserService.getMyInfo();
+            setGender(currentUser.gender);
+            } catch (error) {
+            toast.error("Không thể tải dữ liệu người dùng để sửa.");
+            navigate('/');
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        fetchUserData();
+    }, []);
 
 
     const handleEditProfile = () => {
@@ -23,6 +41,7 @@ const UserButton = () => {
         setLoading(true);
         try {
           logout();
+          window.location.reload();
           setTimeout(() => navigate('/login'), 1000);
         } catch (error) {
           console.error('Logout error:', error);
@@ -46,7 +65,7 @@ const UserButton = () => {
                 >
                     {/* Avatar */}
                     <div className="w-8 h-8 rounded-full text-black flex items-center justify-center font-semibold">
-                        <img src={myAssets.user} alt="User Avatar" className="w-8 h-8 rounded-full object-cover"/>
+                        <img src={gender === 'M' ? myAssets.user_male : myAssets.user_female} alt="User Avatar" className="w-8 h-8 rounded-full object-cover"/>
                     </div>
                     <h5 className='text-black'>{username || 'User'}</h5>
                 </button>

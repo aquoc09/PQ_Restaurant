@@ -59,7 +59,7 @@ function AddCategory() {
         try {
             await CategoryService.createCategory(categoryRequest);
             toast.success('Add category success!');
-            navigate('/admin/list-category');
+            navigate('/manager/list-category');
         } catch (error) {
             console.error("Lỗi thêm danh mục:", error);
             toast.error("Thêm danh mục thất bại. Vui lòng kiểm tra dữ liệu.");
@@ -116,8 +116,8 @@ function AddCategory() {
                 </div>
 
                 <div className="flex justify-end gap-3">
-                    <button type="button" 
-                    onClick={() => navigate('/admin/list-category')}
+                    <button type="button"
+                    onClick={() => navigate('/manager/list-category')}
                     className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400">Cancel</button>
                     <button type="submit" disabled={loading} className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:opacity-50">
                         {loading ? 'Adding...' : 'Add Category'}

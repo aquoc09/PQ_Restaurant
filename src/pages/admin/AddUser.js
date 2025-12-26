@@ -147,7 +147,8 @@ function AddUser() {
                         <input type="text" 
                         name="username" 
                         value={formData.username} 
-                        onChange={handleInputChange} required 
+                        onChange={handleInputChange} 
+                        required 
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"/>
                         {errors.username && <p className="text-red-500 mt-1">{errors.username}</p>}
                     </div>
@@ -165,7 +166,8 @@ function AddUser() {
                         <input type="email" 
                         name="email" 
                         value={formData.email} 
-                        onChange={handleInputChange} required 
+                        onChange={handleInputChange} 
+                        // required 
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"/>
                         {errors.email && <p className="text-red-500 mt-1">{errors.email}</p>}
                     </div>
@@ -188,7 +190,8 @@ function AddUser() {
                         <input type="text" 
                         name="fullName" 
                         value={formData.fullName} 
-                        onChange={handleInputChange} required 
+                        onChange={handleInputChange} 
+                        // required 
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"/>
                     </div>
                     <div className="mb-4">
@@ -215,6 +218,7 @@ function AddUser() {
                         <select name="role" 
                         value={formData.role} 
                         onChange={handleInputChange} 
+                        required
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
                             <option value="USER">USER</option>
                             <option value="ADMIN">ADMIN</option>

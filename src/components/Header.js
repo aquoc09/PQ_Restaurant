@@ -5,14 +5,15 @@ import Navbar from './Navbar'
 import { useUserContext } from '../context/UserContext'
 import useAuth from '../hooks/useAuth'
 import UserButton from './UserButton'
-import AdminPanel from './AdminPanel'
+import AdminButton from './AdminButton'
+import ManagerButton from './ManagerButton'
 
 const Header = () => {
 
   const [menuOpened, setMenuOpened] = useState(false);
 
   const toggleMenu = ()=>setMenuOpened(prev => !prev);
-  const {isUser, isAdmin} = useAuth();
+  const {isUser, isAdmin, isManager} = useAuth();
 
   // const {openSignIn}=useClerk();
   const {navigate, getCartCount}=useUserContext();
@@ -81,7 +82,11 @@ const Header = () => {
           ) : (
             isAdmin() === true
           ) ? (
-            <AdminPanel />
+            <AdminButton />
+          ) : (
+            isManager() === true
+          ) ? (
+            <ManagerButton />
           ) : (
               <div>
                 <button 

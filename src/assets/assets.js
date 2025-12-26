@@ -143,8 +143,14 @@ import edit from './edit.png'
 import order_comfirm from './order_comfirm.png'
 import wait from './wait.gif'
 import details from './details.png'
+import manager from './manager.png'
+import user_male from './user_male.gif'
+import user_female from './user_female.gif'
 
 export const myAssets = {
+    manager,
+    user_male,
+    user_female,
     details,
     wait,
     order_comfirm,

@@ -23,7 +23,7 @@ function CouponDetail() {
         } catch (error) {
             console.error(error);
             toast.error("Không tìm thấy thông tin mã giảm giá");
-            navigate('/admin/list-coupon'); // Quay lại trang danh sách nếu lỗi
+            navigate('/manager/list-coupon'); // Quay lại trang danh sách nếu lỗi
         } finally {
             setLoading(false);
         }
@@ -34,7 +34,7 @@ function CouponDetail() {
             try {
                 await CouponService.deleteCoupon(coupon.id);
                 toast.success("Đã xóa mã giảm giá");
-                navigate('/admin/list-coupon');
+                navigate('/manager/list-coupon');
             } catch (error) {
                 toast.error("Xóa thất bại");
             }
@@ -102,13 +102,13 @@ function CouponDetail() {
 
                     <div className="flex gap-3 relative z-10">
                         <button
-                            onClick={() => navigate('/admin/list-coupon')}
+                            onClick={() => navigate('/manager/list-coupon')}
                             className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition backdrop-blur-sm border border-white/10"
                         >
                             Quay lại
                         </button>
                         <button
-                            onClick={() => navigate(`/admin/edit-coupon/${coupon.code}`)}
+                            onClick={() => navigate(`/manager/edit-coupon/${coupon.code}`)}
                             className="px-4 py-2 bg-white text-indigo-600 hover:bg-indigo-50 rounded-lg text-sm font-bold shadow-sm transition flex items-center gap-2"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>

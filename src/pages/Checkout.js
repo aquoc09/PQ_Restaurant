@@ -65,7 +65,7 @@ const Checkout = () => {
     }
 
     return (
-        <div className='max-padd-container py-16 xl:py-24 bg-primary'>
+        <div className='max-padd-container py-16 xl:py-24 bg-gradient-to-br from-slate-50 to-primary'>
             <Title title1={"Checkout"} title2={"Order Summary"} titleStyles={"pb-10"} />
 
             <div className='flex flex-col xl:flex-row gap-12'>

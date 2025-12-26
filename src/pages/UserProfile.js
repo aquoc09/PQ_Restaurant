@@ -50,14 +50,14 @@ function UserProfile() {
             });
         } catch (error) {
             toast.error("Không thể tải dữ liệu người dùng để sửa.");
-            navigate('/admin');
+            navigate('/');
         } finally {
             setLoading(false);
         }
     };
     useEffect(() => {
         fetchUserData();
-    }, []);
+    },[]);
 
     // --- Xử lý thay đổi Input ---
     const handleInputChange = (e) => {
@@ -117,7 +117,7 @@ function UserProfile() {
     if (loading) return <div className='p-6'>Đang tải dữ liệu người dùng...</div>;
 
     return (
-        <div className=' pt-28 pb-8 m-1 flex flex-col w-full px-10 lg:px-12 justify-between items-center bg-primary shadow rounded-xl'>
+        <div className=' pb-8 m-1 flex flex-col w-full px-10 lg:px-12 justify-between items-center max-padd-container py-16 pt-28 bg-gradient-to-br from-slate-50 to-primary min-h-screen shadow rounded-xl'>
             <Title 
                 title1={"My"}
                 title2={"Profile"}

@@ -56,7 +56,7 @@ function EditCoupon() {
             } catch (error) {
                 console.error(error);
                 toast.error("Không tìm thấy thông tin mã giảm giá");
-                navigate('/admin/list-coupon');
+                navigate('/manager/list-coupon');
             } finally {
                 setLoading(false);
             }
@@ -154,7 +154,7 @@ function EditCoupon() {
             }
 
             toast.success("Cập nhật thành công!");
-            navigate(`/admin/coupon-detail/${couponData.code}`);
+            navigate(`/manager/coupon-detail/${couponData.code}`);
 
         } catch (error) {
             console.error("Lỗi cập nhật:", error);
@@ -181,7 +181,7 @@ function EditCoupon() {
                         <p className="text-slate-500 text-sm mt-1">Cập nhật thông tin và điều kiện áp dụng</p>
                     </div>
                     <button 
-                        onClick={() => navigate(`/admin/coupon-detail/${couponData.code}`)}
+                        onClick={() => navigate(`/manager/coupon-detail/${couponData.code}`)}
                         className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 font-medium text-sm shadow-sm transition"
                     >
                         Quay lại
@@ -356,7 +356,7 @@ function EditCoupon() {
                     <div className="w-full flex justify-end gap-3 mt-8 pt-6 border-t border-slate-200">
                         <button
                             type="button"
-                            onClick={() => navigate(`/admin/coupon-detail/${couponData.code}`)}
+                            onClick={() => navigate(`/manager/coupon-detail/${couponData.code}`)}
                             className="px-6 py-2.5 bg-white border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition"
                         >
                             Hủy bỏ

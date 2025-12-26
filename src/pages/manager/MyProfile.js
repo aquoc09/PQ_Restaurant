@@ -51,7 +51,7 @@ function MyProfile() {
             });
         } catch (error) {
             toast.error("Không thể tải dữ liệu người dùng để sửa.");
-            navigate('/admin');
+            navigate('/manager');
         } finally {
             setLoading(false);
         }
@@ -104,7 +104,7 @@ function MyProfile() {
             // Gọi API cập nhật User. Giả định BE trả về UserResponse trong .data.result
             const response = await UserService.updateUser(formData.id, userUpdateRequest);
 
-            toast.success(`Cập nhật admin: ${response.name} success!`);
+            toast.success(`Cập nhật manager: ${response.name} success!`);
             navigate('/manager');
         } catch (error) {
             console.error("Lỗi khi Update User:", error);
@@ -198,7 +198,6 @@ function MyProfile() {
                         onChange={handleInputChange} 
                         className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
                             <option value="USER">USER</option>
-                            <option value="ADMIN">ADMIN</option>
                             <option value="MANAGER">MANAGER</option>
                         </select>
                     </div>
