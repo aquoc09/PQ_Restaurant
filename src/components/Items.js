@@ -79,7 +79,7 @@ const Items = ({product}) => {
                 <div className='flex items-start justify-between pb-1'>
                     <h5 className='mb-1'>{product.categoryCode}</h5>
                 <div className='flex items-center justify-start gap-x-1'>
-                    <h5 className='text-red-600'>{averageRating}/5</h5>
+                    <h5 className='text-red-600'>{averageRating.toFixed(1)}/5</h5>
                     <img src={myAssets.star} alt="" width={16} />
                 </div>
                 </div>

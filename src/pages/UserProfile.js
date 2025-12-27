@@ -35,7 +35,7 @@ function UserProfile() {
     const fetchUserData = async () => {
         try {
             const currentUser = await UserService.getMyInfo();
-            // Format DOB từ LocalDate (YYYY-MM-DD) sang chuỗi cho input type="date"
+
             const formattedDob = currentUser.dob || '';
 
             setFormData({
@@ -104,6 +104,7 @@ function UserProfile() {
             const response = await UserService.updateUser(formData.id, userUpdateRequest);
 
             toast.success(`Update User: ${response.name} success!`);
+            window.location.reload();
             navigate('/user-profile');
         } catch (error) {
             console.error("Lỗi khi Update User:", error);

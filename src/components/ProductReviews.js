@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import ReviewService from '../services/ReviewService';
 import useAuth from '../hooks/useAuth';
-import UserService from '../services/UserService'; // Giả sử lấy user info từ đây
+import UserService from '../services/UserService';
 
 const ProductReviews = ({ productId }) => {
     const { isAuthenticated } = useAuth();
@@ -105,7 +106,7 @@ const ProductReviews = ({ productId }) => {
                     <form onSubmit={handleSubmitReview} className="flex flex-col gap-4">
                         {/* Chọn sao */}
                         <div className="flex items-center gap-2">
-                            <span className="text-solid font-semibold">Chất lượng:</span>
+                            <span className="text-action font-semibold">Chất lượng:</span>
                             <div className="flex pb-1">
                                 {renderStars(rating, true)}
                             </div>
@@ -125,7 +126,7 @@ const ProductReviews = ({ productId }) => {
                             <button 
                                 type="submit" 
                                 disabled={submitting}
-                                className="btn-secondary rounded-full px-6 py-2 disabled:opacity-50 text-action font-bold"
+                                className="btn-secondary rounded-full px-6 py-2 disabled:opacity-50 text-solid font-bold"
                             >
                                 {submitting ? "Đang gửi..." : "Gửi đánh giá"}
                             </button>
@@ -138,16 +139,43 @@ const ProductReviews = ({ productId }) => {
 
             {/* DANH SÁCH REVIEW (Hiện tại backend chưa có endpoint này nên để chờ) */}
             <div className="flex flex-col gap-4">
-                {reviews.length > 0 ? reviews.map((rev, index) => (
-                    <div key={index} className="border-b pb-4 last:border-0">
-                        <div className="flex items-center gap-2 mb-1">
-                            <span className="font-bold text-gray-800">{rev.user.username || "User"}</span>
-                        </div>
-                        <div className="flex text-sm mb-2">{renderStars(rev.rating)}</div>
-                        <p className="text-gray-600">{rev.comment}</p>
+                {reviews.length > 0 ? (
+                    <>
+                        {/* 2. Chỉ hiển thị 2 review đầu tiên dùng slice(0, 2) */}
+                        {reviews.slice(0, 2).map((rev, index) => (
+                            <div key={index} className="border-b pb-4 last:border-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 text-xs">
+                                        {rev.user.username ? rev.user.username.charAt(0).toUpperCase() : "U"}
+                                    </div>
+                                    <span className="font-bold text-gray-800">{rev.user.username || "User"}</span>
+                                </div>
+                                <div className="flex text-sm mb-2">{renderStars(rev.rating)}</div>
+                                <p className="text-gray-600">{rev.comment}</p>
+                            </div>
+                        ))}
+
+                        {/* Hiển thị nút xem tất cả nếu có nhiều hơn 2 review */}
+                        {reviews.length > 2 && (
+                            <div className="mt-2 text-center">
+                                {/* Bạn cần định nghĩa Route này trong App.js */}
+                                <Link 
+                                    to={`/product-details/${productId}/reviews`} 
+                                    className="text-blue-600 font-semibold hover:underline hover:text-blue-800 transition-colors inline-flex items-center gap-1"
+                                >
+                                    Xem tất cả {reviews.length} đánh giá
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                                    </svg>
+                                </Link>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <div className="text-center py-8 bg-gray-50 rounded-xl">
+                        <p className="text-gray-500">Chưa có đánh giá nào cho sản phẩm này.</p>
+                        <p className="text-sm text-gray-400 mt-1">Hãy là người đầu tiên đánh giá!</p>
                     </div>
-                )) : (
-                    <p className="text-center text-gray-500 py-4">Chưa có đánh giá nào.</p>
                 )}
             </div>
         </div>

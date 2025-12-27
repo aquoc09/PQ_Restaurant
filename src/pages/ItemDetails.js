@@ -169,9 +169,9 @@ function ItemDetails() {
                 {/* PRODUCT DETAILS AND ACTIONS */}
                 <div className='lg:w-1/2 w-full flex flex-col gap-5'>
                     <nav className='text-sm text-gray-500 mb-2' aria-label="Breadcrumb">
-                        <Link to='/' className='text-gray-500 hover:underline'>Home</Link>
+                        <Link to='/' className='text-gray-500 hover:text-blue-600 font-medium'>Home</Link>
                         <span className='mx-2 text-gray-400'>/</span>
-                        <Link to='/menu' className='text-gray-500 hover:underline'>Menu</Link>
+                        <Link to='/menu' className='text-gray-500 hover:text-blue-600 font-medium'>Menu</Link>
                         <span className='mx-2 text-gray-400'>/</span>
                         <span className='text-gray-500'>{product.name}</span>
                     </nav>
@@ -197,9 +197,9 @@ function ItemDetails() {
                             <p className='text-2xl font-bold text-gray-500'>Chọn kích cỡ để xem giá</p>
                         )}
                         
-                        <p className='text-sm text-gray-500 mt-1'>
+                        {/* <p className='text-sm text-gray-500 mt-1'>
                             Price is not include VAT
-                        </p>
+                        </p> */}
                     </div>
 
                     {/* DETAILS/DESCRIPTION */}

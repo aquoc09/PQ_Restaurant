@@ -56,6 +56,7 @@ import EditOrder from './pages/admin/EditOrder';
 import AddCoupon from './pages/admin/AddCoupon';
 import MyReview from './pages/MyReview';
 import ManagerRoute from './components/ManagerRoutes';
+import Reviews from './pages/Reviews';
 
 const MainLayout = ({ children }) => {
   return (
@@ -181,6 +182,7 @@ function App() {
         {/* Tuyến đường riêng dành cho User */}
         <Route path= '/' element={<UserRoute />}>
          <Route path='/product-details/:productId' element={<MainLayout><ItemDetails /></MainLayout>} />
+         <Route path='/product-details/:productId/reviews' element={<MainLayout><Reviews /></MainLayout>} />
           <Route path='/user-profile' element={<MainLayout><UserProfile /> </MainLayout>} />
           <Route path='/user-address' element={<MainLayout><UserAddress /></MainLayout>} />
           <Route path='/address' element={<MainLayout><Address /> </MainLayout>} />

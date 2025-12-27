@@ -66,8 +66,7 @@ export const OrderProvider = ({ children }) => {
     const applyCoupon = async (code, currentAmount) => {
         try {
             const coupon = await CouponService.getCouponByCode(code);
-            
-            // Validate sơ bộ trước khi lưu vào State
+
             if (!coupon.active) {
                 toast.error("Mã giảm giá đã bị vô hiệu hóa.");
                 return null;

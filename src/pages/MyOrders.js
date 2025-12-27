@@ -5,6 +5,16 @@ import { myAssets } from '../assets/assets'
 import OrderService from '../services/OrderSevice';
 import { toast } from 'react-toastify';
 
+const formatDate = (dob_yyyy_mm_dd) => {
+    if (!dob_yyyy_mm_dd) return null;
+    try {
+        const [year, month, day] = dob_yyyy_mm_dd.split('-');
+        return `${day}/${month}/${year}`;
+    } catch (e) {
+        return dob_yyyy_mm_dd;
+    }
+};
+
 const MyOrders = () => {
 
   const {formatCurrency, navigate, addToCart}=useUserContext();
@@ -138,7 +148,7 @@ const MyOrders = () => {
                   <div className='flex items-center gap-x-2'>
                     <h5 className='text-sm font-medium'>Date:</h5>
                     <p className='text-gray-400 text-sm '>
-                          {new Date(order.orderDate).toDateString()}
+                          {formatDate(order.orderDate)}
                     </p>
                   </div>
                     <div className='flex items-center gap-x-2'>
