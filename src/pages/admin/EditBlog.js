@@ -18,7 +18,7 @@ const EditBlog = () => {
         title: '',
         shortDescription: '',
         content: '',
-        image: '' // Tên ảnh cũ
+        image: ''
     });
 
     // Load dữ liệu
@@ -122,7 +122,6 @@ const EditBlog = () => {
 
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-2">Nội dung chi tiết</label>
-                                {/* TEXTAREA THAY THẾ */}
                                 <textarea
                                     name="content"
                                     value={formData.content}
