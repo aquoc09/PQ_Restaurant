@@ -118,7 +118,7 @@ function UserProfile() {
     if (loading) return <div className='p-6'>Đang tải dữ liệu người dùng...</div>;
 
     return (
-        <div className=' pb-8 m-1 flex flex-col w-full px-10 lg:px-12 justify-between items-center max-padd-container py-16 pt-28 bg-gradient-to-br from-slate-50 to-primary min-h-screen shadow rounded-xl'>
+        <div className=' pb-8 m-1 flex flex-col w-full px-10 lg:px-12 justify-between items-center py-16 pt-28 bg-gradient-to-br from-slate-50 to-primary shadow rounded-xl min-h-screen'>
             <Title 
                 title1={"My"}
                 title2={"Profile"}
