@@ -75,7 +75,7 @@ export const useAuth = ()=> {
 
     // Hàm Đăng xuất
     const logout = useCallback(async () => {
-        const token = localStorage.getItem('refreshToken');
+        const token = localStorage.getItem('accessToken');
         
         if (token) {
             try {
