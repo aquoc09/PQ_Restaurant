@@ -74,18 +74,15 @@ function EditOrder() {
         setSaving(true);
 
         try {
-            // Chuẩn bị Payload theo cấu trúc OrderRequest
-            // Merge dữ liệu gốc (originalOrder) với dữ liệu mới sửa (formData)
             const requestPayload = {
-                ...originalOrder, // Spread các trường cũ: orderDetails, address, userId, orderDate...
+                ...originalOrder, 
                 
-                // Ghi đè các trường đã sửa:
+                // Ghi đè các trường đã sửa
                 status: formData.status,
                 active: formData.active === 'true', // Convert string -> boolean
                 shippingMethod: formData.shippingMethod || null,
                 trackingNumber: formData.trackingNumber || null,
                 
-                // Đóng gói lại Note thành JSON string
                 note: JSON.stringify({ note: formData.note }) 
             };
 
@@ -125,10 +122,10 @@ function EditOrder() {
 
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     
-                    {/* CỘT TRÁI (2/3): FORM CHÍNH */}
+                    {/* FORM CHÍNH */}
                     <div className="lg:col-span-2 space-y-6">
                         
-                        {/* Card 1: Trạng thái & Active */}
+                        {/*  Trạng thái & Active */}
                         <div className="bg-white rounded-xl shadow-md border border-slate-100 p-6">
                             <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <span className="w-1 h-6 bg-indigo-500 rounded-full"></span>
@@ -169,7 +166,7 @@ function EditOrder() {
                             </div>
                         </div>
 
-                        {/* Card 2: Vận chuyển */}
+                        {/* Vận chuyển */}
                         <div className="bg-white rounded-xl shadow-md border border-slate-100 p-6">
                              <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <span className="w-1 h-6 bg-orange-500 rounded-full"></span>
@@ -180,7 +177,6 @@ function EditOrder() {
                                 {/* Shipping Method */}
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1.5">Shipping Method</label>
-                                    {/* Nếu ShippingMethod là Enum cố định ở BE, hãy dùng Select. Nếu là String tự do, dùng Input */}
                                     <input 
                                         type="text"
                                         name="shippingMethod"
@@ -206,7 +202,7 @@ function EditOrder() {
                             </div>
                         </div>
 
-                        {/* Card 3: Ghi chú */}
+                        {/* Ghi chú */}
                         <div className="bg-white rounded-xl shadow-md border border-slate-100 p-6">
                             <h3 className="font-bold text-slate-800 mb-4 flex items-center gap-2">
                                 <span className="w-1 h-6 bg-amber-500 rounded-full"></span>
@@ -243,7 +239,6 @@ function EditOrder() {
                         </div>
                     </div>
 
-                    {/* CỘT PHẢI (1/3): THÔNG TIN READ-ONLY (Để tham khảo khi sửa) */}
                     <div className="space-y-6">
                         {/* Summary Card */}
                         <div className="bg-slate-100 rounded-xl p-6 border border-slate-200">
@@ -251,7 +246,7 @@ function EditOrder() {
                                 Thông tin tóm tắt
                             </h4>
                             
-                            <div className="space-y-4 text-base"> {/* Tăng base size lên text-base */}
+                            <div className="space-y-4 text-base">
                                 <div className="flex justify-between items-start">
                                     <span className="text-slate-500 font-medium whitespace-nowrap">Khách hàng:</span>
                                     <span className="font-bold text-slate-800 text-right ml-4">
@@ -285,7 +280,6 @@ function EditOrder() {
                             <div className="space-y-5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
                                 {originalOrder?.orderDetails?.map((item) => (
                                     <div key={item.id} className="flex gap-4 items-start group">
-                                        {/* Tăng kích thước ảnh từ w-10 lên w-16 */}
                                         <div className="w-16 h-16 bg-slate-100 rounded-lg border border-slate-200 shrink-0 overflow-hidden shadow-sm group-hover:shadow-md transition">
                                                 {item.product?.productImage ? (
                                                     <img src={myAssets[item.product.productImage]} alt="" className="w-full h-full object-cover"/>
@@ -295,13 +289,12 @@ function EditOrder() {
                                         </div>
                                         
                                         <div className="flex-1">
-                                            {/* Tên sản phẩm to hơn (text-sm -> text-base) */}
                                             <p className="text-[15px] font-bold text-slate-800 line-clamp-2 leading-snug">
                                                 {item.product?.name}
                                             </p>
                                             
                                             <div className="flex justify-between items-center mt-2">
-                                                {/* Size và số lượng rõ ràng hơn */}
+                                                {/* Size và số lượng */}
                                                 <span className="inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium bg-slate-100 text-slate-700 border border-slate-200">
                                                     {item.size} <span className="text-slate-400 mx-1.5">x</span> {item.numProducts}
                                                 </span>

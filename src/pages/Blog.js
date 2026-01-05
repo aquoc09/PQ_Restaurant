@@ -23,7 +23,7 @@ const Blog = () => {
     fetchBlogs();
   }, []);
 
-  // Hàm format ngày tháng (VD: 2024-10-31)
+  // Hàm format ngày tháng
   const formatDate = (dateString) => {
     if (!dateString) return "MỚI";
     return new Date(dateString).toLocaleDateString('vi-VN');

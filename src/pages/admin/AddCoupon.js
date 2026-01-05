@@ -74,7 +74,7 @@ function AddCoupon() {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     
-                    {/* CARD 1: THÔNG TIN CƠ BẢN (COUPON INFO) */}
+                    {/* THÔNG TIN CƠ BẢN */}
                     <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6">
                         <h2 className="text-lg font-bold text-slate-800 mb-5 pb-2 border-b border-slate-50 flex items-center gap-2">
                             <span className="w-1.5 h-6 bg-indigo-500 rounded-full"></span>

@@ -23,11 +23,7 @@ const AddBlog = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleContentChange = (value) => {
-        setFormData({ ...formData, content: value });
-    };
-
-    // --- LOGIC XỬ LÝ ẢNH CỦA BẠN ---
+    // --- LOGIC XỬ LÝ ẢNH  ---
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -48,25 +44,25 @@ const AddBlog = () => {
         e.preventDefault();
         setLoading(true);
 
-        // 1. Validate Text
+        // Validate Text
         if (!formData.title || !formData.content) {
             toast.warning("Tiêu đề và nội dung không được để trống!");
             setLoading(false);
             return;
         }
 
-        // 2. Validate & Xử lý Ảnh (Theo logic bạn cung cấp)
+        // Validate & Xử lý Ảnh
         let imageFileName = '';
         if (imageFile) {
             const myArray = imageFile.name.split('.');
             imageFileName = myArray[0]; // Lấy tên file bỏ đuôi
         } else {
             setLoading(false);
-            toast.error('Vui lòng chọn ảnh.'); // Bắt buộc chọn ảnh khi thêm mới
+            toast.error('Vui lòng chọn ảnh.'); 
             return;
         }
 
-        // 3. Chuẩn bị dữ liệu gửi đi
+        // Chuẩn bị dữ liệu gửi đi
         const payload = {
             ...formData,
             image: imageFileName // Gán tên file vào trường image

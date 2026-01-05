@@ -24,9 +24,9 @@ function EditPromotion() {
     const [formData, setFormData] = useState(initialFormState);
     const [loading, setLoading] = useState(false);
 
-    // State để lưu trữ File Object (để lấy tên file)
+    // lưu trữ File Object (để lấy tên file)
     const [imageFile, setImageFile] = useState(null); 
-    // State để hiển thị bản xem trước ảnh mới (dùng FileReader )
+    // hiển thị bản xem trước ảnh mới 
     const [imagePreview, setImagePreview] = useState(null);
 
     const fetchData = async () => {

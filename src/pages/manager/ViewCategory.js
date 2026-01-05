@@ -137,8 +137,7 @@ function ViewCategoryManager() {
                     >
                         &laquo; Trước
                     </button>
-                    
-                    {/* Chỉ hiện tối đa 5 trang để tránh dài quá nếu data nhiều */}
+
                     {[...Array(Math.min(totalPages, 5))].map((_, i) => (
                         <button
                             key={i + 1}

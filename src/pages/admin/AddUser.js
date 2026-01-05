@@ -50,7 +50,7 @@ function AddUser() {
         // Giới hạn ngày sinh tối thiểu 18 tuổi
         const minDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
 
-        // username (Yêu cầu @Size min=5)
+        // username
         if (!formData.username.trim()) {
             newErrors.username = "Username không được để trống.";
             isValid = false;
@@ -59,7 +59,7 @@ function AddUser() {
             isValid = false;
         }
 
-        // password (Yêu cầu@Size min=8)
+        // password 
         if (!formData.password) {
             newErrors.password = "Mật khẩu không được để trống.";
             isValid = false;
@@ -77,7 +77,7 @@ function AddUser() {
             isValid = false;
         }
 
-        // dob (Yêu cầu min=18)
+        // dob 
         if (!formData.dob) {
             newErrors.dob = "Ngày sinh không được để trống.";
             isValid = false;

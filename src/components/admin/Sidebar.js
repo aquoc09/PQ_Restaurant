@@ -75,7 +75,7 @@ function Sidebar() {
         {/* Mobile Navbar */}
         <div className='md:hidden w-full bg-slate-50 shadow-xl rounded-b-xl'>
           
-          {/* A. Logo và User Info (Hàng trên cùng) */}
+          {/* Logo và User Info */}
 
           <div className='flex justify-between items-center p-3'>
             {/* Logo */}
@@ -88,12 +88,11 @@ function Sidebar() {
             </Link>
             {/* User Info (Admin Avatar) */}
             <div className='flex items-center gap-2 text-white'>
-              {/* Giả định AdminButton chứa Avatar/Admin Name */}
               <AdminButton /> 
             </div>
           </div>
 
-          {/* B. Menu Ngang (Hàng thứ hai) */}
+          {/* Menu Ngang */}
           <div className='flex overflow-x-auto gap-x-1 p-2'>
             {navItems.map((link) => (
               <NavLink
@@ -128,7 +127,6 @@ function Sidebar() {
 
               {/* User */}
               <div className='flex items-center gap-3 p-3 pl-6 mt-4'>
-                {/* <AdminNavbar /> */}
                 <AdminButton />
               </div>
               <div className='mt-2 border-t border-gray-200'></div>

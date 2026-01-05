@@ -59,10 +59,10 @@ const BlogDetails = () => {
 
     return (
         <div className='pt-32 pb-16 bg-white'>
-            {/* --- CONTAINER CHÍNH (Giới hạn chiều rộng để dễ đọc) --- */}
+            {/* --- CONTAINER CHÍNH --- */}
             <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
                 
-                {/* 1. BREADCRUMB */}
+                {/* BREADCRUMB */}
                 <nav className="flex text-sm text-gray-500 mb-6">
                     <Link to="/" className="hover:text-gray-900 transition-colors">Trang chủ</Link>
                     <span className="mx-2">/</span>
@@ -71,7 +71,7 @@ const BlogDetails = () => {
                     <span className="text-gray-900 font-medium truncate max-w-[200px]">{blog.title}</span>
                 </nav>
 
-                {/* 2. HEADER BÀI VIẾT */}
+                {/*  HEADER BÀI VIẾT */}
                 <div className="text-center mb-10">
                     <span className="inline-block py-1 px-3 rounded-full bg-blue-50 text-blue-600 text-xs font-bold tracking-wider mb-4 uppercase">
                         Tin tức
@@ -97,7 +97,7 @@ const BlogDetails = () => {
                     </div>
                 </div>
 
-                {/* 3. FEATURED IMAGE */}
+                {/* FEATURED IMAGE */}
                 <div className="rounded-2xl overflow-hidden shadow-lg mb-12">
                     <img 
                         src={myAssets[blog.image]} 
@@ -106,20 +106,15 @@ const BlogDetails = () => {
                     />
                 </div>
 
-                {/* 4. NỘI DUNG BÀI VIẾT (Render HTML) */}
-                {/* Lưu ý: Class 'prose' đến từ plugin @tailwindcss/typography. 
-                   Nếu bạn chưa cài, mình đã viết thêm css thủ công bên dưới style={{}} để đảm bảo nó vẫn đẹp.
-                */}
                 <div 
                     className="prose prose-lg prose-blue max-w-none text-gray-700 leading-relaxed space-y-4"
                     dangerouslySetInnerHTML={{ __html: blog.content }}
-                    // Style backup nếu nội dung HTML bị vỡ layout do Tailwind reset
                     style={{
                         textAlign: 'justify',
                     }}
                 />
 
-                {/* 5. TAGS & SHARE (Placeholder) */}
+                {/* TAGS & SHARE (Placeholder) */}
                 <div className="mt-12 pt-8 border-t border-gray-100 flex flex-wrap justify-between items-center gap-4">
                     <div className="flex gap-2">
                         <span className="text-gray-500 font-medium">Tags:</span>
@@ -144,7 +139,7 @@ const BlogDetails = () => {
                 </div>
             </div>
 
-            {/* 6. BÀI VIẾT LIÊN QUAN */}
+            {/* BÀI VIẾT LIÊN QUAN */}
             {relatedBlogs.length > 0 && (
                 <div className="bg-slate-50 mt-20 py-16">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

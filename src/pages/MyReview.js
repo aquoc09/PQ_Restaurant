@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 const MyReviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState(null); // ID của review đang sửa
+  const [editingId, setEditingId] = useState(null); 
   const [editForm, setEditForm] = useState({ rating: 5, comment: '' });
 
   const fetchMyReviews = useCallback(async () => {
@@ -16,7 +16,6 @@ const MyReviews = () => {
       setLoading(true);
       const data = await ReviewService.getMyReviews();
       setReviews(data); 
-      // data ở đây chính là List<ReviewResponse>
     } catch (err) {
       console.error(err);
       toast.error("Không thể tải danh sách đánh giá.");
@@ -34,7 +33,6 @@ const MyReviews = () => {
       try {
         await ReviewService.deleteReview(reviewId);
         toast.success("Đã xóa đánh giá thành công!");
-        // Cập nhật lại list reviews mà không cần gọi lại API fetch
         setReviews(prev => prev.filter(item => item.id !== reviewId));
       } catch (error) {
         toast.error("Lỗi khi xóa đánh giá.");
@@ -43,7 +41,7 @@ const MyReviews = () => {
     }
   };
 
-  // --- 3. Xử lý Bắt đầu Sửa ---
+  // --- Xử lý Bắt đầu Sửa ---
   const handleStartEdit = (review) => {
     setEditingId(review.id);
     setEditForm({
@@ -52,13 +50,13 @@ const MyReviews = () => {
     });
   };
 
-  // --- 4. Xử lý Hủy Sửa ---
+  // --- Xử lý Hủy Sửa ---
   const handleCancelEdit = () => {
     setEditingId(null);
     setEditForm({ rating: 5, comment: '' });
   };
 
-  // --- 5. Xử lý Lưu Sửa (Update) ---
+  // --- Xử lý Lưu Sửa ---
   const handleUpdate = async (review) => {
     try {
         const reviewData = {
@@ -73,7 +71,6 @@ const MyReviews = () => {
         
         toast.success("Cập nhật đánh giá thành công! Đang chờ duyệt.");
         
-        // Cập nhật lại UI Local
         setReviews(prev => prev.map(item => 
             item.id === review.id 
             ? { ...item, rating: editForm.rating, comment: editForm.comment } 
@@ -88,7 +85,6 @@ const MyReviews = () => {
     }
   };
 
-  // Helper render sao (có thể click để chọn khi đang edit)
   const renderStars = (currentRating, isEditing = false) => {
     return (
       <div className="flex text-yellow-500 text-lg cursor-pointer">
@@ -133,9 +129,6 @@ const MyReviews = () => {
       ) : (
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
             {reviews.map((review, index) => (
-                // --- THAY ĐỔI 2: CARD STYLE ---
-                // Thêm shadow-md, hover:shadow-xl để tạo cảm giác card nổi hẳn lên
-                // Thêm border-white/50 để tạo cảm giác hơi "glass"
                 <div key={index} className='group bg-white p-6 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/60 transition-all duration-300 flex gap-5 items-start transform hover:-translate-y-1'>
                 
                 {/* Ảnh sản phẩm */}

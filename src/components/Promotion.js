@@ -1,13 +1,9 @@
 import React, {useEffect, useState} from 'react'
 // Import Swiper React components
 import { Swiper, SwiperSlide } from 'swiper/react';
-
 // Import Swiper styles
 import 'swiper/css';
-
-// import required modules
 import { Autoplay } from 'swiper/modules';
-//import { promotion } from '../assets/assets';
 import ItemPromotions from './ItemPromotions';
 import PromotionService from "../services/PromotionService";
 //import to get data from api
@@ -21,7 +17,6 @@ const Promotion = () => {
       //   setNewPromotions(data);
       // }, [promotion])
 
-    //CODE GENERATED TỪ GPT CẦN TEST LẠI
     useEffect(() => {
     const fetchPromotions = async () => {
       try {

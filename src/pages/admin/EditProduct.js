@@ -29,23 +29,19 @@ function EditProduct() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     
-    // State để lưu File Object mới
+    //  lưu File Object mới
     const [imageFile, setImageFile] = useState(null); 
-    // State để hiển thị bản xem trước ảnh (ảnh cũ hoặc ảnh mới)
+    //  hiển thị bản xem trước ảnh (ảnh cũ hoặc ảnh mới)
     const [imagePreview, setImagePreview] = useState(null); 
-    // --- 1. Tải Dữ liệu (Sản phẩm hiện tại & Danh mục) ---
     const fetchEditData = async () => {
         
             try {
-                // Tải danh mục
                 const categoryData = await CategoryService.getAllCategories();
                 setCategories(categoryData);
 
-                // Tải sản phẩm hiện tại
                 const response = await ProductService.getProductById(id);
                 const productData = response.result;
 
-                // Chuyển đổi giá từ Map BE sang Array FE
                 const pricesArray = productData.prices || [{ size: '', price: '' }];
 
                 const categoryIdToSet = productData.categoryId ? String(productData.categoryId) : '';
@@ -72,6 +68,7 @@ function EditProduct() {
                 setLoading(false);
             }
         };
+
     //  Các hàm xử lý Input  ---
     
     const handleInputChange = (e) => {
@@ -102,7 +99,7 @@ function EditProduct() {
         setFormData(prev => ({ ...prev, prices: newPrices }));
     };
 
-    // --- Xử lý Chọn File Hình ảnh (Điều chỉnh cho Edit) ---
+    // --- Xử lý Chọn File Hình ảnh  ---
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -156,7 +153,6 @@ function EditProduct() {
         };
         console.log("Product Request chuẩn bị gửi:", productRequest);
 
-        // 4. Gọi API Update Product
         try {
             await ProductService.updateProduct(id, productRequest);
             toast.success('Update Product success!');

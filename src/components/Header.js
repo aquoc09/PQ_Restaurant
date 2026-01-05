@@ -23,7 +23,6 @@ const Header = () => {
   //Lắng nghe sự kiện cuộn
   useEffect(() => {
     const handleScroll = () => {
-      // Nếu cuộn xuống hơn 0px thì set state
       setIsScrolled(window.scrollY > 0);
     };
     window.addEventListener("scroll", handleScroll);

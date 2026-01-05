@@ -61,7 +61,7 @@ function SidebarManager() {
         {/* Mobile Navbar */}
         <div className='md:hidden w-full bg-slate-50 shadow-xl rounded-b-xl'>
           
-          {/* A. Logo và User Info (Hàng trên cùng) */}
+          {/* Logo và User Info */}
 
           <div className='flex justify-between items-center p-3'>
             {/* Logo */}
@@ -78,7 +78,7 @@ function SidebarManager() {
             </div>
           </div>
 
-          {/* B. Menu Ngang (Hàng thứ hai) */}
+          {/* Menu Ngang */}
           <div className='flex overflow-x-auto gap-x-1 p-2'>
             {navItems.map((link) => (
               <NavLink
@@ -99,7 +99,7 @@ function SidebarManager() {
 
         {/* Full Screen */}
         <div className='hidden md:flex flex-col bg-slate-50 sm:m-3 md:min-w-[20%] md:min-h-[97vh] rounded-xl shadow'>
-          {/* A. Logo */}
+          {/* Logo */}
           <div className='flex flex-col'>
               <div className='flex flex-1 p-3 lg:pl-12'>
                 <Link to={'/'} className='flex items-end'>
@@ -113,7 +113,6 @@ function SidebarManager() {
 
               {/* User */}
               <div className='flex items-center gap-3 p-3 pl-6 mt-4'>
-                {/* <AdminNavbar /> */}
                 <ManagerButton />
               </div>
               <div className='mt-2 border-t border-gray-200'></div>

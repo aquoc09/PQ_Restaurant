@@ -86,15 +86,12 @@ function OrderDetailManager() {
   return (
     <div className="bg-slate-50 min-h-screen p-4 md:p-8 pb-20">
             
-      {/* --- HEADER TƯƠI SÁNG HƠN --- */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8 gap-4">
           <div>
               <div className="flex items-center gap-3 mb-2">
-                  {/* Tiêu đề lớn và đậm hơn */}
                   <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
                       Order #{order.id}
                   </h1>
-                  {/* Badge trạng thái đẹp mắt */}
                   <span className={`px-4 py-1.5 rounded-full text-sm font-bold shadow-sm ${getStatusStyle(order.status)}`}>
                       {order.status}
                   </span>
@@ -116,7 +113,6 @@ function OrderDetailManager() {
               </button>
               <button 
                   onClick={() => navigate(`/manager/edit-order/${order.id}`)} 
-                  // Nút chính sử dụng màu indigo nổi bật và shadow đẹp
                   className="flex-1 lg:flex-none px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-200 transition-all text-sm font-semibold flex items-center justify-center gap-2"
               >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
@@ -125,12 +121,10 @@ function OrderDetailManager() {
           </div>
       </div>
 
-      {/* Sử dụng gap lớn hơn để thoáng mắt */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* --- CỘT TRÁI (Chiếm 8/12 phần): DANH SÁCH SẢN PHẨM --- */}
           <div className="lg:col-span-8 space-y-6">
-              {/* Card sử dụng shadow mềm mại và bo góc lớn */}
               <div className="bg-white rounded-2xl shadow-xl shadow-slate-200/40 border border-slate-100 overflow-hidden">
                   <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/80 flex items-center gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
@@ -152,7 +146,6 @@ function OrderDetailManager() {
                                   <tr key={item.id} className="hover:bg-indigo-50/30 transition duration-150">
                                       <td className="px-6 py-4">
                                           <div className="flex items-center gap-4">
-                                              {/* Placeholder ảnh đẹp hơn */}
                                               <div className="w-12 h-12 bg-slate-200 rounded-lg flex items-center justify-center text-xs text-slate-400 font-bold shrink-0 ring-1 ring-slate-300 overflow-hidden">
                                                   {item.product?.productImage ? (
                                                       <img src={myAssets[item.product.productImage]} alt={item.product.name} className="w-full h-full object-cover" />
@@ -284,7 +277,7 @@ function OrderDetailManager() {
                           </div>
                       </div>
 
-                      {/* Địa chỉ - Nổi bật hơn */}
+                      {/* Địa chỉ */}
                       <div className="flex items-start gap-3 mt-4 pt-4 border-t border-slate-100">
                           <div className="mt-1"><Icons.Location /></div>
                           <div>

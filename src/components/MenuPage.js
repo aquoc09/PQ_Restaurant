@@ -8,8 +8,7 @@ import { myAssets } from '../assets/assets';
  
 
 const MenuPage = () => {
-    
-    // STATE CHỈ CÒN CATEGORY VÀ KEYWORD
+
     const [selectedCategoryId, setSelectedCategoryId] = useState(0); 
     const [searchKeyword, setSearchKeyword] = useState('');
     const [sortType, setSortType] = useState('relative');
@@ -17,7 +16,6 @@ const MenuPage = () => {
     const [categories, setCategories] = useState([]);
     const [loadingCategories, setLoadingCategories] = useState(true);
 
-    // Lấy danh sách Categories khi component mount
     useEffect(() => {
         const fetchCategories = async () => {
             try {

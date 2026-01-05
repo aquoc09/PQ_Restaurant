@@ -48,7 +48,7 @@ function ViewOrder() {
             const request = {
                 note: order.note,
                 orderDate: order.orderDate,
-                status: newStatus, // Giá trị mới từ <select>
+                status: newStatus,
                 totalMoney: order.totalMoney,
                 shippingMethod: order.shippingMethod,
                 trackingNumber: order.trackingNumber,
@@ -78,7 +78,6 @@ function ViewOrder() {
             // Gọi service cập nhật
             await OrderService.updateOrder(order.id, request);
             
-            // Cập nhật lại state local để UI hiển thị giá trị mới ngay lập tức
             setOrders(prevOrders => 
                 prevOrders.map(o => o.id === order.id ? { ...o, status: newStatus } : o)
             );

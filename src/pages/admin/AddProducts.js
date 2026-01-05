@@ -21,14 +21,12 @@ function AddProduct() {
     const [formData, setFormData] = useState(initialFormState);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
-    // State mới để lưu File Object
+    // lưu File Object ảnh
     const [imageFile, setImageFile] = useState(null); 
-    // State để hiển thị bản xem trước ảnh
+    // hiển thị bản xem trước ảnh
     const [imagePreview, setImagePreview] = useState(null); 
 
-    // Tải danh mục
     useEffect(() => {
-        // ... (Logic tải danh mục tương tự như trước)
         const fetchCategories = async () => {
             try {
                 const data = await CategoryService.getAllCategories();
@@ -40,8 +38,6 @@ function AddProduct() {
         fetchCategories();
     }, []);
 
-    // ... (handleInputChange và các hàm xử lý prices tương tự)
-
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
@@ -51,7 +47,6 @@ function AddProduct() {
     };
     
     const handlePriceChange = (index, e) => {
-        // Logic xử lý giá (như trước)
         const { name, value } = e.target;
         const newPrices = [...formData.prices];
         newPrices[index][name] = name === 'price' ? parseFloat(value) || 0 : value;

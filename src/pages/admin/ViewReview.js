@@ -23,7 +23,7 @@ const ViewReview = () => {
     const fetchReviews = async () => {
         try {
             const data = await ReviewService.getAllReviews();
-            // Data trả về đã là mảng, không cần .result nữa (dựa theo Service đã viết)
+            // Data trả về đã là mảng, không cần .result nữa
             if (Array.isArray(data)) {
                 const sortedData = [...data].sort((a, b) => b.id - a.id); // Sort: Mới nhất lên đầu
                 setReviews(sortedData);
@@ -42,7 +42,6 @@ const ViewReview = () => {
         const newStatus = e.target.value;
         const oldStatus = review.reviewStatus;
 
-        // Nếu không thay đổi thì không làm gì
         if (newStatus === oldStatus) return;
 
         try {
@@ -50,7 +49,6 @@ const ViewReview = () => {
             
             toast.success(`Đã cập nhật trạng thái thành: ${newStatus}`);
 
-            // Cập nhật lại UI Local để không cần load lại trang
             setReviews(prevReviews => 
                 prevReviews.map(item => 
                     item.id === review.id ? { ...item, reviewStatus: newStatus } : item
@@ -103,7 +101,7 @@ const ViewReview = () => {
         setSelectedReview(null);
     };
 
-    // --- Helper: Render Sao ---
+    // --- Render Sao ---
     const renderStars = (rating) => {
         return (
             <div className="flex text-yellow-400">
@@ -116,7 +114,7 @@ const ViewReview = () => {
         );
     };
 
-    // --- Helper: Màu sắc trạng thái (Tailwind classes) ---
+    // --- Màu sắc trạng thái ---
     const getStatusBadge = (status) => {
         const styles = {
             ACCEPTED: "bg-green-100 text-green-800 border-green-200",
@@ -243,8 +241,7 @@ const ViewReview = () => {
                         >
                             &laquo; Trước
                         </button>
-                        
-                        {/* Chỉ hiện tối đa 5 trang để tránh dài quá nếu data nhiều */}
+
                         {[...Array(Math.min(totalPages, 5))].map((_, i) => (
                             <button
                                 key={i + 1}
@@ -302,7 +299,7 @@ const ViewReview = () => {
                                         {selectedReview.product?.productImage && (
                                             <div className="w-16 h-16 rounded-md bg-white border border-blue-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                                                  <img 
-                                                    src={myAssets[selectedReview.product.productImage]} // SỬ DỤNG myAssets
+                                                    src={myAssets[selectedReview.product.productImage]} 
                                                     alt="" 
                                                     className="w-full h-full object-contain"
                                                 />

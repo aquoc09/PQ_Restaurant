@@ -13,12 +13,12 @@ const Cart = () => {
   const cartItems = cart?.cartItems || [];
   const [selectedItems, setSelectedItems] = useState({});
 
-  // --- 1. LỌC DANH SÁCH SẢN PHẨM ĐƯỢC CHỌN ---
+  // --- LỌC DANH SÁCH SẢN PHẨM ĐƯỢC CHỌN ---
   const selectedItemsList = useMemo(() => {
     return cartItems.filter(item => selectedItems[item.id]);
   }, [cartItems, selectedItems]);
 
-  // --- 2. TÍNH TOÁN TỔNG TIỀN & SỐ LƯỢNG ---
+  // --- TÍNH TOÁN TỔNG TIỀN & SỐ LƯỢNG ---
   const { selectedCartAmount, selectedCartCount } = useMemo(() => {
     let amount = 0;
     let count = 0;
@@ -29,7 +29,7 @@ const Cart = () => {
     return { selectedCartAmount: amount, selectedCartCount: count };
   }, [selectedItemsList]);
 
-  // --- 3. XỬ LÝ TRẠNG THÁI CHỌN ---
+  // --- XỬ LÝ TRẠNG THÁI CHỌN ---
   const handleItemSelectChange = (cartId, isChecked) => {
     setSelectedItems(prev => ({ ...prev, [cartId]: isChecked }));
   };
@@ -46,7 +46,7 @@ const Cart = () => {
     setSelectedItems(newSelectedItems);
   };
 
-  // --- 4. XỬ LÝ XÓA ---
+  // --- XỬ LÝ XÓA ---
   const handleDeleteSelected = async () => {
     const itemIdsToDelete = Object.keys(selectedItems).filter(id => selectedItems[id]);
     if (itemIdsToDelete.length === 0) {
@@ -64,7 +64,7 @@ const Cart = () => {
     }
   };
 
-  // --- 5. KIỂM TRA ĐĂNG NHẬP ---
+  // --- KIỂM TRA ĐĂNG NHẬP ---
   useEffect(() => {
     if (!isAuthenticated()) {
       toast.error("Vui lòng đăng nhập để xem giỏ hàng của bạn.");

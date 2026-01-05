@@ -16,7 +16,6 @@ function MapComponent({ position, onMarkerUpdate, zoom, shouldPan, onAutoPanComp
         const lat = e.latLng.lat();
         const lng = e.latLng.lng();
         onMarkerUpdate(lat, lng);
-        // Sau khi kéo thả, bạn có thể muốn Geocode ngược lại để lấy địa chỉ
     }, [onMarkerUpdate]);
     
     // Thiết lập cho Map Click
@@ -27,27 +26,23 @@ function MapComponent({ position, onMarkerUpdate, zoom, shouldPan, onAutoPanComp
         onMarkerUpdate(lat, lng);
     }, [onMarkerUpdate]);
 
-
-    // Only auto-pan when requested (shouldPan); otherwise do not forcibly recenter the map
+    // Tự động pan map đến vị trí mới nếu shouldPan là true
     useEffect(() => {
         if (!map) return;
         if (shouldPan) {
             try {
                 map.panTo(position);
                 if (typeof zoom === 'number') map.setZoom(zoom);
-                // call onAutoPanComplete once map becomes idle
                 const idleListener = map.addListener('idle', () => {
                     try { if (onAutoPanComplete) onAutoPanComplete(); } catch (e) {}
                     try { idleListener.remove(); } catch (e) {}
                 });
             } catch (e) {
-                // ignore
+                
             }
         }
     }, [map, position, shouldPan, zoom, onAutoPanComplete]);
 
-    // Fallback: create a native google.maps.Marker so a pin always appears even if AdvancedMarker
-    // doesn't render as expected in this environment.
     useEffect(() => {
         if (!map || !window.google || !window.google.maps) return;
         try {
@@ -66,7 +61,7 @@ function MapComponent({ position, onMarkerUpdate, zoom, shouldPan, onAutoPanComp
         }
 
         return () => {
-            // keep marker for subsequent updates, but clean up on unmount
+
         };
     }, [map, position]);
     

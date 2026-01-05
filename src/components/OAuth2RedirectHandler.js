@@ -30,7 +30,6 @@ const OAuth2RedirectHandler = () => {
     }
   }, [navigate, searchParams, setAccessToken]);
 
-  // Hiển thị màn hình chờ trong lúc xử lý
   return (
     <div style={{ textAlign: 'center', marginTop: '50px' }}>
       <h2>Đang xử lý đăng nhập...</h2>

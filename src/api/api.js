@@ -28,7 +28,7 @@ const failQueue = (error) => {
     failedQueue = [];
 };
 
-// ... Interceptor Request (đã có) ...
+// ... Interceptor Request ...
 api.interceptors.request.use((config) => {
 
         const token = localStorage.getItem('accessToken');

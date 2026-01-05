@@ -23,10 +23,6 @@ const AddBlogManager = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleContentChange = (value) => {
-        setFormData({ ...formData, content: value });
-    };
-
     // --- LOGIC XỬ LÝ ẢNH CỦA BẠN ---
     const handleImageChange = (e) => {
         const file = e.target.files[0];

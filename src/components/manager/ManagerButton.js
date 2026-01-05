@@ -1,7 +1,6 @@
 import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-// import DEFAULT_AVATAR_MAP from '../../constants/avatarMapping';
 import { myAssets } from "../../assets/assets";
 
 const ManagerButton = () => {

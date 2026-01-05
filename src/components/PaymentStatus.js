@@ -8,9 +8,8 @@ import { FaCircleCheck, FaCircleXmark, FaSpinner } from "react-icons/fa6";
 const PaymentStatus = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { fetchUserCart } = useUserContext(); // Lấy hàm reset giỏ hàng
+    const { fetchUserCart } = useUserContext();
 
-    // State giao diện
     const [isLoading, setIsLoading] = useState(true);
     const [isSuccess, setIsSuccess] = useState(false);
     const [message, setMessage] = useState("Đang xác thực thanh toán...");
@@ -19,11 +18,11 @@ const PaymentStatus = () => {
     const queryParams = new URLSearchParams(location.search);
     const trackingNumber = queryParams.get('vnp_TxnRef');
     const responseCode = queryParams.get('vnp_ResponseCode');
-    const amount = queryParams.get('vnp_Amount'); // Số tiền (nếu có)
+    const amount = queryParams.get('vnp_Amount'); // Số tiền
 
     useEffect(() => {
         const verifyPayment = async () => {
-            // 1. Kiểm tra tham số cơ bản
+            //Kiểm tra tham số cơ bản
             if (!trackingNumber || !responseCode) {
                 setIsLoading(false);
                 setIsSuccess(false);
@@ -32,14 +31,13 @@ const PaymentStatus = () => {
             }
 
             try {
-                // 2. Xác định trạng thái từ VNPAY (00 là thành công)
+                // Xác định trạng thái từ VNPAY (00 là thành công)
                 const vnpaySuccess = responseCode === '00';
 
-                // 3. Gọi Backend để cập nhật trạng thái đơn hàng (Endpoint: /orders/vnpay/callback)
-                // Lưu ý: Đảm bảo OrderService đã sửa đường dẫn thành '/orders/vnpay/callback'
+                // Gọi Backend để cập nhật trạng thái đơn hàng (Endpoint: /orders/vnpay/callback)
                 const apiResponse = await OrderService.vnPayCallback(trackingNumber, vnpaySuccess);
 
-                // 4. Xử lý kết quả dựa trên phản hồi của VNPAY và Backend
+                // Xử lý kết quả dựa trên phản hồi của VNPAY và Backend
                 if (vnpaySuccess) {
                     setIsSuccess(true);
                     
@@ -79,7 +77,7 @@ const PaymentStatus = () => {
         <div className='max-padd-container py-18 bg-primary min-h-[110vh] flex items-center justify-center'>
             <div className='max-w-xl w-full bg-white rounded-3xl shadow-xl p-8 md:p-12 text-center ring-1 ring-slate-900/5'>
                 
-                {/* 1. TRẠNG THÁI LOADING */}
+                {/* TRẠNG THÁI LOADING */}
                 {isLoading ? (
                     <div className='flex flex-col items-center justify-center gap-4'>
                         <FaSpinner className='text-6xl text-secondary animate-spin' />
@@ -88,7 +86,7 @@ const PaymentStatus = () => {
                     </div>
                 ) : (
                     
-                /* 2. HIỂN THỊ KẾT QUẢ */
+                /*HIỂN THỊ KẾT QUẢ */
                 <div className='flex flex-col items-center gap-6'>
                     {/* Icon trạng thái */}
                     <div className={`text-8xl ${isSuccess ? 'text-green-500' : 'text-red-500'} animate-bounce`}>

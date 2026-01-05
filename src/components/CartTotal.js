@@ -38,7 +38,7 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
     if (isAuthenticated) fetchAddresses();
   }, [isAuthenticated, fetchAddresses]);
 
-  // 2. Ràng buộc Coupon: Tự động kiểm tra lại khi số tiền giỏ hàng thay đổi
+  // Ràng buộc Coupon: Tự động kiểm tra lại khi số tiền giỏ hàng thay đổi
   useEffect(() => {
     if (appliedCoupon) {
       // Tìm điều kiện về số tiền tối thiểu trong mảng conditions
@@ -53,7 +53,7 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
     }
   }, [selectedAmount, appliedCoupon, setAppliedCoupon, formatCurrency]);
 
-  // 3. Logic Tính Toán Chi Phí
+  // Logic Tính Toán Chi Phí
   const { shippingFee, discountValue, totalAmount } = useMemo(() => {
     // const tax = selectedAmount * 0.08;
     const ship = selectedAmount === 0 ? 0 : delivery_charges;
@@ -65,13 +65,13 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
     return { shippingFee: ship, discountValue: discount, totalAmount: total };
   }, [selectedAmount, delivery_charges, getValidDiscount]);
 
-  // 4. Xử lý sự kiện
+  // Xử lý sự kiện
   const handleApplyCoupon = async () => {
     if (!couponInput.trim()) {
       toast.warn("Vui lòng nhập mã giảm giá.");
       return;
     }
-    // Gọi hàm applyCoupon từ OrderContext (đã viết ở lượt trước)
+    // Gọi hàm applyCoupon từ OrderContext
     await applyCoupon(couponInput, selectedAmount);
   };
 
@@ -99,7 +99,7 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
       </h3>
       <hr className='border-gray-300' />
 
-      {/* 1. Địa chỉ giao hàng */}
+      {/* Địa chỉ giao hàng */}
       <div className='flex flex-col gap-2'>
         <h4 className='text-gray-900 font-semibold'>Where to ship your order?</h4>
         {addressLoading ? (
@@ -139,7 +139,7 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
 
       <hr className='border-gray-300' />
 
-      {/* 2. Nhập mã giảm giá */}
+      {/* Nhập mã giảm giá */}
       <div className='flex flex-col gap-2'>
         <h4 className='text-gray-900 font-semibold'>Coupon Code</h4>
         <div className='flex gap-2 mt-1'>
@@ -167,7 +167,7 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
 
       <hr className='border-gray-300' />
 
-      {/* 4. Tóm tắt chi phí */}
+      {/* Tóm tắt chi phí */}
       <div className='flex flex-col gap-3 pt-2'>
         <div className='flex justify-between'>
           <h5 className='text-gray-900'>Price ({selectedCount} items)</h5>
@@ -196,7 +196,7 @@ function CartTotal({ selectedAmount, selectedCount, selectedItemsList }) {
         </div>
       </div>
 
-      {/* 5. Nút điều hướng */}
+      {/* Nút điều hướng */}
       <button 
         onClick={handleCheckout} 
         disabled={selectedAmount === 0 || !selectedAddress} 

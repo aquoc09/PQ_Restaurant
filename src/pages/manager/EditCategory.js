@@ -18,7 +18,6 @@ function EditCategoryManager() {
     const [allCategories, setAllCategories] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // Tải dữ liệu cần thiết (Danh mục hiện tại và Danh mục cha)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -41,9 +40,10 @@ function EditCategoryManager() {
                     parentCategory: parentCodeToSet,
                 });
 
-                // 2. Tải tất cả danh mục để chọn Danh mục cha
+                // Tải tất cả danh mục để chọn Danh mục cha
                 const allCats = await CategoryService.getAllCategories();
-                setAllCategories(allCats);
+                const filteredCats = allCats.filter(cat => cat.id !== currentCategory.id && !cat.parentCategory);
+                setAllCategories(filteredCats);
             } catch (error) {
                 console.error("Lỗi tải dữ liệu sửa:", error);
                 toast.error("Không thể tải dữ liệu danh mục để sửa.");

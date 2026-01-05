@@ -22,7 +22,8 @@ function AddCategoryManager() {
         const fetchAllCategories = async () => {
             try {
                 const data = await CategoryService.getAllCategories();
-                setAllCategories(data);
+                const filteredCats = data.filter(cat => !cat.parentCategory);
+                setAllCategories(filteredCats);
             } catch (error) {
                 console.error("Lỗi tải danh mục cha:", error);
                 toast.error("Không thể tải danh sách danh mục cha.");

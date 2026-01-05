@@ -5,14 +5,11 @@ import CouponService from '../services/CouponService'
 import CartService from '../services/CartService'
 import { useUserContext } from './UserContext'
 
-// ... (Các import khác) ...
-
 const OrderContext = createContext();
 
 export const OrderProvider = ({ children }) => {
-    const { navigate, fetchCart, deleteMultipleItems } = useUserContext();
+    const { navigate, fetchCart } = useUserContext();
 
-    // --- STATES ---
     const [method, setMethod] = useState("COD");
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [orderNote, setOrderNote] = useState('');
@@ -25,7 +22,7 @@ export const OrderProvider = ({ children }) => {
         const now = new Date();
         const expiryDate = new Date(appliedCoupon.expiredAt);
 
-        // 1. Kiểm tra hạn dùng tổng quát
+        // Kiểm tra hạn dùng tổng quát
         if (now > expiryDate) return 0;
 
         let totalDiscount = 0;
@@ -62,7 +59,7 @@ export const OrderProvider = ({ children }) => {
         return isMinimumSatisfied ? totalDiscount : 0;
     }, [appliedCoupon]);
 
-    // --- 1. XỬ LÝ ÁP DỤNG MÃ (APPLY COUPON) ---
+    // --- XỬ LÝ ÁP DỤNG MÃ ---
     const applyCoupon = async (code, currentAmount) => {
         try {
             const coupon = await CouponService.getCouponByCode(code);
@@ -103,7 +100,7 @@ export const OrderProvider = ({ children }) => {
         return discount;
     };
 
-    // --- 2. XỬ LÝ ĐẶT HÀNG (PROCESS ORDER) ---
+    // --- XỬ LÝ ĐẶT HÀNG ---
     const processOrder = useCallback(async (finalTotalAmount) => {
         // Kiểm tra điều kiện bắt buộc
         if (!selectedAddress || !selectedAddress.id) {
@@ -134,7 +131,6 @@ export const OrderProvider = ({ children }) => {
         try {
             toast.info("Đang xử lý đơn hàng...");
 
-            // 4. GỌI API (Phần này giữ nguyên)
             const response = await OrderService.checkoutSelectedItems(payload);
             console.log("KẾT QUẢ TỪ API:", response);
             const responseData = response?.result || response;
@@ -167,16 +163,14 @@ export const OrderProvider = ({ children }) => {
         }
     }, [method, selectedAddress, orderNote, selectedItemsForCheckout, appliedCoupon, navigate, fetchCart]);
 
-    // --- 3. DỌN DẸP DỮ LIỆU ---
+    // --- DỌN DẸP DỮ LIỆU ---
     const clearOrderData = () => {
         setOrderNote('');
         setAppliedCoupon(null);
         setSelectedItemsForCheckout([]);
     };
 
-    // --- EXPOSE VALUES ---
     const value = {
-        // States
         method, setMethod,
         selectedAddress, setSelectedAddress,
         orderNote, setOrderNote,

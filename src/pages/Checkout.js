@@ -21,14 +21,13 @@ const Checkout = () => {
 
     const [isProcessing, setIsProcessing] = useState(false);
 
-    // 1. Lọc ra danh sách các sản phẩm thực tế người dùng đã chọn từ Cart
+    // Lọc ra danh sách các sản phẩm thực tế người dùng đã chọn từ Cart
     const itemsToDisplay = selectedItemsForCheckout || [];
 
-    // 2. Tính toán tổng tiền ngay tại trang Checkout
+    // Tính toán tổng tiền ngay tại trang Checkout
     const { subTotal, totalAmount, discountValue } = useMemo(() => {
         const sub = itemsToDisplay.reduce((total, item) => total + item.totalMoney, 0);
         // const tax = sub * 0.08;
-        // Đảm bảo OrderContext trả về đúng trường này (calculatedDiscount)
         const discount = getValidDiscount(sub); 
         const total = Math.max(0, sub  + (sub > 0 ? delivery_charges : 0) - discount);
         
@@ -71,7 +70,7 @@ const Checkout = () => {
                 {/* --- BÊN TRÁI: CHI TIẾT ĐƠN HÀNG --- */}
                 <div className='flex-[2] flex flex-col gap-6'>
                     
-                    {/* 1. Danh sách sản phẩm */}
+                    {/* Danh sách sản phẩm */}
                     <div className='bg-white p-6 rounded-2xl shadow-sm'>
                         <h4 className='bold-18 mb-4 border-b pb-2 text-gray-600'>Products selected</h4>
                         <div className='space-y-4'>

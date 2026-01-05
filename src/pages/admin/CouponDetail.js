@@ -41,28 +41,27 @@ function CouponDetail() {
         }
     };
 
-    // Helper: Format tiền tệ
+    //Format tiền tệ
     const formatCurrency = (amount) => {
         return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
     };
 
-    // Helper: Format ngày
+    // Format ngày
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         return new Date(dateString).toLocaleDateString('vi-VN');
     };
 
-    // Helper: Dịch thuật ngữ Attribute sang tiếng Việt
+    // Dịch thuật ngữ Attribute sang tiếng Việt
     const translateAttribute = (attr) => {
         const dict = {
             'minimum_amount': 'Giá trị đơn tối thiểu',
             'applicable_date': 'Ngày áp dụng',
-            // Thêm các key khác nếu có
         };
         return dict[attr] || attr;
     };
 
-    // Helper: Dịch Operator
+    // Dịch Operator
     const translateOperator = (op) => {
         const dict = {
             '>': 'Lớn hơn',
@@ -87,7 +86,7 @@ function CouponDetail() {
 
                 {/* --- HEADER: GRADIENT & MODERN --- */}
                 <div className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden">
-                    {/* Background decoration (optional) */}
+                    {/* Background decoration */}
                     <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
                     
                     <div className="relative z-10">
@@ -126,7 +125,7 @@ function CouponDetail() {
                 <div className="p-6 md:p-8">
                     {/* --- INFO SECTION: CARD STYLE --- */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-                        {/* Cột 1: Mã Code - Highlight */}
+                        {/* Mã Code - Highlight */}
                         <div className="md:col-span-1">
                             <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Mã Coupon</label>
                             <div className="flex items-center justify-center p-6 bg-indigo-50 border-2 border-dashed border-indigo-200 rounded-xl relative group hover:border-indigo-400 transition-colors">
@@ -139,7 +138,7 @@ function CouponDetail() {
                             </div>
                         </div>
 
-                        {/* Cột 2: Thông tin chi tiết */}
+                        {/* Thông tin chi tiết */}
                         <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {/* Trạng thái */}
                             <div className="bg-sky-50 p-4 rounded-xl border border-sky-100">

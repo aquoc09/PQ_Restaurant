@@ -4,9 +4,6 @@ import { toast } from 'react-toastify';
 import { myAssets } from '../../assets/assets';
 import { useNavigate } from 'react-router-dom';
 
-const DISPLAY_LIMIT = 5;
-const FETCH_LIMIT = 6;
-
 function ViewPromotion() {
 
   const navigate=useNavigate();
@@ -14,7 +11,6 @@ function ViewPromotion() {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const [hasNextPage, setHasNextPage] = useState(true);
 
   const fetchPromotion = async () => {
     setLoading(true);
@@ -30,7 +26,6 @@ function ViewPromotion() {
     }
   };
 
-    // Tải dữ liệu khi component mount lần đầu
     useEffect(() => {
         fetchPromotion();
     }, []);
@@ -41,12 +36,7 @@ function ViewPromotion() {
     const totalPages = Math.ceil(promotion.length / itemsPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    
-    // Tải lại dữ liệu khi chuyển trang
-    const handlePageChange = (newPage) => {
-      fetchPromotion(newPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+
 
     const handleDeletePromotion = async (promotionId) => {
         if (!window.confirm(`Bạn có chắc chắn muốn xóa khuyến mãi ID: ${promotionId} không?`)) {
@@ -146,8 +136,7 @@ function ViewPromotion() {
               >
                   &laquo; Trước
               </button>
-              
-              {/* Chỉ hiện tối đa 5 trang để tránh dài quá nếu data nhiều */}
+
               {[...Array(Math.min(totalPages, 5))].map((_, i) => (
                   <button
                       key={i + 1}

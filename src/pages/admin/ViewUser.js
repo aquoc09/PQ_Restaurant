@@ -15,7 +15,6 @@ function ViewUser() {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            // Gọi hàm getAllUsers từ UserService
             const data = await UserService.getAllUsers();
             setUsers(data);
         } catch (error) {
@@ -34,7 +33,6 @@ function ViewUser() {
             case 'O':
                 return 'Khác (Other)';
             default:
-                // Nếu BE trả về null, undefined, hoặc một đối tượng có thuộc tính name
                 return (genderCode && genderCode.name) || 'N/A';
         }
     };
@@ -57,13 +55,11 @@ function ViewUser() {
             return;
         }
         try {
-            // Gọi hàm deleteUser từ UserService
             const message = await UserService.deleteUser(userId);
             if(message.code === 1000)
                 toast.success(`Xóa người dùng ID: ${userId} success.`);
             else
                 toast.error(`Xóa người dùng ID: ${userId} failed vì người dùng có giỏ hàng`);
-            // Tải lại danh sách sau khi xóa
             fetchUsers(); 
         } catch (err) {
             console.error("Lỗi xóa người dùng:", err);
@@ -91,7 +87,7 @@ function ViewUser() {
             <div className='flex justify-between items-center mb-6'> 
                 <h2 className='text-2xl font-bold'>User Management</h2>
                 
-                {/* Nút thêm mới (Giả sử Admin có thể thêm User) */}
+                {/* Nút thêm mới */}
                 <button 
                     onClick={() => navigate("/admin/add-user")} 
                     className='px-6 py-3 active:scale-95 transition bg-tertiary border-gray-500/20 text-black  font-medium rounded-full cursor-pointer flex justify-center items-center gap-2'>
@@ -170,7 +166,6 @@ function ViewUser() {
                         &laquo; Trước
                     </button>
                     
-                    {/* Chỉ hiện tối đa 5 trang để tránh dài quá nếu data nhiều */}
                     {[...Array(Math.min(totalPages, 5))].map((_, i) => (
                         <button
                             key={i + 1}

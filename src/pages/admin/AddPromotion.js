@@ -15,10 +15,9 @@ function AddPromotion() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState(initialFormState);
     const [loading, setLoading] = useState(false);
-
-    // State để lưu trữ File Object (để lấy tên file)
+    // lưu trữ File Object ảnh
     const [imageFile, setImageFile] = useState(null); 
-    // State để hiển thị bản xem trước ảnh mới (dùng FileReader )
+    // hiển thị bản xem trước ảnh mới
     const [imagePreview, setImagePreview] = useState(null);
 
     // Xử lý chung cho title, img, inStock
@@ -98,7 +97,7 @@ function AddPromotion() {
                     className="px-3 py-2 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full"/>
                 </div>
                 
-                {/* Input Ảnh (img) */}
+                {/* Input Ảnh */}
                 <div className="mb-4">
                     <h5>Image</h5>
                     <input 

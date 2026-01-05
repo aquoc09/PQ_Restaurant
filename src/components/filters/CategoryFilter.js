@@ -35,10 +35,9 @@ const CategoryFilter = ({ allCategories, selectedCategoryId, onCategoryChange, l
                     const isChildSelected = children.some(child => child.id === selectedCategoryId);
 
                     return (
-                        // Class 'group' để kích hoạt hover cho phần tử con
                         <div key={parent.id} className="group relative">
                             {hasChildren ? (
-                                // TRƯỜNG HỢP 1: CÓ CON -> Dùng thẻ DIV (Không bấm được), chỉ Hover
+                                // TRƯỜNG HỢP CÓ CON -> Dùng thẻ DIV (Không bấm được), chỉ Hover
                                 <div className={`w-full flex justify-between items-center text-left py-2.5 px-4 rounded-lg font-bold cursor-default
                                     ${isChildSelected ? 'text-red-600 bg-red-50' : 'text-gray-800 hover:bg-gray-100'}`}
                                 >
@@ -47,7 +46,7 @@ const CategoryFilter = ({ allCategories, selectedCategoryId, onCategoryChange, l
                                     <span className="text-xs opacity-60 transition-transform duration-200 group-hover:rotate-90">▶</span>
                                 </div>
                             ) : (
-                                // TRƯỜNG HỢP 2: KHÔNG CÓ CON (VD: SALAD) -> Dùng BUTTON (Phải bấm được)
+                                // TRƯỜNG HỢP KHÔNG CÓ CON (VD: SALAD) -> Dùng BUTTON (Phải bấm được)
                                 <button
                                     onClick={() => onCategoryChange(parent.id)}
                                     className={`w-full text-left py-2.5 px-4 rounded-lg transition-all duration-200 font-medium

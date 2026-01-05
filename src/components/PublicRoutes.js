@@ -5,9 +5,8 @@ import useAuth from '../hooks/useAuth'; // Hoặc useAuthContext
 const PublicRoute = () => {
   const { isAuthenticated } = useAuth(); 
   
-  // Nếu người dùng ĐÃ đăng nhập, chuyển hướng họ về Trang chủ (hoặc Trang cá nhân)
+  // Nếu người dùng ĐÃ đăng nhập, chuyển hướng họ về Trang chủ
   if (isAuthenticated()) {
-    // Thay đổi '/' thành '/user/profile' nếu đó là trang cá nhân mặc định
     return <Navigate to="/" replace />; 
   }
   

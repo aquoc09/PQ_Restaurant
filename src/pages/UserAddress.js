@@ -18,6 +18,8 @@ import AddressList from '../components/AddressList';
 
 const VISGL_AVAILABLE = !!(APIProvider && Map && AdvancedMarker && Pin && useMap);
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+// const MAP_ID = process.env.REACT_APP_GOOGLE_MAP_ID || "DEMO_MAP_ID"; 
+
 const DEFAULT_CENTER = { lat: 10.8231, lng: 106.6297 };
 const HCMC_BOUNDS = {
     north: 11.2,
@@ -42,7 +44,7 @@ const initialFormState = {
 };
 
 function UserAddress() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const { isUser } = useUserContext(); 
     const [formData, setFormData] = useState(initialFormState);
     const [markerPosition, setMarkerPosition] = useState(DEFAULT_CENTER);
@@ -54,7 +56,6 @@ function UserAddress() {
     const [addressesError, setAddressesError] = useState(null);
 
     const autocompleteInputRef = useRef(null);
-    
     
     // Lấy thông tin người dùng (Phone, Email)
     const fecthDataUser = useCallback(async () => {
@@ -185,7 +186,6 @@ function UserAddress() {
             latitude: lat,
             longitude: lng,
             ...newAddressData,
-            // Giữ lại Phone/Email đã fetch trước đó
             phoneNumber: prev.phoneNumber || newAddressData.phoneNumber || '', 
             email: prev.email || newAddressData.email || '', 
         }));
@@ -200,7 +200,6 @@ function UserAddress() {
         setFormData(prev => ({ 
             ...prev, 
             ...address, // Load toàn bộ dữ liệu địa chỉ đã lưu vào form
-            // Giữ lại Phone/Email đã fetch từ UserService
             phoneNumber: prev.phoneNumber || address.phoneNumber,
             email: prev.email || address.email,
         }));
@@ -242,11 +241,6 @@ function UserAddress() {
     const handleFormChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-        
-        // Đồng bộ input với Autocomplete
-        if (name === 'fullAddress' && autocompleteInputRef && autocompleteInputRef.current) {
-            autocompleteInputRef.current.value = value;
-        }
     };
 
     // Xử lý lưu địa chỉ
@@ -295,18 +289,18 @@ function UserAddress() {
                 title1Styles={"items-start pb-5"}
                 paraStyles={"hidden"}
             />
-            {/* Vùng chứa Navbar và Nội dung chính */}
+            {/* Navbar và Nội dung chính */}
             <div className='flex gap-10 items-start flex-col lg:flex-row'> 
                 
-                {/* 1. Navbar bên trái (Giữ chiều rộng cố định) */}
+                {/* Navbar bên trái */}
                 <div className='w-fit lg:flex-none sticky top-28 gap-20'>
                     <UserNavbar />
                 </div>
 
-                {/* 2. Nội dung chính (Map + Form + Address List) */}
+                {/* Nội dung chính (Map + Form + Address List) */}
                 <div className='lg:w-3/4 w-full flex flex-col gap-10'>
                     
-                    {/* Hàng 1: Danh sách địa chỉ đã lưu */}
+                    {/* Danh sách địa chỉ đã lưu */}
                     <div className='w-full bg-white p-6 rounded-xl shadow-lg'>
                         <AddressList 
                             addresses={addresses} 
@@ -317,7 +311,7 @@ function UserAddress() {
                         />
                     </div>
                     
-                    {/* Hàng 2: Google Map và Form thêm/sửa địa chỉ */}
+                    {/* Google Map và Form thêm/sửa địa chỉ */}
                     <div className='w-full bg-white p-6 rounded-xl shadow-lg'>
                         <h3 className="text-xl font-semibold border-b pb-2 mb-4">Add/Edit Delivery Address</h3>
                         <div className="flex flex-col gap-3">
@@ -326,7 +320,7 @@ function UserAddress() {
                                 <input
                                     ref={autocompleteInputRef}
                                     name="fullAddress"
-                                    value={formData.fullAddress}
+                                    value={formData.fullAddress || ''}
                                     onChange={handleFormChange}
                                     className="p-3 border border-gray-300 rounded shadow-sm focus:border-blue-500 w-full text-gray-700"
                                     placeholder="Tìm kiếm địa chỉ giao hàng... (ví dụ: 123 Nguyễn Huệ)"
@@ -338,6 +332,7 @@ function UserAddress() {
                             <div className='w-full bg-gray-100 rounded-lg p-3'>
                                 <APIProvider apiKey={GOOGLE_MAPS_API_KEY} libraries={LIBRARIES}>
                                     <MapComponent 
+                                        // mapId={MAP_ID}
                                         position={markerPosition} 
                                         onMarkerUpdate={handleMarkerUpdate}
                                         zoom={mapZoom}
@@ -349,38 +344,37 @@ function UserAddress() {
 
                             {/* Form Address fields */}
                             <form onSubmit={handleSaveAddress} className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Các trường Input... (giữ nguyên các trường Phone, Email, City, District, Ward, Street, StreetNumber, AddressNote) */}
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>Phone Number</label>
-                                    <input name="phoneNumber" value={formData.phoneNumber} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Số điện thoại' required />
+                                    <input name="phoneNumber" value={formData.phoneNumber || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Số điện thoại' required />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>Email</label>
-                                    <input name="email" value={formData.email} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Email' required />
+                                    <input name="email" value={formData.email || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Email' required />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>City</label>
-                                    <input name="city" value={formData.city} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='City' required />
+                                    <input name="city" value={formData.city || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='City' required />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>District</label>
-                                    <input name="district" value={formData.district} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='District' required />
+                                    <input name="district" value={formData.district || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='District' required />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>Ward</label>
-                                    <input name="ward" value={formData.ward} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Ward' />
+                                    <input name="ward" value={formData.ward || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Ward' />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>Street</label>
-                                    <input name="street" value={formData.street} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Street' required />
+                                    <input name="street" value={formData.street || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Street' required />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>Street Number</label>
-                                    <input name="streetNumber" value={formData.streetNumber} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Street number' />
+                                    <input name="streetNumber" value={formData.streetNumber || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700' placeholder='Street number' />
                                 </div>
                                 <div>
                                     <label className='block text-sm font-medium text-gray-700'>Address Note</label>
-                                    <textarea name="addressNote" value={formData.addressNote} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700 h-24' placeholder='Ghi chú...' />
+                                    <textarea name="addressNote" value={formData.addressNote || ''} onChange={handleFormChange} className='mt-1 p-2 w-full border border-gray-300 rounded text-gray-700 h-24' placeholder='Ghi chú...' />
                                 </div>
                                 
                                 <div className='md:col-span-2 flex justify-end'>

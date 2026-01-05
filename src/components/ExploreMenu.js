@@ -11,8 +11,7 @@ const ExploreMenu = ({category, setCategory}) => {
     try {
         setLoading(true);
         setError(null);
-        // Lấy menu categories từ products hoặc từ endpoint riêng
-        const response = await axios.get(`${environment.apiBaseUrl}/categories`); // Endpoint để lấy danh sách categories
+        const response = await axios.get(`${environment.apiBaseUrl}/categories`); 
         if (response.data) {
             setMenuLists(response.data); 
         }
@@ -22,10 +21,10 @@ const ExploreMenu = ({category, setCategory}) => {
         const productsResponse = await axios.get(`${environment.apiBaseUrl}/products`);
         if (productsResponse.data && Array.isArray(productsResponse.data)) {
           const uniqueCategories = [...new Set(productsResponse.data.map(p => p.category).filter(Boolean))];
-          // Tạo menu list từ categories (có thể cần thêm img từ backend)
+          // Tạo menu list từ categories 
           const menuListFromProducts = uniqueCategories.map(cat => ({
             name: cat,
-            img: null // Có thể cần lấy từ backend hoặc sử dụng default image
+            img: null 
           }));
           setMenuLists(menuListFromProducts);
         }
@@ -46,7 +45,6 @@ const ExploreMenu = ({category, setCategory}) => {
 
   return (
     <section className='max-padd-container py-22 xl:py-10 bg-white'>
-    {/* //<section className='mx-auto max-w-[1440px] px-4 lg:px-12 flex justify-between items-center bg-white'> */}
       <div className='flex flex-col gap-5'> 
       <h3 className='text-gray-50'>Menu Của Chúng Tôi</h3>
       <div className='flex justify-between items-center text-center my-5 overflow-x-scroll hide-scrollbar'>

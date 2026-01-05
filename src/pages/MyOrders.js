@@ -221,7 +221,7 @@ const MyOrders = () => {
         ))
       )}
 
-      {/* MODAL REVIEW (Giữ nguyên như cũ) */}
+      {/* MODAL REVIEW */}
       {showModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
               <div className="bg-white p-6 rounded-2xl w-full max-w-md shadow-2xl animate-fade-in-down">

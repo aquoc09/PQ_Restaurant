@@ -18,7 +18,6 @@ const ForgotPassword = () => {
         e.preventDefault();
         setLoading(true);
 
-        // Logic Gửi Yêu cầu Đặt lại Mật khẩu (Bạn cần thay thế bằng API call thực tế)
         try {
             const response = await AuthService.forgotPassword({
                 username: formData.username,

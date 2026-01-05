@@ -23,7 +23,6 @@ const ViewReviewManager = () => {
     const fetchReviews = async () => {
         try {
             const data = await ReviewService.getAllReviews();
-            // Data trả về đã là mảng, không cần .result nữa (dựa theo Service đã viết)
             if (Array.isArray(data)) {
                 const sortedData = [...data].sort((a, b) => b.id - a.id); // Sort: Mới nhất lên đầu
                 setReviews(sortedData);
@@ -43,7 +42,6 @@ const ViewReviewManager = () => {
         const oldStatus = review.reviewStatus;
         console.log("status", review, newStatus);
 
-        // Nếu không thay đổi thì không làm gì
         if (newStatus === oldStatus) return;
 
         try {
@@ -51,7 +49,6 @@ const ViewReviewManager = () => {
             
             toast.success(`Đã cập nhật trạng thái thành: ${newStatus}`);
 
-            // Cập nhật lại UI Local để không cần load lại trang
             setReviews(prevReviews => 
                 prevReviews.map(item => 
                     item.id === review.id ? { ...item, reviewStatus: newStatus } : item
@@ -60,7 +57,6 @@ const ViewReviewManager = () => {
         } catch (error) {
             console.error("Lỗi cập nhật trạng thái:", error);
             toast.error("Cập nhật thất bại!");
-            // Reset lại select box về giá trị cũ nếu lỗi (tùy chọn)
             e.target.value = oldStatus; 
         }
     };
@@ -105,7 +101,7 @@ const ViewReviewManager = () => {
         setSelectedReview(null);
     };
 
-    // --- Helper: Render Sao ---
+    // --- Render Sao ---
     const renderStars = (rating) => {
         return (
             <div className="flex text-yellow-400">
@@ -118,7 +114,7 @@ const ViewReviewManager = () => {
         );
     };
 
-    // --- Helper: Màu sắc trạng thái (Tailwind classes) ---
+    // ---  Màu sắc trạng thái ---
     const getStatusBadge = (status) => {
         const styles = {
             ACCEPTED: "bg-green-100 text-green-800 border-green-200",

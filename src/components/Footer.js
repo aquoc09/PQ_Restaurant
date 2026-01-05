@@ -7,7 +7,7 @@ const Footer = () => {
               <div className='max-padd-container'>
             <div className='flex flex-wrap justify-between gap-12 md:gap-6'>
                 <div className='max-w-80'>
-{/* LOGO */}
+        {/* LOGO */}
         <div className='flex flex-1'>
           <Link to={'/'} className='flex items-end'>
             <img src={myAssets.logo} alt="logoImg" className='h-12'/>

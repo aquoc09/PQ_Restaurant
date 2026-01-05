@@ -93,8 +93,7 @@ function ItemDetails() {
     }, [fetchProductDetail, fetchAndCalculateRating]);
 
     const renderStars = (rating) => {
-        // Làm tròn rating để hiển thị (VD: 4.6 -> 5 sao, hoặc dùng thư viện render nửa sao)
-        // Ở đây mình làm tròn theo quy tắc toán học (round)
+        // Làm tròn rating để hiển thị
         const roundedRating = Math.round(rating); 
         
         return (

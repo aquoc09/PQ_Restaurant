@@ -76,7 +76,7 @@ function EditUser() {
         e.preventDefault();
         setLoading(true);
 
-        // 1. Kiểm tra Mật khẩu
+        // Kiểm tra Mật khẩu
         const newPassword = formData.password;
         if (newPassword) {
             if (newPassword.length > 0 && newPassword.length < 8) {
@@ -86,11 +86,9 @@ function EditUser() {
             }
         }
         
-        // 2. Chuẩn bị UserUpdateRequest
+        // Chuẩn bị UserUpdateRequest
         const dobBackendFormat = formatDobToBackend(formData.dob);
 
-        // Tạo UserUpdateRequest (chỉ cần các trường cập nhật)
-        // Chúng ta không gửi username và password qua đây.
         const userUpdateRequest = {
             email: formData.email,
             fullName: formData.fullName,
