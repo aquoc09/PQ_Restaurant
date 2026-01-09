@@ -93,14 +93,16 @@ const Items = ({product}) => {
             height={177} 
             width={177}
             onClick={()=>{navigate(`/product-details/${product.id}`)}}
-            className='absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-100 drop-shadow-md'/>
+            className='absolute inset-0 h-full w-full object-cover opacity-100 group-hover:opacity-100 drop-shadow-md hover:cursor-pointer'/>
         </div>
         <br />
         {/* Info */}
         <div className='rounded-3xl bg-primary pt-20 overflow-hidden'>
             {/* Title */}
             <div className='p-3'>
-                <h4 className='text-lg line-clamp-1 mb-1 text-gray-950'>{product.name}</h4>
+                <h4 
+                onClick={()=>{navigate(`/product-details/${product.id}`)}}
+                className='text-lg line-clamp-1 mb-1 text-gray-950 hover:text-blue-600'>{product.name}</h4>
                 <div className='flex items-start justify-between pb-1'>
                     <h5 className='mb-1'>{product.categoryCode}</h5>
                 <div className='flex items-center justify-start gap-x-1'>

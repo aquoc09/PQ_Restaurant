@@ -11,7 +11,7 @@ const ViewBlogManager = () => {
     
     // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(10);
+    const [itemsPerPage] = useState(5);
 
     // --- Fetch Data ---
     useEffect(() => {

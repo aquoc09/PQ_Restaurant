@@ -7,6 +7,8 @@ import useAuth from '../hooks/useAuth'
 import UserButton from './UserButton'
 import AdminButton from './AdminButton'
 import ManagerButton from './ManagerButton'
+import MiniCartItem from './MiniCartItem'
+import CartService from '../services/CartService'
 
 const Header = () => {
 
@@ -16,8 +18,10 @@ const Header = () => {
   const {isUser, isAdmin, isManager} = useAuth();
 
   // const {openSignIn}=useClerk();
-  const {navigate, getCartCount}=useUserContext();
-  const isHomePage=useLocation().pathname.endsWith('/')
+  const [isCartHovered, setIsCartHovered] = useState(false);
+  const {navigate, getCartCount, formatCurrency, getCartAmount}=useUserContext();
+  const isHomePage=useLocation().pathname.endsWith('/');
+  const [cartItems, setCartItems] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
 
   //Lắng nghe sự kiện cuộn
@@ -28,6 +32,24 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+  
+  useEffect(() => {
+    const fetchCartData = async () => {
+        if(isUser()){
+            try {
+                const response = await CartService.getCart();
+                const newCartData = response.result;
+                if (newCartData && Array.isArray(newCartData.cartItems)) {
+                    setCartItems(newCartData.cartItems);
+                }
+            } catch (error) {
+                console.error("Lỗi fetch cart header:", error);
+            }
+        }
+    };
+    
+    fetchCartData();
+  }, [getCartCount, isUser]);
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -65,13 +87,59 @@ const Header = () => {
           ${menuOpened ? "opacity-100" : "opacity-0"}`}/>
         </div>
 
-        {/* CART */}
-        <div onClick={()=>navigate('/cart')} className='relative cursor-pointer'>
-          <img src={myAssets.cart_added} alt="" className='min-w-[44px] bg-white rounded-full p-2'/>
-          <label className="absolute bottom-10 right-1 text-xs font-bold 
-          bg-solid text-white flex justify-center items-center rounded-full w-9">
-          {getCartCount}
-            </label>
+        <div 
+            className='relative cursor-pointer group py-2' // Thêm group và py-2 để vùng hover rộng hơn
+            onMouseEnter={() => setIsCartHovered(true)}
+            onMouseLeave={() => setIsCartHovered(false)}
+        >
+          {/* CART */}
+          <div onClick={()=>navigate('/cart')} className='relative cursor-pointer'>
+            <img src={myAssets.cart_added} alt="" className='min-w-[44px] bg-white rounded-full p-2'/>
+            <label className="absolute bottom-10 right-1 text-xs font-bold 
+            bg-solid text-white flex justify-center items-center rounded-full w-9">
+            {getCartCount}
+              </label>
+          </div>
+
+            {/* --- DROPDOWN CART PREVIEW --- */}
+            {isCartHovered && cartItems.length > 0 && (
+                <div className="absolute top-full right-0 w-80 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-[60] animate-fade-in-up origin-top-right">
+                    <div className="p-3 bg-slate-50 border-b border-gray-100">
+                        <h5 className="font-semibold text-gray-700">Giỏ hàng ({getCartCount})</h5>
+                    </div>
+                    
+                    <div className="max-h-[350px] overflow-y-auto custom-scrollbar p-2">
+                        {/* Chỉ lấy 5 item đầu tiên */}
+                        {cartItems.slice(0, 5).map((item) => (
+                            <MiniCartItem 
+                                key={item.id} 
+                                cart={item} 
+                                formatCurrency={formatCurrency}
+                            />
+                        ))}
+                        {cartItems.length > 5 && (
+                            <div className="text-center text-xs text-gray-500 py-2 italic">
+                                Và {cartItems.length - 5} món khác...
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="p-4 border-t border-gray-100 bg-white">
+                      <div className="flex justify-between items-center mb-4">
+                        <h5 className="text-gray-600 font-medium text-sm">Tổng cộng:</h5>
+                        <h5 className="text-lg font-bold text-red-600">
+                          {formatCurrency(getCartAmount)}
+                        </h5>
+                      </div>
+                      <button 
+                          onClick={()=>navigate('/cart')}
+                          className="w-full py-2 bg-solid text-white rounded-lg font-semibold text-sm hover:opacity-90 transition shadow-md"
+                      >
+                          Xem giỏ hàng
+                      </button>
+                    </div>
+                </div>
+            )}
         </div>
 
         {/* USER PROFILE */}
