@@ -71,11 +71,12 @@ const CartItem = ({cart, onSelectChange, isSelected}) => {
             className='w-20 h-20 object-cover cursor-pointer' />
         </div>
         <div>
-            <h5 className='line-clamp-1 text-gray-900 font-semibold text-sm md:text-base'>{product.name}</h5>
+            <h5 
+            onClick={()=>{navigate(`/product-details/${product.id}`)}}
+            className='line-clamp-1 text-gray-900 font-semibold text-sm md:text-base hover:cursor-pointer hover:text-blue-600'>{product.name}</h5>
             <div className='bold-14 flexStart gap-2 mb-1 text-gray-700 text-xs md:text-sm'>Size: <p>{cart.size}</p></div>
             <div className='flexBetween'>
-            <div className='flex items-center right-1 ring-slate-900/15 
-            rounded-full overflow-hidden bg-primary'>
+            <div className='flex items-center right-1 ring-slate-900/15 rounded-full overflow-hidden bg-primary'>
                 <button onClick={()=>decrement(cart.id, cart.quantity)} 
                 className='p-1.5 bg-solid text-white rounded-full shadow-md m-0.5 cursor-pointer'>
                 <img src={myAssets.minus} alt="" width={11}
