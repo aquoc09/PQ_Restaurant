@@ -79,9 +79,9 @@ const Items = ({product}) => {
     }, [fetchAndCalculateRating]);
 
     return (
-            <div className='relative mt-24 group'>
+        <div className='relative mt-24 group hover:cursor-pointer'>
         {/* Photo */}
-                <div className='mx-auto rounded-full absolute left-0 right-0 -top-20 h-[177px] w-[177px]'>
+            <div className='mx-auto rounded-full absolute left-0 right-0 -top-20 h-[177px] w-[177px]'>
             <img 
             src={imageSrc} 
             alt="productImg" 
