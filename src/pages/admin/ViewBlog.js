@@ -250,7 +250,11 @@ const ViewBlog = () => {
                             <button
                                 onClick={() => paginate(currentPage - 1)}
                                 disabled={currentPage === 1}
-                                className="px-3 py-2 md:px-4 md:py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition shadow-sm"
+                                className={`px-4 py-2 rounded-lg border text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+                                    currentPage === 1 
+                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                                    : "bg-white text-gray-700 hover:bg-blue-100 border-gray-300"
+                                }`}
                             >
                                 Trước
                             </button>
@@ -258,7 +262,7 @@ const ViewBlog = () => {
                                 <button
                                     key={i}
                                     onClick={() => paginate(i + 1)}
-                                    className={`w-9 h-9 md:w-9 md:h-9 rounded-lg border text-sm font-bold transition shadow-sm ${
+                                    className={`w-9 h-9 md:w-9 md:h-9 rounded-lg border text-sm font-bold transition-all shadow-sm ${
                                         currentPage === i + 1
                                         ? 'bg-blue-600 text-white border-blue-600 shadow-blue-200'
                                         : 'bg-white text-gray-600 border-gray-200 hover:bg-blue-50 hover:text-blue-600'
@@ -270,7 +274,11 @@ const ViewBlog = () => {
                             <button
                                 onClick={() => paginate(currentPage + 1)}
                                 disabled={currentPage === totalPages}
-                                className="px-3 py-2 md:px-4 md:py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition shadow-sm"
+                                className={`px-4 py-2 rounded border text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all ${
+                                    currentPage === totalPages 
+                                    ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                                    : "bg-white text-gray-700 hover:bg-blue-100 border-gray-300"
+                                }`}
                             >
                                 Sau
                             </button>

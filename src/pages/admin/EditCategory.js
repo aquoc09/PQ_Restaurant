@@ -139,7 +139,7 @@ function EditCategory() {
                     <select 
                     name="parentCategory" 
                     value={formData.parentCategory} 
-                    onChange={handleInputChange} required
+                    onChange={handleInputChange}
                     className="px-3 py-1.5 ring-1 ring-sky-900/10 rounded-lg bg-white text-gray-600 text-sm font-medium mt-1 w-full">
                         <option value="">Không</option>
                         {allCategories.map(cat => (

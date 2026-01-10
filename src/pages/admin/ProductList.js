@@ -79,7 +79,49 @@ const ProductList = ({searchKeyword}) => {
         return categories[categoryId];
     };
 
+    // Update Logic
+    const handleToggleInStock = async (product) => {
+        const newStatus = !product.inStock;
+        
+        const previousProducts = [...products];
+        const updatedProducts = products.map(p => 
+            p.id === product.id ? { ...p, inStock: newStatus } : p
+        );
+        setProducts(updatedProducts);
 
+        try {
+
+            const detailResponse = await ProductService.getProductById(product.id);
+            const fullProduct = detailResponse.result;
+            let pricesMap = {};
+            if (Array.isArray(fullProduct.prices)) {
+                fullProduct.prices.forEach(item => {
+                    if (item.size) pricesMap[item.size] = item.price;
+                });
+            } else if (typeof fullProduct.prices === 'object') {
+                pricesMap = fullProduct.prices;
+            }
+            const productRequest = {
+                name: fullProduct.name,
+                productCode: fullProduct.productCode,
+                productImage: fullProduct.productImage,
+                description: fullProduct.description || "",
+                categoryId: fullProduct.categoryId,
+                inPopular: fullProduct.inPopular,
+                inStock: newStatus,
+                prices: pricesMap
+            };
+            await ProductService.updateProduct(product.id, productRequest);
+            
+            toast.success(`Cập nhật trạng thái sản phẩm ${product.name} thành công!`);
+        } catch (error) {
+            setProducts(previousProducts);
+            toast.error("Lỗi khi cập nhật trạng thái inStock.");
+            console.error(error);
+        }
+    };
+
+    // Delete Logic
     const handleDeleteProduct = async (productId) => {
         if (!window.confirm(`Bạn có chắc chắn muốn xóa sản phẩm ID: ${productId}?`)) {
             return;
@@ -134,12 +176,16 @@ const ProductList = ({searchKeyword}) => {
                         ))}
                     </div>
                     <div>
-                        <h5 className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
-                        <input type='checkbox' className='sr-only peer' defaultChecked={product.inStock}></input>
-                        <div className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
-                            <span className='absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4'></span>
-                        </div>
-                        </h5>
+                        <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
+                            <input 
+                            type='checkbox' 
+                            className='sr-only peer' 
+                            checked={product.inStock} 
+                            onChange={() => handleToggleInStock(product)} />
+                            <div className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
+                                <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${product.inStock ? 'translate-x-4' : ''}`}></span>
+                            </div>
+                        </label>
                     </div>
                     <div className='py-2.5 flex items-center gap-2'>
                         <button 

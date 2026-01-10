@@ -120,7 +120,7 @@ function EditCouponManager() {
         setSaving(true);
 
         try {
-            // Bước 1: Cập nhật Coupon (Parent)
+            // Cập nhật Coupon (Parent)
             const couponRequest = {
                 code: couponData.code,
                 description: couponData.description,
@@ -130,7 +130,7 @@ function EditCouponManager() {
             
             await CouponService.updateCoupon(couponRequest, couponData.id);
 
-            // Bước 2: Cập nhật Conditions (Children) - Chạy song song
+            //Cập nhật Conditions (Children) - Chạy song song
             if (conditions.length > 0) {
                 const conditionPromises = conditions.map(cond => {
                     // Mapping sang CouponConditionRequest

@@ -18,6 +18,9 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword, sortType }) => 
     }, [selectedCategoryId, searchKeyword]);
 
     useEffect(() => {
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         const fetchProducts = async () => {
             setLoading(true);
             setError(null);
@@ -104,9 +107,12 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword, sortType }) => 
                         disabled={currentPage === 1} 
                         onClick={() => setCurrentPage(prev => prev - 1)} 
                         className={`px-3 py-1 border rounded-lg transition-all text-sm font-semibold 
-                        ${currentPage === 1 ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
+                        ${currentPage === 1 
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                            : "bg-red-400 text-white hover:bg-red-600"
+                        }`}
                     >
-                        Previous
+                        Trước
                     </button>
                     
                     {Array.from({ length: totalPages }, (_, index) => (
@@ -114,7 +120,10 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword, sortType }) => 
                             key={index + 1} 
                             onClick={() => setCurrentPage(index + 1)}
                             className={`px-3 py-1 border rounded-lg text-sm font-semibold transition-all
-                            ${currentPage === index + 1 ? "bg-red-500 text-white border-red-500" : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"}`}
+                            ${currentPage === index + 1 
+                                ? "bg-red-500 text-white border-red-500" 
+                                : "bg-white text-gray-700 hover:bg-gray-100 border-gray-300"
+                            }`}
                         >
                             {index + 1}
                         </button>
@@ -124,9 +133,12 @@ const ProductListSection = ({ selectedCategoryId, searchKeyword, sortType }) => 
                         disabled={currentPage === totalPages} 
                         onClick={() => setCurrentPage(prev => prev + 1)} 
                         className={`px-3 py-1 border rounded-lg transition-all text-sm font-semibold 
-                        ${currentPage === totalPages ? "bg-gray-100 text-gray-400 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
+                        ${currentPage === totalPages 
+                            ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                            : "bg-red-400 text-white hover:bg-red-600"
+                        }`}
                     >
-                        Next
+                        Sau
                     </button>
                 </div>
             )}

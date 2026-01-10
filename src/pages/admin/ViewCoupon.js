@@ -38,6 +38,38 @@ function ViewCoupon() {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+    // Update
+    const handleToggleStatus = async (item) => {
+        const newStatus = !item.active; // Đảo ngược trạng thái
+
+        const previousCoupons = [...coupons];
+        const updatedCoupons = coupons.map(c => 
+            c.id === item.id ? { ...c, active: newStatus } : c
+        );
+        setCoupons(updatedCoupons);
+
+        try {
+
+            const detailResponse = await CouponService.getCouponByCode(item.code); 
+            const fullData = detailResponse;
+
+            const couponRequest = {
+                code: fullData.code,
+                description: fullData.description,
+                expiredAt: fullData.expiredAt,
+                active: newStatus 
+            };
+            await CouponService.updateCoupon(couponRequest, item.id);
+            
+            toast.success(`Cập nhật trạng thái: ${fullData.code}`);
+
+        } catch (error) {
+            setCoupons(previousCoupons);
+            console.error("Lỗi update status:", error);
+            toast.error("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+        }
+    };
+
     const handleDelete = async (couponId) => {
         if (!window.confirm(`Bạn có chắc chắn muốn xóa coupon ID: ${couponId} không?`)) {
             return;
@@ -90,19 +122,15 @@ function ViewCoupon() {
                     <h5 className='text-sm font-semibold line-clamp-2'>{coupon.expiredAt}</h5>
 
                     <div>
-                        <label 
-                        className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
+                        <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3 select-none'>
                             <input 
-                            type='checkbox' 
-                            className='sr-only peer' 
-                            defaultChecked={coupon.active}
-                            >
-
-                            </input>
-                            <div 
-                            className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
-                            <span 
-                            className='absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4'></span>
+                                type='checkbox' 
+                                className='sr-only peer' 
+                                checked={coupon.active} 
+                                onChange={() => handleToggleStatus(coupon)}
+                            />
+                            <div className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
+                                <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${coupon.active ? 'translate-x-4' : ''}`}></span>
                             </div>
                         </label>
                     </div>

@@ -30,6 +30,44 @@ function ViewCategoryManager() {
         fetchCategories();
     }, []);
 
+    // Update
+    const handleToggleStatus = async (category) => {
+        const newStatus = !category.active;
+
+        const previousCategories = [...categories];
+        const updatedCategories = categories.map(cat => 
+            cat.id === category.id ? { ...cat, active: newStatus } : cat
+        );
+        setCategories(updatedCategories);
+
+        try {
+            const detailResponse = await CategoryService.getCategoryById(category.id);
+            const fullCategoryData = detailResponse.result; 
+            let parentCategoryObject = {};
+            if (fullCategoryData.parentCategory && fullCategoryData.parentCategory !== "") {
+                parentCategoryObject = { 
+                    categoryCode: fullCategoryData.parentCategory
+                };
+            }
+
+            const requestData = {
+                name: fullCategoryData.name,
+                categoryCode: fullCategoryData.categoryCode,
+                active: newStatus,
+                parentCategory: parentCategoryObject,
+            };
+            console.log (requestData);
+            
+            await CategoryService.updateCategory(category.id, requestData);
+            toast.success(`Cập nhật trạng thái: ${category.name}`);
+
+        } catch (error) {
+            setCategories(previousCategories);
+            console.error("Lỗi update status:", error);
+            toast.error("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+        }
+    };
+
     // --- Xử lý Xóa Danh mục ---
     const handleDelete = async (categoryId) => {
         if (!window.confirm(`Bạn có chắc chắn muốn xóa danh mục ID: ${categoryId} không?`)) {
@@ -92,12 +130,17 @@ function ViewCategoryManager() {
                             <p className='font-semibold'>{cat.categoryCode}</p>
                             <p className='font-semibold'>{cat.parentCategory || 'Không'}</p>
                             <div>
-                                <h5 className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
-                                <input type='checkbox' className='sr-only peer' defaultChecked={cat.active}></input>
-                                <div className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
-                                    <span className='absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4'></span>
-                                </div>
-                                </h5>
+                                <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3 select-none'>
+                                    <input 
+                                        type='checkbox' 
+                                        className='sr-only peer' 
+                                        checked={cat.active} 
+                                        onChange={() => handleToggleStatus(cat)}
+                                    />
+                                    <div className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
+                                        <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${cat.active ? 'translate-x-4' : ''}`}></span>
+                                    </div>
+                                </label>
                             </div>
                             <div className='flex items-center gap-2 py-2.5'>
                                 {/* Nút điều hướng đến trang Sửa */}

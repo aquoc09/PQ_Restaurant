@@ -36,7 +36,35 @@ function ViewPromotion() {
     const totalPages = Math.ceil(promotion.length / itemsPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    // Update Status
+    const handleToggleStatus = async (item) => {
+        const newStatus = !item.inStock;
 
+        const previousPromotions = [...promotion];
+        const updatedPromotions = promotion.map(p => 
+            p.id === item.id ? { ...p, inStock: newStatus } : p
+        );
+        setPromotion(updatedPromotions);
+        try {
+
+            const detailResponse = await PromotionService.getPromotionById(item.id);
+            const fullData = detailResponse.result;
+
+            const promotionRequest = {
+                title: fullData.title,
+                img: fullData.img,
+                inStock: newStatus, 
+            };
+
+            await PromotionService.updatePromotion(item.id, promotionRequest);
+            toast.success(`Cập nhật trạng thái: ${fullData.title}`);
+
+        } catch (error) {
+            setPromotion(previousPromotions);
+            console.error("Lỗi update status:", error);
+            toast.error("Không thể cập nhật trạng thái. Vui lòng thử lại.");
+        }
+    };
 
     const handleDeletePromotion = async (promotionId) => {
         if (!window.confirm(`Bạn có chắc chắn muốn xóa khuyến mãi ID: ${promotionId} không?`)) {
@@ -87,19 +115,15 @@ function ViewPromotion() {
             <h5 className='text-sm font-semibold line-clamp-2'>{promotion.title}</h5>
 
             <div>
-              <label 
-              className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3'>
+              <label className='relative inline-flex items-center cursor-pointer text-gray-900 gap-3 select-none'>
                 <input 
-                type='checkbox' 
-                className='sr-only peer' 
-                defaultChecked={promotion.inStock}
-                >
-
-                </input>
-                <div 
-                className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
-                  <span 
-                  className='absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out peer-checked:translate-x-4'></span>
+                    type='checkbox' 
+                    className='sr-only peer' 
+                    checked={promotion.inStock} // Đổi từ defaultChecked sang checked
+                    onChange={() => handleToggleStatus(promotion)} // Gắn hàm xử lý
+                />
+                <div className='w-10 h-6 bg-slate-300 rounded-full peer peer-checked:bg-solid transition-colors duration-200'>
+                  <span className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-200 ease-in-out ${promotion.inStock ? 'translate-x-4' : ''}`}></span>
                 </div>
               </label>
             </div>
