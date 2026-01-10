@@ -35,21 +35,19 @@ const Header = () => {
   
   useEffect(() => {
     const fetchCartData = async () => {
-        if(isUser()){
-            try {
-                const response = await CartService.getCart();
-                const newCartData = response.result;
-                if (newCartData && Array.isArray(newCartData.cartItems)) {
-                    setCartItems(newCartData.cartItems);
-                }
-            } catch (error) {
-                console.error("Lỗi fetch cart header:", error);
-            }
-        }
+      try {
+          const response = await CartService.getCart();
+          const newCartData = response.result;
+          if (newCartData && Array.isArray(newCartData.cartItems)) {
+              setCartItems(newCartData.cartItems);
+          }
+      } catch (error) {
+          console.error("Lỗi fetch cart header:", error);
+      }
     };
     
     fetchCartData();
-  }, [getCartCount, isUser]);
+  }, [getCartCount]);
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${

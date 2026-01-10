@@ -26,7 +26,6 @@ const getDecodedToken = () => {
 };
 
 export const useAuth = ()=> {
-    const navigate = useNavigate();
     const [accessToken, setAccessToken] = useState(() => localStorage.getItem('accessToken'));
     const decodedToken = useMemo(() => getDecodedToken(accessToken), [accessToken]);
 
@@ -81,6 +80,12 @@ export const useAuth = ()=> {
             try {
                 // Gửi yêu cầu vô hiệu hóa token lên Back-end
                 await AuthService.logout({ token: token });
+                
+                // Hiển thị thông báo thành công
+                toast.success("Đăng xuất thành công!");
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 500);
             } catch (error) {
                 // Ignore lỗi nếu token đã hết hạn ở phía server
                 console.warn("Logout API failed (token có thể đã hết hạn), proceeding with local clear.", error);

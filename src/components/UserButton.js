@@ -27,7 +27,7 @@ const UserButton = () => {
     };
     useEffect(() => {
         fetchUserData();
-    }, []);
+    },);
 
 
     const handleEditProfile = () => {

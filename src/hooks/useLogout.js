@@ -11,14 +11,7 @@ const useLogout = () => {
         try {
             // Xóa token, user data, v.v.
             await logout();
-            
-            // Hiển thị thông báo thành công
-            toast.success("Đăng xuất thành công!");
-            window.location.reload();
-            
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 1000);
+
         } catch (error) {
             console.error('Logout error:', error);
             toast.error("Lỗi khi đăng xuất. Vui lòng thử lại.");
